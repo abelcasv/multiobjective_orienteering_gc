@@ -45,13 +45,13 @@ multiobjective_orienteering_gc/
 
 ---
 
-## Resultados y Benchmarking
+## Resultados y Benchmarking (Dataset Real de 30 POIs)
 
 | Métrica / Algoritmo | Baseline Greedy (Voraz) | NSGA-II (Genético Multiobjetivo) | Mejora / Diferencia |
 | :--- | :---: | :---: | :---: |
-| **Soluciones en Frente F1** | 10 | **75** | **+650% diversidad** |
-| **Hipervolumen (HV)** | 13,869.13 | **15,795.30** | **+13.9% espacio dominado** |
-| **Puntuación Máxima Factible** | 60.70 pts | **64.10 pts** | **+3.4 pts** |
+| **Hipervolumen (HV)** | 10,287.14 | **11,625.18** | **+13.0% espacio dominado** |
+| **Puntuación Máxima Factible** | 47.00 pts | **48.00 pts** | **+1.0 pts** |
+| **Ajuste Temporal Exhaustivo** | 478.50 min | **479.04 min** | **99.8% de $T_{\max}$ (7h 59m de 8h)** |
 | **Cumplimiento de $T_{\max} \le 8$h** | 100% factible | 100% factible | Regla de Deb (sin penalizaciones ad-hoc) |
 
 ---
