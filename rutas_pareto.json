@@ -6,9 +6,9 @@
   "origen_destino_depot": "Vegueta (Las Palmas)",
   "tiempo_maximo_minutos": 480.0,
   "metricas_comparativas": {
-    "hipervolumen_nsga2": 15818.22,
+    "hipervolumen_nsga2": 15795.27,
     "hipervolumen_greedy": 13869.13,
-    "mejora_porcentual_hv": 14.05
+    "mejora_porcentual_hv": 13.89
   },
   "opciones_recomendadas": {
     "express": {
@@ -23,6 +23,14 @@
       "paradas_ordenadas": [
         "Tufia (Poblado y Playa)",
         "Bufadero de la Garita"
+      ],
+      "paradas_detalle": [
+        {
+          "nombre": "Tufia (Poblado y Playa)"
+        },
+        {
+          "nombre": "Bufadero de la Garita"
+        }
       ],
       "itinerario_completo": [
         "Vegueta (Las Palmas)",
@@ -72,6 +80,23 @@
         "Caldera de Bandama",
         "Tufia (Poblado y Playa)",
         "Bufadero de la Garita"
+      ],
+      "paradas_detalle": [
+        {
+          "nombre": "Jardín de la Marquesa (Arucas)"
+        },
+        {
+          "nombre": "Arucas (Iglesia)"
+        },
+        {
+          "nombre": "Caldera de Bandama"
+        },
+        {
+          "nombre": "Tufia (Poblado y Playa)"
+        },
+        {
+          "nombre": "Bufadero de la Garita"
+        }
       ],
       "itinerario_completo": [
         "Vegueta (Las Palmas)",
@@ -135,80 +160,80 @@
     },
     "exhaustiva": {
       "tipo_opcion": "Opción Exhaustiva",
-      "puntuacion_total": 67.9,
-      "tiempo_total_min": 472.88,
-      "tiempo_total_horas": 7.88,
-      "tiempo_conduccion_min": 137.88,
-      "tiempo_visitas_min": 335.0,
-      "eficiencia_score_hora": 8.62,
-      "numero_paradas": 9,
+      "puntuacion_total": 63.6,
+      "tiempo_total_min": 473.51,
+      "tiempo_total_horas": 7.89,
+      "tiempo_conduccion_min": 118.51,
+      "tiempo_visitas_min": 355.0,
+      "eficiencia_score_hora": 8.06,
+      "numero_paradas": 8,
       "paradas_ordenadas": [
-        "Jardín Botánico Viera y Clavijo",
-        "Caldera de Bandama",
-        "Tufia (Poblado y Playa)",
-        "Bufadero de la Garita",
+        "Playa de las Canteras",
         "Arucas (Iglesia)",
         "Jardín de la Marquesa (Arucas)",
         "Puerto de las Nieves (Agaete)",
-        "Cenobio de Valerón",
-        "Charco de San Lorenzo"
+        "Cueva Pintada (Gáldar)",
+        "Jardín Botánico Viera y Clavijo",
+        "Caldera de Bandama",
+        "Bufadero de la Garita"
+      ],
+      "paradas_detalle": [
+        {
+          "nombre": "Playa de las Canteras"
+        },
+        {
+          "nombre": "Arucas (Iglesia)"
+        },
+        {
+          "nombre": "Jardín de la Marquesa (Arucas)"
+        },
+        {
+          "nombre": "Puerto de las Nieves (Agaete)"
+        },
+        {
+          "nombre": "Cueva Pintada (Gáldar)"
+        },
+        {
+          "nombre": "Jardín Botánico Viera y Clavijo"
+        },
+        {
+          "nombre": "Caldera de Bandama"
+        },
+        {
+          "nombre": "Bufadero de la Garita"
+        }
       ],
       "itinerario_completo": [
         "Vegueta (Las Palmas)",
-        "Jardín Botánico Viera y Clavijo",
-        "Caldera de Bandama",
-        "Tufia (Poblado y Playa)",
-        "Bufadero de la Garita",
+        "Playa de las Canteras",
         "Arucas (Iglesia)",
         "Jardín de la Marquesa (Arucas)",
         "Puerto de las Nieves (Agaete)",
-        "Cenobio de Valerón",
-        "Charco de San Lorenzo",
+        "Cueva Pintada (Gáldar)",
+        "Jardín Botánico Viera y Clavijo",
+        "Caldera de Bandama",
+        "Bufadero de la Garita",
         "Vegueta (Las Palmas)"
       ],
       "detalle_tramos": [
         {
           "tramo": 1,
           "origen": "Vegueta (Las Palmas)",
-          "destino": "Jardín Botánico Viera y Clavijo",
-          "tiempo_conduccion_min": 9.89,
-          "tiempo_estancia_min": 50.0,
-          "score_parada": 8.1
+          "destino": "Playa de las Canteras",
+          "tiempo_conduccion_min": 8.93,
+          "tiempo_estancia_min": 60.0,
+          "score_parada": 9.0
         },
         {
           "tramo": 2,
-          "origen": "Jardín Botánico Viera y Clavijo",
-          "destino": "Caldera de Bandama",
-          "tiempo_conduccion_min": 7.58,
-          "tiempo_estancia_min": 35.0,
-          "score_parada": 7.8
-        },
-        {
-          "tramo": 3,
-          "origen": "Caldera de Bandama",
-          "destino": "Tufia (Poblado y Playa)",
-          "tiempo_conduccion_min": 18.53,
-          "tiempo_estancia_min": 35.0,
-          "score_parada": 7.5
-        },
-        {
-          "tramo": 4,
-          "origen": "Tufia (Poblado y Playa)",
-          "destino": "Bufadero de la Garita",
-          "tiempo_conduccion_min": 5.76,
-          "tiempo_estancia_min": 25.0,
-          "score_parada": 6.5
-        },
-        {
-          "tramo": 5,
-          "origen": "Bufadero de la Garita",
+          "origen": "Playa de las Canteras",
           "destino": "Arucas (Iglesia)",
-          "tiempo_conduccion_min": 19.84,
+          "tiempo_conduccion_min": 13.91,
           "tiempo_estancia_min": 40.0,
           "score_parada": 8.0
         },
         {
-          "tramo": 6,
+          "tramo": 3,
           "origen": "Arucas (Iglesia)",
           "destino": "Jardín de la Marquesa (Arucas)",
           "tiempo_conduccion_min": 2.48,
@@ -216,7 +241,7 @@
           "score_parada": 7.1
         },
         {
-          "tramo": 7,
+          "tramo": 4,
           "origen": "Jardín de la Marquesa (Arucas)",
           "destino": "Puerto de las Nieves (Agaete)",
           "tiempo_conduccion_min": 24.41,
@@ -224,26 +249,42 @@
           "score_parada": 8.6
         },
         {
-          "tramo": 8,
+          "tramo": 5,
           "origen": "Puerto de las Nieves (Agaete)",
-          "destino": "Cenobio de Valerón",
-          "tiempo_conduccion_min": 13.66,
+          "destino": "Cueva Pintada (Gáldar)",
+          "tiempo_conduccion_min": 8.0,
+          "tiempo_estancia_min": 60.0,
+          "score_parada": 8.5
+        },
+        {
+          "tramo": 6,
+          "origen": "Cueva Pintada (Gáldar)",
+          "destino": "Jardín Botánico Viera y Clavijo",
+          "tiempo_conduccion_min": 25.96,
+          "tiempo_estancia_min": 50.0,
+          "score_parada": 8.1
+        },
+        {
+          "tramo": 7,
+          "origen": "Jardín Botánico Viera y Clavijo",
+          "destino": "Caldera de Bandama",
+          "tiempo_conduccion_min": 7.58,
           "tiempo_estancia_min": 35.0,
-          "score_parada": 7.3
+          "score_parada": 7.8
+        },
+        {
+          "tramo": 8,
+          "origen": "Caldera de Bandama",
+          "destino": "Bufadero de la Garita",
+          "tiempo_conduccion_min": 15.47,
+          "tiempo_estancia_min": 25.0,
+          "score_parada": 6.5
         },
         {
           "tramo": 9,
-          "origen": "Cenobio de Valerón",
-          "destino": "Charco de San Lorenzo",
-          "tiempo_conduccion_min": 14.73,
-          "tiempo_estancia_min": 30.0,
-          "score_parada": 7.0
-        },
-        {
-          "tramo": 10,
-          "origen": "Charco de San Lorenzo",
+          "origen": "Bufadero de la Garita",
           "destino": "Vegueta (Las Palmas)",
-          "tiempo_conduccion_min": 21.0,
+          "tiempo_conduccion_min": 11.77,
           "tiempo_estancia_min": 0.0,
           "score_parada": 0.0
         }
@@ -263,6 +304,13 @@
       "tiempo_total_min": 64.68,
       "paradas": [
         "Caldera de Bandama"
+      ]
+    },
+    {
+      "score": 8.0,
+      "tiempo_total_min": 70.21,
+      "paradas": [
+        "Arucas (Iglesia)"
       ]
     },
     {
@@ -425,15 +473,6 @@
       ]
     },
     {
-      "score": 24.9,
-      "tiempo_total_min": 190.0,
-      "paradas": [
-        "Playa de las Canteras",
-        "Jardín Botánico Viera y Clavijo",
-        "Caldera de Bandama"
-      ]
-    },
-    {
       "score": 25.1,
       "tiempo_total_min": 195.68,
       "paradas": [
@@ -483,16 +522,6 @@
       ]
     },
     {
-      "score": 30.4,
-      "tiempo_total_min": 212.47,
-      "paradas": [
-        "Arucas (Iglesia)",
-        "Jardín Botánico Viera y Clavijo",
-        "Caldera de Bandama",
-        "Bufadero de la Garita"
-      ]
-    },
-    {
       "score": 30.8,
       "tiempo_total_min": 214.9,
       "paradas": [
@@ -534,22 +563,22 @@
     },
     {
       "score": 32.2,
-      "tiempo_total_min": 239.59,
+      "tiempo_total_min": 238.88,
       "paradas": [
+        "Jardín Botánico Viera y Clavijo",
         "Jardín de la Marquesa (Arucas)",
         "Arucas (Iglesia)",
-        "Jardín Botánico Viera y Clavijo",
         "Playa de las Canteras"
       ]
     },
     {
-      "score": 32.4,
-      "tiempo_total_min": 243.1,
+      "score": 32.9,
+      "tiempo_total_min": 243.57,
       "paradas": [
         "Playa de las Canteras",
+        "Arucas (Iglesia)",
         "Jardín Botánico Viera y Clavijo",
-        "Caldera de Bandama",
-        "Tufia (Poblado y Playa)"
+        "Caldera de Bandama"
       ]
     },
     {
@@ -581,17 +610,6 @@
         "Arucas (Iglesia)",
         "Jardín Botánico Viera y Clavijo",
         "Tufia (Poblado y Playa)",
-        "Bufadero de la Garita"
-      ]
-    },
-    {
-      "score": 37.5,
-      "tiempo_total_min": 255.67,
-      "paradas": [
-        "Jardín de la Marquesa (Arucas)",
-        "Arucas (Iglesia)",
-        "Jardín Botánico Viera y Clavijo",
-        "Caldera de Bandama",
         "Bufadero de la Garita"
       ]
     },
@@ -768,14 +786,14 @@
     },
     {
       "score": 47.0,
-      "tiempo_total_min": 339.49,
+      "tiempo_total_min": 337.44,
       "paradas": [
-        "Tufia (Poblado y Playa)",
-        "Bufadero de la Garita",
-        "Caldera de Bandama",
-        "Teror (Basílica)",
+        "Playa de las Canteras",
+        "Charco de San Lorenzo",
+        "Jardín de la Marquesa (Arucas)",
         "Arucas (Iglesia)",
-        "Playa de las Canteras"
+        "Jardín Botánico Viera y Clavijo",
+        "Caldera de Bandama"
       ]
     },
     {
@@ -792,14 +810,14 @@
     },
     {
       "score": 47.5,
-      "tiempo_total_min": 349.46,
+      "tiempo_total_min": 350.2,
       "paradas": [
         "Playa de las Canteras",
         "Jardín Botánico Viera y Clavijo",
         "Caldera de Bandama",
         "Tufia (Poblado y Playa)",
-        "Jardín de la Marquesa (Arucas)",
-        "Arucas (Iglesia)"
+        "Arucas (Iglesia)",
+        "Jardín de la Marquesa (Arucas)"
       ]
     },
     {
@@ -816,28 +834,41 @@
     },
     {
       "score": 52.0,
-      "tiempo_total_min": 356.33,
+      "tiempo_total_min": 353.59,
       "paradas": [
+        "Charco de San Lorenzo",
+        "Jardín de la Marquesa (Arucas)",
+        "Arucas (Iglesia)",
         "Jardín Botánico Viera y Clavijo",
         "Caldera de Bandama",
         "Tufia (Poblado y Playa)",
-        "Bufadero de la Garita",
-        "Arucas (Iglesia)",
-        "Jardín de la Marquesa (Arucas)",
-        "Charco de San Lorenzo"
+        "Bufadero de la Garita"
       ]
     },
     {
       "score": 52.0,
-      "tiempo_total_min": 357.9,
+      "tiempo_total_min": 360.55,
       "paradas": [
         "Tufia (Poblado y Playa)",
         "Bufadero de la Garita",
         "Jardín Botánico Viera y Clavijo",
         "Caldera de Bandama",
-        "Arucas (Iglesia)",
+        "Charco de San Lorenzo",
         "Jardín de la Marquesa (Arucas)",
-        "Charco de San Lorenzo"
+        "Arucas (Iglesia)"
+      ]
+    },
+    {
+      "score": 52.9,
+      "tiempo_total_min": 366.06,
+      "paradas": [
+        "Playa de las Canteras",
+        "Charco de San Lorenzo",
+        "Jardín de la Marquesa (Arucas)",
+        "Arucas (Iglesia)",
+        "Caldera de Bandama",
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita"
       ]
     },
     {
@@ -868,54 +899,67 @@
     },
     {
       "score": 54.1,
-      "tiempo_total_min": 381.39,
-      "paradas": [
-        "Tufia (Poblado y Playa)",
-        "Bufadero de la Garita",
-        "Caldera de Bandama",
-        "Teror (Basílica)",
-        "Jardín de la Marquesa (Arucas)",
-        "Arucas (Iglesia)",
-        "Playa de las Canteras"
-      ]
-    },
-    {
-      "score": 54.4,
-      "tiempo_total_min": 391.52,
+      "tiempo_total_min": 385.85,
       "paradas": [
         "Playa de las Canteras",
         "Teror (Basílica)",
         "Jardín de la Marquesa (Arucas)",
         "Arucas (Iglesia)",
-        "Jardín Botánico Viera y Clavijo",
+        "Caldera de Bandama",
         "Tufia (Poblado y Playa)",
         "Bufadero de la Garita"
       ]
     },
     {
-      "score": 55.1,
-      "tiempo_total_min": 396.31,
+      "score": 54.5,
+      "tiempo_total_min": 390.54,
       "paradas": [
-        "Tufia (Poblado y Playa)",
-        "Bufadero de la Garita",
+        "Playa de las Canteras",
+        "Charco de San Lorenzo",
+        "Jardín de la Marquesa (Arucas)",
+        "Arucas (Iglesia)",
         "Jardín Botánico Viera y Clavijo",
         "Caldera de Bandama",
+        "Tufia (Poblado y Playa)"
+      ]
+    },
+    {
+      "score": 54.7,
+      "tiempo_total_min": 393.85,
+      "paradas": [
+        "Playa de las Canteras",
         "Teror (Basílica)",
+        "Jardín de la Marquesa (Arucas)",
         "Arucas (Iglesia)",
-        "Playa de las Canteras"
+        "Jardín Botánico Viera y Clavijo",
+        "Caldera de Bandama",
+        "Bufadero de la Garita"
       ]
     },
     {
       "score": 55.1,
-      "tiempo_total_min": 403.75,
+      "tiempo_total_min": 400.16,
       "paradas": [
-        "Playa de las Canteras",
-        "Jardín Botánico Viera y Clavijo",
-        "Caldera de Bandama",
         "Tufia (Poblado y Playa)",
         "Bufadero de la Garita",
+        "Jardín Botánico Viera y Clavijo",
+        "Caldera de Bandama",
+        "Arucas (Iglesia)",
         "Teror (Basílica)",
-        "Arucas (Iglesia)"
+        "Playa de las Canteras"
+      ]
+    },
+    {
+      "score": 55.2,
+      "tiempo_total_min": 408.82,
+      "paradas": [
+        "Playa de las Canteras",
+        "Charco de San Lorenzo",
+        "Jardín de la Marquesa (Arucas)",
+        "Arucas (Iglesia)",
+        "Teror (Basílica)",
+        "Jardín Botánico Viera y Clavijo",
+        "Caldera de Bandama"
       ]
     },
     {
@@ -932,45 +976,58 @@
       ]
     },
     {
-      "score": 59.3,
-      "tiempo_total_min": 411.85,
+      "score": 56.4,
+      "tiempo_total_min": 417.19,
       "paradas": [
+        "Playa de las Canteras",
+        "Arucas (Iglesia)",
         "Jardín Botánico Viera y Clavijo",
         "Caldera de Bandama",
+        "Dunas de Maspalomas",
         "Tufia (Poblado y Playa)",
-        "Bufadero de la Garita",
-        "Arucas (Iglesia)",
-        "Jardín de la Marquesa (Arucas)",
-        "Cenobio de Valerón",
-        "Charco de San Lorenzo"
-      ]
-    },
-    {
-      "score": 60.2,
-      "tiempo_total_min": 425.44,
-      "paradas": [
-        "Tufia (Poblado y Playa)",
-        "Bufadero de la Garita",
-        "Jardín Botánico Viera y Clavijo",
-        "Caldera de Bandama",
-        "Teror (Basílica)",
-        "Arucas (Iglesia)",
-        "Jardín de la Marquesa (Arucas)",
-        "Charco de San Lorenzo"
+        "Bufadero de la Garita"
       ]
     },
     {
       "score": 61.0,
-      "tiempo_total_min": 428.24,
+      "tiempo_total_min": 417.88,
+      "paradas": [
+        "Playa de las Canteras",
+        "Charco de San Lorenzo",
+        "Jardín de la Marquesa (Arucas)",
+        "Arucas (Iglesia)",
+        "Jardín Botánico Viera y Clavijo",
+        "Caldera de Bandama",
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita"
+      ]
+    },
+    {
+      "score": 61.0,
+      "tiempo_total_min": 430.89,
       "paradas": [
         "Playa de las Canteras",
         "Jardín Botánico Viera y Clavijo",
         "Caldera de Bandama",
         "Tufia (Poblado y Playa)",
         "Bufadero de la Garita",
-        "Arucas (Iglesia)",
+        "Charco de San Lorenzo",
         "Jardín de la Marquesa (Arucas)",
-        "Charco de San Lorenzo"
+        "Arucas (Iglesia)"
+      ]
+    },
+    {
+      "score": 61.1,
+      "tiempo_total_min": 435.98,
+      "paradas": [
+        "Playa de las Canteras",
+        "Charco de San Lorenzo",
+        "Jardín de la Marquesa (Arucas)",
+        "Arucas (Iglesia)",
+        "Teror (Basílica)",
+        "Caldera de Bandama",
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita"
       ]
     },
     {
@@ -989,11 +1046,11 @@
     },
     {
       "score": 62.2,
-      "tiempo_total_min": 440.45,
+      "tiempo_total_min": 440.29,
       "paradas": [
+        "Teror (Basílica)",
         "Arucas (Iglesia)",
         "Jardín de la Marquesa (Arucas)",
-        "Teror (Basílica)",
         "Jardín Botánico Viera y Clavijo",
         "Caldera de Bandama",
         "Tufia (Poblado y Playa)",
@@ -1002,31 +1059,31 @@
       ]
     },
     {
-      "score": 62.6,
-      "tiempo_total_min": 452.67,
+      "score": 62.5,
+      "tiempo_total_min": 451.28,
       "paradas": [
+        "Playa de las Canteras",
+        "Arucas (Iglesia)",
+        "Puerto de las Nieves (Agaete)",
+        "Charco de San Lorenzo",
         "Jardín Botánico Viera y Clavijo",
         "Caldera de Bandama",
         "Tufia (Poblado y Playa)",
-        "Bufadero de la Garita",
+        "Bufadero de la Garita"
+      ]
+    },
+    {
+      "score": 62.6,
+      "tiempo_total_min": 453.98,
+      "paradas": [
+        "Playa de las Canteras",
         "Arucas (Iglesia)",
         "Jardín de la Marquesa (Arucas)",
         "Puerto de las Nieves (Agaete)",
-        "Playa de las Canteras"
-      ]
-    },
-    {
-      "score": 62.6,
-      "tiempo_total_min": 459.76,
-      "paradas": [
-        "Playa de las Canteras",
         "Jardín Botánico Viera y Clavijo",
         "Caldera de Bandama",
         "Tufia (Poblado y Playa)",
-        "Bufadero de la Garita",
-        "Arucas (Iglesia)",
-        "Jardín de la Marquesa (Arucas)",
-        "Puerto de las Nieves (Agaete)"
+        "Bufadero de la Garita"
       ]
     },
     {
@@ -1044,18 +1101,31 @@
       ]
     },
     {
-      "score": 67.9,
-      "tiempo_total_min": 472.88,
+      "score": 63.5,
+      "tiempo_total_min": 471.3,
       "paradas": [
+        "Playa de las Canteras",
         "Jardín Botánico Viera y Clavijo",
         "Caldera de Bandama",
+        "Arucas (Iglesia)",
+        "Jardín de la Marquesa (Arucas)",
+        "Dunas de Maspalomas",
         "Tufia (Poblado y Playa)",
-        "Bufadero de la Garita",
+        "Bufadero de la Garita"
+      ]
+    },
+    {
+      "score": 63.6,
+      "tiempo_total_min": 473.51,
+      "paradas": [
+        "Playa de las Canteras",
         "Arucas (Iglesia)",
         "Jardín de la Marquesa (Arucas)",
         "Puerto de las Nieves (Agaete)",
-        "Cenobio de Valerón",
-        "Charco de San Lorenzo"
+        "Cueva Pintada (Gáldar)",
+        "Jardín Botánico Viera y Clavijo",
+        "Caldera de Bandama",
+        "Bufadero de la Garita"
       ]
     }
   ]

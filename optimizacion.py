@@ -48,6 +48,34 @@ CATALOGO_PUNTOS: Dict[str, Dict[str, float]] = {
 }
 
 
+def load_poi_catalog(filepath: str = "puntos_interes.csv") -> Dict[str, Dict[str, float]]:
+    import os
+    if not os.path.exists(filepath):
+        return CATALOGO_PUNTOS
+    df = pd.read_csv(filepath)
+    col_name = next((c for c in df.columns if any(k in c.lower() for k in ["nomb", "poi", "lugar"])), df.columns[0])
+    col_score = next((c for c in df.columns if any(k in c.lower() for k in ["punt", "score", "valor"])), df.columns[1])
+    col_visit = next((c for c in df.columns if any(k in c.lower() for k in ["visit", "estanc", "tiempo"])), df.columns[2])
+    return {
+        str(row[col_name]): {"score": float(row[col_score]), "visita": float(row[col_visit])}
+        for _, row in df.iterrows()
+    }
+
+
+def load_coordinates(filepath: str = "coordenadas.csv") -> Dict[str, Dict[str, float]]:
+    import os
+    if not os.path.exists(filepath):
+        return {}
+    df = pd.read_csv(filepath)
+    col_name = next((c for c in df.columns if any(k in c.lower() for k in ["nomb", "poi", "lugar"])), df.columns[0])
+    col_lat = next((c for c in df.columns if "lat" in c.lower()), df.columns[1])
+    col_lon = next((c for c in df.columns if any(k in c.lower() for k in ["lon", "lng"])), df.columns[2])
+    return {
+        str(row[col_name]): {"lat": float(row[col_lat]), "lon": float(row[col_lon])}
+        for _, row in df.iterrows()
+    }
+
+
 def load_distance_matrix(filepath: str) -> Tuple[np.ndarray, List[str]]:
     df = pd.read_csv(filepath, index_col=0)
     df.replace([np.inf, -np.inf], np.nan, inplace=True)
@@ -61,27 +89,39 @@ def create_problem_instance(
     node_names: List[str],
     depot_name: str = "Vegueta (Las Palmas)",
     t_max: float = 480.0,
+    poi_catalog_file: str = "puntos_interes.csv",
 ) -> OrienteeringProblem:
     depot_idx = node_names.index(depot_name) if depot_name in node_names else 0
-    scores = np.array([CATALOGO_PUNTOS.get(n, {}).get("score", 7.0) for n in node_names])
-    visits = np.array([CATALOGO_PUNTOS.get(n, {}).get("visita", 40.0) for n in node_names])
+    catalog = load_poi_catalog(poi_catalog_file)
+    scores = np.array([catalog.get(n, {}).get("score", 7.0) for n in node_names])
+    visits = np.array([catalog.get(n, {}).get("visita", 40.0) for n in node_names])
     return OrienteeringProblem(matrix, scores, visits, depot_idx, t_max)
 
 
 def _build_leg_detail(
-    k: int, origin: int, destination: int, is_last_leg: bool, problem: OrienteeringProblem, names: List[str]
+    k: int,
+    origin: int,
+    destination: int,
+    is_last_leg: bool,
+    problem: OrienteeringProblem,
+    names: List[str],
+    coords: Dict[str, Dict[str, float]],
 ) -> Dict[str, Any]:
     driving = problem.driving_time(origin, destination)
     visiting = 0.0 if is_last_leg else float(problem.visit_times[destination])
     score = 0.0 if is_last_leg else float(problem.scores[destination])
-    return {
+    dest_name = names[destination]
+    leg_info: Dict[str, Any] = {
         "tramo": k + 1,
         "origen": names[origin],
-        "destino": names[destination],
+        "destino": dest_name,
         "tiempo_conduccion_min": round(driving, 2),
         "tiempo_estancia_min": round(visiting, 2),
         "score_parada": round(score, 2),
     }
+    if dest_name in coords:
+        leg_info["coordenadas_destino"] = coords[dest_name]
+    return leg_info
 
 
 def serialize_route(ind: Optional[Individual], label: str, problem: OrienteeringProblem, names: List[str]) -> Dict[str, Any]:
@@ -89,9 +129,14 @@ def serialize_route(ind: Optional[Individual], label: str, problem: Orienteering
         return {}
     stops = ind.genes
     route = [problem.depot_idx] + stops + [problem.depot_idx]
+    coords = load_coordinates()
     tramos = [
-        _build_leg_detail(k, route[k], route[k + 1], k == len(stops), problem, names)
+        _build_leg_detail(k, route[k], route[k + 1], k == len(stops), problem, names, coords)
         for k in range(len(route) - 1)
+    ]
+    stops_info = [
+        {"nombre": names[i], **({"coordenadas": coords[names[i]]} if names[i] in coords else {})}
+        for i in stops
     ]
     return {
         "tipo_opcion": label,
@@ -103,6 +148,7 @@ def serialize_route(ind: Optional[Individual], label: str, problem: Orienteering
         "eficiencia_score_hora": round(ind.score / max(0.1, ind.total_time / 60.0), 2),
         "numero_paradas": len(stops),
         "paradas_ordenadas": [names[i] for i in stops],
+        "paradas_detalle": stops_info,
         "itinerario_completo": [names[problem.depot_idx]] + [names[i] for i in stops] + [names[problem.depot_idx]],
         "detalle_tramos": tramos,
     }
