@@ -1,0 +1,269 @@
+import json
+from typing import List, Tuple, Dict, Any, Optional
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+from genetic_algorithm import (
+    OrienteeringProblem,
+    GAConfig,
+    NSGA2Orienteering,
+    seleccionar_3_opciones_turisticas,
+    calcular_hipervolumen,
+    Individual,
+)
+from greedy_algorithm import GreedyOrienteering
+
+
+CATALOGO_PUNTOS: Dict[str, Dict[str, float]] = {
+    "Roque Nublo": {"score": 9.8, "visita": 60},
+    "Dunas de Maspalomas": {"score": 9.5, "visita": 45},
+    "Puerto de Mogán": {"score": 8.7, "visita": 60},
+    "Vegueta (Las Palmas)": {"score": 9.2, "visita": 60},
+    "Pico de las Nieves": {"score": 9.0, "visita": 30},
+    "Teror (Basílica)": {"score": 8.2, "visita": 45},
+    "Arucas (Iglesia)": {"score": 8.0, "visita": 40},
+    "Barranco de Guayadeque": {"score": 8.4, "visita": 50},
+    "Cenobio de Valerón": {"score": 7.3, "visita": 35},
+    "Puerto de las Nieves (Agaete)": {"score": 8.6, "visita": 45},
+    "Playa de las Canteras": {"score": 9.0, "visita": 60},
+    "Jardín Botánico Viera y Clavijo": {"score": 8.1, "visita": 50},
+    "Cueva Pintada (Gáldar)": {"score": 8.5, "visita": 60},
+    "Mirador de Unamuno": {"score": 6.8, "visita": 20},
+    "Tejeda (Pueblo)": {"score": 9.1, "visita": 50},
+    "Bufadero de la Garita": {"score": 6.5, "visita": 25},
+    "Presa de las Niñas": {"score": 7.2, "visita": 30},
+    "Playa del Inglés": {"score": 7.4, "visita": 40},
+    "Caldera de Bandama": {"score": 7.8, "visita": 35},
+    "Los Azulejos de Veneguera": {"score": 7.6, "visita": 25},
+    "Cueva del Rey": {"score": 6.7, "visita": 25},
+    "Mirador del Balcón": {"score": 8.3, "visita": 30},
+    "Barranco de los Cernícalos": {"score": 7.9, "visita": 60},
+    "Charco de San Lorenzo": {"score": 7.0, "visita": 30},
+    "Tufia (Poblado y Playa)": {"score": 7.5, "visita": 35},
+    "Jardín de la Marquesa (Arucas)": {"score": 7.1, "visita": 40},
+    "Mundo Aborigen": {"score": 6.4, "visita": 50},
+    "Barranco de Fataga": {"score": 7.5, "visita": 30},
+    "Playa de Amadores": {"score": 8.0, "visita": 50},
+}
+
+
+def load_distance_matrix(filepath: str) -> Tuple[np.ndarray, List[str]]:
+    df = pd.read_csv(filepath, index_col=0)
+    df.replace([np.inf, -np.inf], np.nan, inplace=True)
+    broken_nodes = df.index[df.isnull().any(axis=1)].tolist()
+    clean_df = df.drop(index=broken_nodes, columns=broken_nodes) if broken_nodes else df
+    return clean_df.to_numpy(), clean_df.index.tolist()
+
+
+def create_problem_instance(
+    matrix: np.ndarray,
+    node_names: List[str],
+    depot_name: str = "Vegueta (Las Palmas)",
+    t_max: float = 480.0,
+) -> OrienteeringProblem:
+    depot_idx = node_names.index(depot_name) if depot_name in node_names else 0
+    scores = np.array([CATALOGO_PUNTOS.get(n, {}).get("score", 7.0) for n in node_names])
+    visits = np.array([CATALOGO_PUNTOS.get(n, {}).get("visita", 40.0) for n in node_names])
+    return OrienteeringProblem(matrix, scores, visits, depot_idx, t_max)
+
+
+def _build_leg_detail(
+    k: int, origin: int, destination: int, is_last_leg: bool, problem: OrienteeringProblem, names: List[str]
+) -> Dict[str, Any]:
+    driving = problem.driving_time(origin, destination)
+    visiting = 0.0 if is_last_leg else float(problem.visit_times[destination])
+    score = 0.0 if is_last_leg else float(problem.scores[destination])
+    return {
+        "tramo": k + 1,
+        "origen": names[origin],
+        "destino": names[destination],
+        "tiempo_conduccion_min": round(driving, 2),
+        "tiempo_estancia_min": round(visiting, 2),
+        "score_parada": round(score, 2),
+    }
+
+
+def serialize_route(ind: Optional[Individual], label: str, problem: OrienteeringProblem, names: List[str]) -> Dict[str, Any]:
+    if not ind:
+        return {}
+    stops = ind.genes
+    route = [problem.depot_idx] + stops + [problem.depot_idx]
+    tramos = [
+        _build_leg_detail(k, route[k], route[k + 1], k == len(stops), problem, names)
+        for k in range(len(route) - 1)
+    ]
+    return {
+        "tipo_opcion": label,
+        "puntuacion_total": round(ind.score, 2),
+        "tiempo_total_min": round(ind.total_time, 2),
+        "tiempo_total_horas": round(ind.total_time / 60.0, 2),
+        "tiempo_conduccion_min": round(ind.driving_time, 2),
+        "tiempo_visitas_min": round(ind.visiting_time, 2),
+        "eficiencia_score_hora": round(ind.score / max(0.1, ind.total_time / 60.0), 2),
+        "numero_paradas": len(stops),
+        "paradas_ordenadas": [names[i] for i in stops],
+        "itinerario_completo": [names[problem.depot_idx]] + [names[i] for i in stops] + [names[problem.depot_idx]],
+        "detalle_tramos": tramos,
+    }
+
+
+def export_results_json(
+    filepath: str,
+    problem: OrienteeringProblem,
+    names: List[str],
+    hv_nsga2: float,
+    hv_greedy: float,
+    express: Optional[Individual],
+    balanced: Optional[Individual],
+    exhaustive: Optional[Individual],
+    pareto_front: List[Individual],
+) -> None:
+    data = {
+        "proyecto": "Optimización Multiobjetivo de Rutas Turísticas en Gran Canaria",
+        "asignatura": "Optimización y Heurística",
+        "algoritmo": "NSGA-II (Deb et al., 2002)",
+        "baseline_comparado": "Greedy Multi-Objetivo",
+        "origen_destino_depot": names[problem.depot_idx],
+        "tiempo_maximo_minutos": problem.t_max,
+        "metricas_comparativas": {
+            "hipervolumen_nsga2": round(hv_nsga2, 2),
+            "hipervolumen_greedy": round(hv_greedy, 2),
+            "mejora_porcentual_hv": round(((hv_nsga2 - hv_greedy) / max(1.0, hv_greedy)) * 100.0, 2),
+        },
+        "opciones_recomendadas": {
+            "express": serialize_route(express, "Opción Express", problem, names),
+            "equilibrada": serialize_route(balanced, "Opción Equilibrada", problem, names),
+            "exhaustiva": serialize_route(exhaustive, "Opción Exhaustiva", problem, names),
+        },
+        "frente_pareto_completo": [
+            {
+                "score": round(ind.score, 2),
+                "tiempo_total_min": round(ind.total_time, 2),
+                "paradas": [names[i] for i in ind.genes],
+            }
+            for ind in sorted(pareto_front, key=lambda x: x.total_time)
+        ],
+    }
+    with open(filepath, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+
+def plot_pareto_comparison(
+    filepath: str,
+    nsga_front: List[Individual],
+    greedy_front: List[Dict[str, Any]],
+    hv_nsga: float,
+    hv_greedy: float,
+    t_max: float,
+    express: Optional[Individual],
+    balanced: Optional[Individual],
+    exhaustive: Optional[Individual],
+) -> None:
+    plt.figure(figsize=(10, 6))
+
+    tg = [s["total_time"] / 60.0 for s in greedy_front]
+    sg = [s["score"] for s in greedy_front]
+    plt.plot(tg, sg, color="#8e44ad", linestyle="--", linewidth=1.8, label=f"Baseline Greedy (HV = {hv_greedy:.0f})")
+    plt.scatter(tg, sg, color="#8e44ad", marker="s", s=50)
+
+    tn = [ind.total_time / 60.0 for ind in nsga_front]
+    sn = [ind.score for ind in nsga_front]
+    improvement = ((hv_nsga - hv_greedy) / max(1.0, hv_greedy)) * 100.0
+    plt.scatter(tn, sn, color="#2980b9", alpha=0.6, s=65, label=f"Frente NSGA-II (HV = {hv_nsga:.0f}, +{improvement:.1f}%)")
+
+    if express:
+        plt.scatter([express.total_time / 60.0], [express.score], color="#27ae60", s=180, edgecolors="black", zorder=6, label=f"Express ({express.score:.1f} pts, {express.total_time/60:.1f}h)")
+    if balanced:
+        plt.scatter([balanced.total_time / 60.0], [balanced.score], color="#e67e22", s=180, edgecolors="black", zorder=6, label=f"Equilibrada ({balanced.score:.1f} pts, {balanced.total_time/60:.1f}h)")
+    if exhaustive:
+        plt.scatter([exhaustive.total_time / 60.0], [exhaustive.score], color="#c0392b", s=180, edgecolors="black", zorder=6, label=f"Exhaustiva ({exhaustive.score:.1f} pts, {exhaustive.total_time/60:.1f}h)")
+
+    plt.axvline(x=t_max / 60.0, color="red", linestyle=":", linewidth=1.5, label=f"Límite T_max ({t_max/60:.1f}h)")
+    plt.title("Comparativa de Optimización: Frente de Pareto NSGA-II vs Baseline Voraz", fontsize=12, fontweight="bold")
+    plt.xlabel("Tiempo Total de Viaje (horas)", fontsize=11)
+    plt.ylabel("Puntuación Turística Total (Score)", fontsize=11)
+    plt.grid(True, linestyle=":", alpha=0.6)
+    plt.legend(loc="upper left", framealpha=0.9)
+    plt.tight_layout()
+    plt.savefig(filepath, dpi=300)
+    plt.close()
+
+
+def plot_convergence(
+    filepath: str,
+    history_hv: List[float],
+    history_score: List[float],
+    hv_greedy: float,
+) -> None:
+    plt.figure(figsize=(11, 5))
+
+    plt.subplot(1, 2, 1)
+    plt.plot(range(1, len(history_hv) + 1), history_hv, color="#2980b9", linewidth=2.0)
+    plt.axhline(y=hv_greedy, color="#8e44ad", linestyle="--", label=f"HV Greedy ({hv_greedy:.0f})")
+    plt.title("Convergencia del Hipervolumen (HV)", fontsize=11, fontweight="bold")
+    plt.xlabel("Generación", fontsize=10)
+    plt.ylabel("Hipervolumen", fontsize=10)
+    plt.grid(True, linestyle=":", alpha=0.6)
+    plt.legend(loc="lower right")
+
+    plt.subplot(1, 2, 2)
+    plt.plot(range(1, len(history_score) + 1), history_score, color="#27ae60", linewidth=2.0)
+    plt.title("Evolución del Mejor Score Factible", fontsize=11, fontweight="bold")
+    plt.xlabel("Generación", fontsize=10)
+    plt.ylabel("Puntuación Turística Máxima", fontsize=10)
+    plt.grid(True, linestyle=":", alpha=0.6)
+
+    plt.tight_layout()
+    plt.savefig(filepath, dpi=300)
+    plt.close()
+
+
+def main() -> None:
+    matrix, names = load_distance_matrix("matriz_tiempos.csv")
+    problem = create_problem_instance(matrix, names, depot_name="Vegueta (Las Palmas)", t_max=480.0)
+
+    greedy = GreedyOrienteering(problem)
+    greedy_front = greedy.generate_greedy_front(step_minutes=15.0)
+    pts_greedy = [(s["total_time"], s["score"]) for s in greedy_front]
+    hv_greedy = calcular_hipervolumen(pts_greedy, ref_point=(problem.t_max, 0.0))
+
+    nsga2 = NSGA2Orienteering(problem, GAConfig(population_size=100, generations=200))
+    pareto_front = nsga2.evolve()
+    pts_nsga2 = [(ind.total_time, ind.score) for ind in pareto_front]
+    hv_nsga2 = calcular_hipervolumen(pts_nsga2, ref_point=(problem.t_max, 0.0))
+
+    express, balanced, exhaustive = seleccionar_3_opciones_turisticas(pareto_front)
+
+    export_results_json(
+        "rutas_pareto.json",
+        problem,
+        names,
+        hv_nsga2,
+        hv_greedy,
+        express,
+        balanced,
+        exhaustive,
+        pareto_front,
+    )
+
+    plot_pareto_comparison(
+        "comparativa_pareto_vs_greedy.png",
+        pareto_front,
+        greedy_front,
+        hv_nsga2,
+        hv_greedy,
+        problem.t_max,
+        express,
+        balanced,
+        exhaustive,
+    )
+
+    plot_convergence("convergencia_nsga2.png", nsga2.history_hypervolume, nsga2.history_best_score, hv_greedy)
+
+    improvement = ((hv_nsga2 - hv_greedy) / max(1.0, hv_greedy)) * 100.0
+    print(f"Benchmarking completado: NSGA-II HV={hv_nsga2:.1f} vs Greedy HV={hv_greedy:.1f} (+{improvement:.1f}%)")
+
+
+if __name__ == "__main__":
+    main()
