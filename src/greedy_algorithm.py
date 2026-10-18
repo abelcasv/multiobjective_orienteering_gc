@@ -1,6 +1,10 @@
 from typing import List, Dict, Any, Set, Optional, Tuple
 import numpy as np
-from genetic_algorithm import OrienteeringProblem
+
+try:
+    from .genetic_algorithm import OrienteeringProblem
+except ImportError:
+    from genetic_algorithm import OrienteeringProblem
 
 
 class GreedyOrienteering:

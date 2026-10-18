@@ -1,19 +1,25 @@
 import json
+from pathlib import Path
 from typing import List, Tuple, Dict, Any, Optional
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-from genetic_algorithm import (
+from .genetic_algorithm import (
     OrienteeringProblem,
     GAConfig,
+    Individual,
     NSGA2Orienteering,
     seleccionar_3_opciones_turisticas,
     calcular_hipervolumen,
-    Individual,
 )
-from greedy_algorithm import GreedyOrienteering
+from .greedy_algorithm import GreedyOrienteering
 
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+DATA_DIR = BASE_DIR / "data"
+OUTPUT_DIR = BASE_DIR / "output"
 
 CATALOGO_PUNTOS: Dict[str, Dict[str, float]] = {
     "Roque Nublo": {"score": 9.8, "visita": 60},
@@ -48,9 +54,14 @@ CATALOGO_PUNTOS: Dict[str, Dict[str, float]] = {
 }
 
 
-def load_poi_catalog(filepath: str = "puntos_interes.csv") -> Dict[str, Dict[str, float]]:
-    import os
-    if not os.path.exists(filepath):
+def _resolve_data_path(filename: str) -> Path:
+    in_data = DATA_DIR / filename
+    return in_data if in_data.exists() else BASE_DIR / filename
+
+
+def load_poi_catalog(filename: str = "puntos_interes.csv") -> Dict[str, Dict[str, float]]:
+    filepath = _resolve_data_path(filename)
+    if not filepath.exists():
         return CATALOGO_PUNTOS
     df = pd.read_csv(filepath)
     col_name = next((c for c in df.columns if any(k in c.lower() for k in ["nomb", "poi", "lugar"])), df.columns[0])
@@ -62,9 +73,9 @@ def load_poi_catalog(filepath: str = "puntos_interes.csv") -> Dict[str, Dict[str
     }
 
 
-def load_coordinates(filepath: str = "coordenadas.csv") -> Dict[str, Dict[str, float]]:
-    import os
-    if not os.path.exists(filepath):
+def load_coordinates(filename: str = "coordenadas.csv") -> Dict[str, Dict[str, float]]:
+    filepath = _resolve_data_path(filename)
+    if not filepath.exists():
         return {}
     df = pd.read_csv(filepath)
     col_name = next((c for c in df.columns if any(k in c.lower() for k in ["nomb", "poi", "lugar"])), df.columns[0])
@@ -76,7 +87,8 @@ def load_coordinates(filepath: str = "coordenadas.csv") -> Dict[str, Dict[str, f
     }
 
 
-def load_distance_matrix(filepath: str) -> Tuple[np.ndarray, List[str]]:
+def load_distance_matrix(filename: str = "matriz_tiempos.csv") -> Tuple[np.ndarray, List[str]]:
+    filepath = _resolve_data_path(filename)
     df = pd.read_csv(filepath, index_col=0)
     df.replace([np.inf, -np.inf], np.nan, inplace=True)
     broken_nodes = df.index[df.isnull().any(axis=1)].tolist()
@@ -89,10 +101,10 @@ def create_problem_instance(
     node_names: List[str],
     depot_name: str = "Vegueta (Las Palmas)",
     t_max: float = 480.0,
-    poi_catalog_file: str = "puntos_interes.csv",
+    poi_filename: str = "puntos_interes.csv",
 ) -> OrienteeringProblem:
     depot_idx = node_names.index(depot_name) if depot_name in node_names else 0
-    catalog = load_poi_catalog(poi_catalog_file)
+    catalog = load_poi_catalog(poi_filename)
     scores = np.array([catalog.get(n, {}).get("score", 7.0) for n in node_names])
     visits = np.array([catalog.get(n, {}).get("visita", 40.0) for n in node_names])
     return OrienteeringProblem(matrix, scores, visits, depot_idx, t_max)
@@ -155,7 +167,7 @@ def serialize_route(ind: Optional[Individual], label: str, problem: Orienteering
 
 
 def export_results_json(
-    filepath: str,
+    filepath: Path,
     problem: OrienteeringProblem,
     names: List[str],
     hv_nsga2: float,
@@ -165,6 +177,7 @@ def export_results_json(
     exhaustive: Optional[Individual],
     pareto_front: List[Individual],
 ) -> None:
+    filepath.parent.mkdir(parents=True, exist_ok=True)
     data = {
         "proyecto": "Optimización Multiobjetivo de Rutas Turísticas en Gran Canaria",
         "asignatura": "Optimización y Heurística",
@@ -196,7 +209,7 @@ def export_results_json(
 
 
 def plot_pareto_comparison(
-    filepath: str,
+    filepath: Path,
     nsga_front: List[Individual],
     greedy_front: List[Dict[str, Any]],
     hv_nsga: float,
@@ -206,6 +219,7 @@ def plot_pareto_comparison(
     balanced: Optional[Individual],
     exhaustive: Optional[Individual],
 ) -> None:
+    filepath.parent.mkdir(parents=True, exist_ok=True)
     plt.figure(figsize=(10, 6))
 
     tg = [s["total_time"] / 60.0 for s in greedy_front]
@@ -237,11 +251,12 @@ def plot_pareto_comparison(
 
 
 def plot_convergence(
-    filepath: str,
+    filepath: Path,
     history_hv: List[float],
     history_score: List[float],
     hv_greedy: float,
 ) -> None:
+    filepath.parent.mkdir(parents=True, exist_ok=True)
     plt.figure(figsize=(11, 5))
 
     plt.subplot(1, 2, 1)
@@ -265,7 +280,7 @@ def plot_convergence(
     plt.close()
 
 
-def main() -> None:
+def run_pipeline() -> None:
     matrix, names = load_distance_matrix("matriz_tiempos.csv")
     problem = create_problem_instance(matrix, names, depot_name="Vegueta (Las Palmas)", t_max=480.0)
 
@@ -282,7 +297,7 @@ def main() -> None:
     express, balanced, exhaustive = seleccionar_3_opciones_turisticas(pareto_front)
 
     export_results_json(
-        "rutas_pareto.json",
+        OUTPUT_DIR / "rutas_pareto.json",
         problem,
         names,
         hv_nsga2,
@@ -294,7 +309,7 @@ def main() -> None:
     )
 
     plot_pareto_comparison(
-        "comparativa_pareto_vs_greedy.png",
+        OUTPUT_DIR / "comparativa_pareto_vs_greedy.png",
         pareto_front,
         greedy_front,
         hv_nsga2,
@@ -305,11 +320,13 @@ def main() -> None:
         exhaustive,
     )
 
-    plot_convergence("convergencia_nsga2.png", nsga2.history_hypervolume, nsga2.history_best_score, hv_greedy)
+    plot_convergence(
+        OUTPUT_DIR / "convergencia_nsga2.png",
+        nsga2.history_hypervolume,
+        nsga2.history_best_score,
+        hv_greedy,
+    )
 
     improvement = ((hv_nsga2 - hv_greedy) / max(1.0, hv_greedy)) * 100.0
     print(f"Benchmarking completado: NSGA-II HV={hv_nsga2:.1f} vs Greedy HV={hv_greedy:.1f} (+{improvement:.1f}%)")
-
-
-if __name__ == "__main__":
-    main()
+    print(f"Archivos exportados exitosamente en la carpeta '{OUTPUT_DIR.name}/'")
