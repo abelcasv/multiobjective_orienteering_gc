@@ -6,9 +6,9 @@
   "origen_destino_depot": "Vegueta (Las Palmas)",
   "tiempo_maximo_minutos": 480.0,
   "metricas_comparativas": {
-    "hipervolumen_nsga2": 11650.59,
+    "hipervolumen_nsga2": 11633.86,
     "hipervolumen_greedy": 10287.14,
-    "mejora_porcentual_hv": 13.25
+    "mejora_porcentual_hv": 13.09
   },
   "opciones_recomendadas": {
     "express": {
@@ -204,57 +204,22 @@
     "exhaustiva": {
       "tipo_opcion": "Opción Exhaustiva",
       "puntuacion_total": 52.0,
-      "tiempo_total_min": 476.22,
-      "tiempo_total_horas": 7.94,
-      "tiempo_conduccion_min": 131.22,
+      "tiempo_total_min": 478.29,
+      "tiempo_total_horas": 7.97,
+      "tiempo_conduccion_min": 133.29,
       "tiempo_visitas_min": 345.0,
-      "eficiencia_score_hora": 6.55,
+      "eficiencia_score_hora": 6.52,
       "numero_paradas": 7,
       "paradas_ordenadas": [
-        "Tufia (Poblado y Playa)",
-        "Bufadero de la Garita",
-        "Arucas (Iglesia)",
-        "Jardín de la Marquesa (Arucas)",
-        "Firgas (Paseo de Gran Canaria)",
         "Cueva Pintada (Gáldar)",
-        "Cenobio de Valerón"
+        "Cenobio de Valerón",
+        "Firgas (Paseo de Gran Canaria)",
+        "Jardín de la Marquesa (Arucas)",
+        "Arucas (Iglesia)",
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita"
       ],
       "paradas_detalle": [
-        {
-          "nombre": "Tufia (Poblado y Playa)",
-          "coordenadas": {
-            "lat": 27.9602,
-            "lon": -15.3822
-          }
-        },
-        {
-          "nombre": "Bufadero de la Garita",
-          "coordenadas": {
-            "lat": 27.9926,
-            "lon": -15.3853
-          }
-        },
-        {
-          "nombre": "Arucas (Iglesia)",
-          "coordenadas": {
-            "lat": 28.1186,
-            "lon": -15.5222
-          }
-        },
-        {
-          "nombre": "Jardín de la Marquesa (Arucas)",
-          "coordenadas": {
-            "lat": 28.1205,
-            "lon": -15.5342
-          }
-        },
-        {
-          "nombre": "Firgas (Paseo de Gran Canaria)",
-          "coordenadas": {
-            "lat": 28.1086,
-            "lon": -15.5638
-          }
-        },
         {
           "nombre": "Cueva Pintada (Gáldar)",
           "coordenadas": {
@@ -268,85 +233,60 @@
             "lat": 28.1362,
             "lon": -15.6033
           }
+        },
+        {
+          "nombre": "Firgas (Paseo de Gran Canaria)",
+          "coordenadas": {
+            "lat": 28.1086,
+            "lon": -15.5638
+          }
+        },
+        {
+          "nombre": "Jardín de la Marquesa (Arucas)",
+          "coordenadas": {
+            "lat": 28.1205,
+            "lon": -15.5342
+          }
+        },
+        {
+          "nombre": "Arucas (Iglesia)",
+          "coordenadas": {
+            "lat": 28.1186,
+            "lon": -15.5222
+          }
+        },
+        {
+          "nombre": "Tufia (Poblado y Playa)",
+          "coordenadas": {
+            "lat": 27.9602,
+            "lon": -15.3822
+          }
+        },
+        {
+          "nombre": "Bufadero de la Garita",
+          "coordenadas": {
+            "lat": 27.9926,
+            "lon": -15.3853
+          }
         }
       ],
       "itinerario_completo": [
         "Vegueta (Las Palmas)",
-        "Tufia (Poblado y Playa)",
-        "Bufadero de la Garita",
-        "Arucas (Iglesia)",
-        "Jardín de la Marquesa (Arucas)",
-        "Firgas (Paseo de Gran Canaria)",
         "Cueva Pintada (Gáldar)",
         "Cenobio de Valerón",
+        "Firgas (Paseo de Gran Canaria)",
+        "Jardín de la Marquesa (Arucas)",
+        "Arucas (Iglesia)",
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita",
         "Vegueta (Las Palmas)"
       ],
       "detalle_tramos": [
         {
           "tramo": 1,
           "origen": "Vegueta (Las Palmas)",
-          "destino": "Tufia (Poblado y Playa)",
-          "tiempo_conduccion_min": 16.37,
-          "tiempo_estancia_min": 45.0,
-          "score_parada": 7.0,
-          "coordenadas_destino": {
-            "lat": 27.9602,
-            "lon": -15.3822
-          }
-        },
-        {
-          "tramo": 2,
-          "origen": "Tufia (Poblado y Playa)",
-          "destino": "Bufadero de la Garita",
-          "tiempo_conduccion_min": 6.52,
-          "tiempo_estancia_min": 30.0,
-          "score_parada": 7.0,
-          "coordenadas_destino": {
-            "lat": 27.9926,
-            "lon": -15.3853
-          }
-        },
-        {
-          "tramo": 3,
-          "origen": "Bufadero de la Garita",
-          "destino": "Arucas (Iglesia)",
-          "tiempo_conduccion_min": 22.26,
-          "tiempo_estancia_min": 60.0,
-          "score_parada": 8.0,
-          "coordenadas_destino": {
-            "lat": 28.1186,
-            "lon": -15.5222
-          }
-        },
-        {
-          "tramo": 4,
-          "origen": "Arucas (Iglesia)",
-          "destino": "Jardín de la Marquesa (Arucas)",
-          "tiempo_conduccion_min": 2.82,
-          "tiempo_estancia_min": 60.0,
-          "score_parada": 7.0,
-          "coordenadas_destino": {
-            "lat": 28.1205,
-            "lon": -15.5342
-          }
-        },
-        {
-          "tramo": 5,
-          "origen": "Jardín de la Marquesa (Arucas)",
-          "destino": "Firgas (Paseo de Gran Canaria)",
-          "tiempo_conduccion_min": 12.13,
-          "tiempo_estancia_min": 45.0,
-          "score_parada": 7.0,
-          "coordenadas_destino": {
-            "lat": 28.1086,
-            "lon": -15.5638
-          }
-        },
-        {
-          "tramo": 6,
-          "origen": "Firgas (Paseo de Gran Canaria)",
           "destino": "Cueva Pintada (Gáldar)",
-          "tiempo_conduccion_min": 29.75,
+          "tiempo_conduccion_min": 31.44,
           "tiempo_estancia_min": 60.0,
           "score_parada": 9.0,
           "coordenadas_destino": {
@@ -355,7 +295,7 @@
           }
         },
         {
-          "tramo": 7,
+          "tramo": 2,
           "origen": "Cueva Pintada (Gáldar)",
           "destino": "Cenobio de Valerón",
           "tiempo_conduccion_min": 10.65,
@@ -367,10 +307,70 @@
           }
         },
         {
-          "tramo": 8,
+          "tramo": 3,
           "origen": "Cenobio de Valerón",
+          "destino": "Firgas (Paseo de Gran Canaria)",
+          "tiempo_conduccion_min": 32.3,
+          "tiempo_estancia_min": 45.0,
+          "score_parada": 7.0,
+          "coordenadas_destino": {
+            "lat": 28.1086,
+            "lon": -15.5638
+          }
+        },
+        {
+          "tramo": 4,
+          "origen": "Firgas (Paseo de Gran Canaria)",
+          "destino": "Jardín de la Marquesa (Arucas)",
+          "tiempo_conduccion_min": 12.08,
+          "tiempo_estancia_min": 60.0,
+          "score_parada": 7.0,
+          "coordenadas_destino": {
+            "lat": 28.1205,
+            "lon": -15.5342
+          }
+        },
+        {
+          "tramo": 5,
+          "origen": "Jardín de la Marquesa (Arucas)",
+          "destino": "Arucas (Iglesia)",
+          "tiempo_conduccion_min": 2.46,
+          "tiempo_estancia_min": 60.0,
+          "score_parada": 8.0,
+          "coordenadas_destino": {
+            "lat": 28.1186,
+            "lon": -15.5222
+          }
+        },
+        {
+          "tramo": 6,
+          "origen": "Arucas (Iglesia)",
+          "destino": "Tufia (Poblado y Playa)",
+          "tiempo_conduccion_min": 24.62,
+          "tiempo_estancia_min": 45.0,
+          "score_parada": 7.0,
+          "coordenadas_destino": {
+            "lat": 27.9602,
+            "lon": -15.3822
+          }
+        },
+        {
+          "tramo": 7,
+          "origen": "Tufia (Poblado y Playa)",
+          "destino": "Bufadero de la Garita",
+          "tiempo_conduccion_min": 6.52,
+          "tiempo_estancia_min": 30.0,
+          "score_parada": 7.0,
+          "coordenadas_destino": {
+            "lat": 27.9926,
+            "lon": -15.3853
+          }
+        },
+        {
+          "tramo": 8,
+          "origen": "Bufadero de la Garita",
           "destino": "Vegueta (Las Palmas)",
-          "tiempo_conduccion_min": 30.72,
+          "tiempo_conduccion_min": 13.22,
           "tiempo_estancia_min": 0.0,
           "score_parada": 0.0,
           "coordenadas_destino": {
@@ -519,13 +519,13 @@
     },
     {
       "score": 38.0,
-      "tiempo_total_min": 350.22,
+      "tiempo_total_min": 349.47,
       "paradas": [
-        "Tufia (Poblado y Playa)",
-        "Bufadero de la Garita",
-        "Arucas (Iglesia)",
         "Cueva Pintada (Gáldar)",
-        "Cenobio de Valerón"
+        "Cenobio de Valerón",
+        "Arucas (Iglesia)",
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita"
       ]
     },
     {
@@ -551,18 +551,6 @@
       ]
     },
     {
-      "score": 43.0,
-      "tiempo_total_min": 403.99,
-      "paradas": [
-        "Tufia (Poblado y Playa)",
-        "Bufadero de la Garita",
-        "Arucas (Iglesia)",
-        "Jardín de la Marquesa (Arucas)",
-        "Firgas (Paseo de Gran Canaria)",
-        "Charco de San Lorenzo"
-      ]
-    },
-    {
       "score": 44.0,
       "tiempo_total_min": 404.86,
       "paradas": [
@@ -576,64 +564,63 @@
     },
     {
       "score": 45.0,
-      "tiempo_total_min": 412.12,
+      "tiempo_total_min": 413.68,
       "paradas": [
-        "Tufia (Poblado y Playa)",
-        "Bufadero de la Garita",
-        "Arucas (Iglesia)",
-        "Jardín de la Marquesa (Arucas)",
         "Cueva Pintada (Gáldar)",
-        "Cenobio de Valerón"
+        "Cenobio de Valerón",
+        "Jardín de la Marquesa (Arucas)",
+        "Arucas (Iglesia)",
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita"
       ]
     },
     {
       "score": 46.0,
-      "tiempo_total_min": 429.87,
-      "paradas": [
-        "Tufia (Poblado y Playa)",
-        "Bufadero de la Garita",
-        "Caldera de Bandama",
-        "Arucas (Iglesia)",
-        "Cueva Pintada (Gáldar)",
-        "Cenobio de Valerón"
-      ]
-    },
-    {
-      "score": 47.0,
-      "tiempo_total_min": 461.79,
+      "tiempo_total_min": 427.95,
       "paradas": [
         "Cueva Pintada (Gáldar)",
+        "Cenobio de Valerón",
         "Arucas (Iglesia)",
-        "Jardín Botánico Viera y Clavijo",
         "Caldera de Bandama",
         "Tufia (Poblado y Playa)",
         "Bufadero de la Garita"
       ]
     },
     {
-      "score": 50.0,
-      "tiempo_total_min": 473.9,
+      "score": 47.0,
+      "tiempo_total_min": 462.36,
+      "paradas": [
+        "Cueva Pintada (Gáldar)",
+        "Arucas (Iglesia)",
+        "Teror (Basílica)",
+        "Caldera de Bandama",
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita"
+      ]
+    },
+    {
+      "score": 48.0,
+      "tiempo_total_min": 475.64,
       "paradas": [
         "Tufia (Poblado y Playa)",
         "Bufadero de la Garita",
         "Arucas (Iglesia)",
-        "Jardín de la Marquesa (Arucas)",
-        "Firgas (Paseo de Gran Canaria)",
-        "Charco de San Lorenzo",
-        "Cenobio de Valerón"
+        "Cueva Pintada (Gáldar)",
+        "Cenobio de Valerón",
+        "Playa de las Canteras"
       ]
     },
     {
       "score": 52.0,
-      "tiempo_total_min": 476.22,
+      "tiempo_total_min": 478.29,
       "paradas": [
-        "Tufia (Poblado y Playa)",
-        "Bufadero de la Garita",
-        "Arucas (Iglesia)",
-        "Jardín de la Marquesa (Arucas)",
-        "Firgas (Paseo de Gran Canaria)",
         "Cueva Pintada (Gáldar)",
-        "Cenobio de Valerón"
+        "Cenobio de Valerón",
+        "Firgas (Paseo de Gran Canaria)",
+        "Jardín de la Marquesa (Arucas)",
+        "Arucas (Iglesia)",
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita"
       ]
     }
   ]
