@@ -40,104 +40,71 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 OUTPUT_DIR = BASE_DIR / "output"
 
 
+def _evaluate_algorithm_run(
+    algo_name: str,
+    problem: OrienteeringProblem,
+) -> Tuple[List[Tuple[float, float]], float]:
+    t0 = time.time()
+    if algo_name == "NSGA-II":
+        algo = NSGA2Orienteering(problem, GAConfig(population_size=100, generations=200))
+        front = algo.evolve()
+        pts = [(ind.total_time, ind.score) for ind in front]
+    elif algo_name == "Greedy":
+        front_greedy = GreedyOrienteering(problem).generate_greedy_front(step_minutes=15.0)
+        pts = [(s["total_time"], s["score"]) for s in front_greedy]
+    elif algo_name == "Random Search":
+        front_rs = RandomSearchOrienteering(problem, total_evaluations=15000).run()
+        pts = [(ind.total_time, ind.score) for ind in front_rs]
+    else:
+        front_ws = WeightedSumGA(problem, pop_size=30, generations=40).run()
+        pts = [(ind.total_time, ind.score) for ind in front_ws]
+    return pts, time.time() - t0
+
+
+def _build_summary_report(
+    algorithms: List[str],
+    results: Dict[str, Dict[str, List[float]]],
+) -> Dict[str, Any]:
+    summary: Dict[str, Any] = {"algoritmos": {}}
+    hv_ref = results["NSGA-II"]["hipervolumen"]
+    for algo in algorithms:
+        summary["algoritmos"][algo] = {
+            "hipervolumen": resumen_estadistico(results[algo]["hipervolumen"]),
+            "spread": resumen_estadistico(results[algo]["spread"]),
+            "tiempo_segundos": resumen_estadistico(results[algo]["tiempo_segundos"]),
+            "test_wilcoxon_vs_nsga2": test_wilcoxon(hv_ref, results[algo]["hipervolumen"]) if algo != "NSGA-II" else None,
+        }
+    return summary
+
+
 def run_statistical_benchmark(
     seeds: List[int],
     problem: OrienteeringProblem,
 ) -> Dict[str, Any]:
     algorithms = ["NSGA-II", "Greedy", "Random Search", "Weighted Sum"]
     results: Dict[str, Dict[str, List[float]]] = {
-        algo: {"hipervolumen": [], "spread": [], "tiempo_segundos": []}
-        for algo in algorithms
+        algo: {"hipervolumen": [], "spread": [], "tiempo_segundos": []} for algo in algorithms
     }
-    raw_records = []
+    raw_records: List[Dict[str, Any]] = []
 
     print(f"--> Iniciando batería estadística con {len(seeds)} semillas independientes...")
-
     for seed in seeds:
         print(f"    * Ejecutando semilla {seed}...")
         random.seed(seed)
         np.random.seed(seed)
+        for algo in algorithms:
+            pts, elapsed = _evaluate_algorithm_run(algo, problem)
+            hv = calcular_hipervolumen(pts, ref_point=(problem.t_max, 0.0))
+            sp = calcular_spread(pts)
+            results[algo]["hipervolumen"].append(hv)
+            results[algo]["spread"].append(sp)
+            results[algo]["tiempo_segundos"].append(elapsed)
+            raw_records.append({"semilla": seed, "algoritmo": algo, "hipervolumen": hv, "spread": sp, "tiempo_s": elapsed})
 
-        # 1. NSGA-II (Propio)
-        t0 = time.time()
-        nsga = NSGA2Orienteering(problem, GAConfig(population_size=100, generations=200))
-        frente_nsga = nsga.evolve()
-        pts_nsga = [(ind.total_time, ind.score) for ind in frente_nsga]
-        t_nsga = time.time() - t0
-        hv_nsga = calcular_hipervolumen(pts_nsga, ref_point=(problem.t_max, 0.0))
-        sp_nsga = calcular_spread(pts_nsga)
-        results["NSGA-II"]["hipervolumen"].append(hv_nsga)
-        results["NSGA-II"]["spread"].append(sp_nsga)
-        results["NSGA-II"]["tiempo_segundos"].append(t_nsga)
-        raw_records.append({"semilla": seed, "algoritmo": "NSGA-II", "hipervolumen": hv_nsga, "spread": sp_nsga, "tiempo_s": t_nsga})
-
-        # 2. Greedy Baseline (Determinista con presupuesto)
-        t0 = time.time()
-        greedy = GreedyOrienteering(problem)
-        frente_greedy = greedy.generate_greedy_front(step_minutes=15.0)
-        pts_greedy = [(s["total_time"], s["score"]) for s in frente_greedy]
-        t_greedy = time.time() - t0
-        hv_greedy = calcular_hipervolumen(pts_greedy, ref_point=(problem.t_max, 0.0))
-        sp_greedy = calcular_spread(pts_greedy)
-        results["Greedy"]["hipervolumen"].append(hv_greedy)
-        results["Greedy"]["spread"].append(sp_greedy)
-        results["Greedy"]["tiempo_segundos"].append(t_greedy)
-        raw_records.append({"semilla": seed, "algoritmo": "Greedy", "hipervolumen": hv_greedy, "spread": sp_greedy, "tiempo_s": t_greedy})
-
-        # 3. Random Search Baseline
-        t0 = time.time()
-        random_search = RandomSearchOrienteering(problem, total_evaluations=15000)
-        frente_rs = random_search.run()
-        pts_rs = [(ind.total_time, ind.score) for ind in frente_rs]
-        t_rs = time.time() - t0
-        hv_rs = calcular_hipervolumen(pts_rs, ref_point=(problem.t_max, 0.0))
-        sp_rs = calcular_spread(pts_rs)
-        results["Random Search"]["hipervolumen"].append(hv_rs)
-        results["Random Search"]["spread"].append(sp_rs)
-        results["Random Search"]["tiempo_segundos"].append(t_rs)
-        raw_records.append({"semilla": seed, "algoritmo": "Random Search", "hipervolumen": hv_rs, "spread": sp_rs, "tiempo_s": t_rs})
-
-        # 4. Weighted Sum GA Baseline
-        t0 = time.time()
-        ws_ga = WeightedSumGA(problem, pop_size=30, generations=40)
-        frente_ws = ws_ga.run()
-        pts_ws = [(ind.total_time, ind.score) for ind in frente_ws]
-        t_ws = time.time() - t0
-        hv_ws = calcular_hipervolumen(pts_ws, ref_point=(problem.t_max, 0.0))
-        sp_ws = calcular_spread(pts_ws)
-        results["Weighted Sum"]["hipervolumen"].append(hv_ws)
-        results["Weighted Sum"]["spread"].append(sp_ws)
-        results["Weighted Sum"]["tiempo_segundos"].append(t_ws)
-        raw_records.append({"semilla": seed, "algoritmo": "Weighted Sum", "hipervolumen": hv_ws, "spread": sp_ws, "tiempo_s": t_ws})
-
-    # Guardar CSV crudo
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    df_raw = pd.DataFrame(raw_records)
-    csv_path = OUTPUT_DIR / "resultados_estadisticos_semillas.csv"
-    df_raw.to_csv(csv_path, index=False)
-
-    # Análisis estadístico y tests de Wilcoxon
-    summary_report: Dict[str, Any] = {"algoritmos": {}}
-    hv_nsga_samples = results["NSGA-II"]["hipervolumen"]
-
-    for algo in algorithms:
-        stats_hv = resumen_estadistico(results[algo]["hipervolumen"])
-        stats_sp = resumen_estadistico(results[algo]["spread"])
-        stats_time = resumen_estadistico(results[algo]["tiempo_segundos"])
-
-        wilcoxon = None
-        if algo != "NSGA-II":
-            wilcoxon = test_wilcoxon(hv_nsga_samples, results[algo]["hipervolumen"])
-
-        summary_report["algoritmos"][algo] = {
-            "hipervolumen": stats_hv,
-            "spread": stats_sp,
-            "tiempo_segundos": stats_time,
-            "test_wilcoxon_vs_nsga2": wilcoxon,
-        }
-
-    json_path = OUTPUT_DIR / "resumen_estadistico.json"
-    with open(json_path, "w", encoding="utf-8") as f:
+    pd.DataFrame(raw_records).to_csv(OUTPUT_DIR / "resultados_estadisticos_semillas.csv", index=False)
+    summary_report = _build_summary_report(algorithms, results)
+    with open(OUTPUT_DIR / "resumen_estadistico.json", "w", encoding="utf-8") as f:
         json.dump(summary_report, f, ensure_ascii=False, indent=2)
 
     _plot_boxplots(results, OUTPUT_DIR / "boxplot_hipervolumen.png")

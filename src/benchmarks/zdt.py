@@ -110,50 +110,58 @@ def crowding_distance_zdt(front: List[ZDT1Individual]) -> None:
                 front[i].crowding_distance += (obj(front[i + 1]) - obj(front[i - 1])) / val_range
 
 
+def _reproduce_zdt_pair(population: List[ZDT1Individual], num_vars: int) -> Tuple[ZDT1Individual, ZDT1Individual]:
+    p1, p2 = random.sample(population, 2)
+    p = p1 if p1.rank < p2.rank else p2
+    q1, q2 = random.sample(population, 2)
+    q = q1 if q1.rank < q2.rank else q2
+    c1_x, c2_x = _sbx_crossover(p.x, q.x)
+    c1_x = _polynomial_mutation(c1_x, pm=1.0 / num_vars)
+    c2_x = _polynomial_mutation(c2_x, pm=1.0 / num_vars)
+    return ZDT1Individual(c1_x), ZDT1Individual(c2_x)
+
+
+def _generate_zdt_offspring(population: List[ZDT1Individual], pop_size: int, num_vars: int) -> List[ZDT1Individual]:
+    offspring: List[ZDT1Individual] = []
+    while len(offspring) < pop_size:
+        c1, c2 = _reproduce_zdt_pair(population, num_vars)
+        offspring.extend([c1, c2])
+    return offspring[:pop_size]
+
+
+def _select_next_generation_zdt(population: List[ZDT1Individual], pop_size: int) -> List[ZDT1Individual]:
+    fronts = fast_sort_zdt(population)
+    selected: List[ZDT1Individual] = []
+    for front in fronts:
+        crowding_distance_zdt(front)
+        if len(selected) + len(front) <= pop_size:
+            selected.extend(front)
+        else:
+            front.sort(key=lambda ind: ind.crowding_distance, reverse=True)
+            selected.extend(front[: pop_size - len(selected)])
+            break
+    return selected
+
+
+def _calculate_zdt1_igd(front: List[ZDT1Individual]) -> float:
+    true_f1 = np.linspace(0.0, 1.0, 500)
+    true_f2 = 1.0 - np.sqrt(true_f1)
+    true_pareto = np.column_stack([true_f1, true_f2])
+    obtained = np.array([[ind.f1, ind.f2] for ind in front])
+    return float(np.mean([np.min(np.linalg.norm(obtained - pt, axis=1)) for pt in true_pareto]))
+
+
 def run_zdt1_validation(
     num_variables: int = 30,
     pop_size: int = 100,
     generations: int = 150,
 ) -> Tuple[List[ZDT1Individual], float]:
     population = [ZDT1Individual(np.random.rand(num_variables)) for _ in range(pop_size)]
-
     for _ in range(generations):
-        offspring = []
-        while len(offspring) < pop_size:
-            p1, p2 = random.sample(population, 2)
-            p = p1 if p1.rank < p2.rank else p2
-            q1, q2 = random.sample(population, 2)
-            q = q1 if q1.rank < q2.rank else q2
-
-            c1_x, c2_x = _sbx_crossover(p.x, q.x)
-            c1_x = _polynomial_mutation(c1_x, pm=1.0 / num_variables)
-            c2_x = _polynomial_mutation(c2_x, pm=1.0 / num_variables)
-
-            offspring.extend([ZDT1Individual(c1_x), ZDT1Individual(c2_x)])
-
-        combined = population + offspring[:pop_size]
-        fronts = fast_sort_zdt(combined)
-        selected = []
-        for front in fronts:
-            crowding_distance_zdt(front)
-            if len(selected) + len(front) <= pop_size:
-                selected.extend(front)
-            else:
-                front.sort(key=lambda ind: ind.crowding_distance, reverse=True)
-                selected.extend(front[: pop_size - len(selected)])
-                break
-        population = selected
-
+        offspring = _generate_zdt_offspring(population, pop_size, num_variables)
+        population = _select_next_generation_zdt(population + offspring, pop_size)
     f1_front = fast_sort_zdt(population)[0]
-
-    # Calcular Inverted Generational Distance (IGD) frente al Pareto real
-    true_f1 = np.linspace(0.0, 1.0, 500)
-    true_f2 = 1.0 - np.sqrt(true_f1)
-    true_pareto = np.column_stack([true_f1, true_f2])
-    obtained = np.array([[ind.f1, ind.f2] for ind in f1_front])
-
-    igd = np.mean([np.min(np.linalg.norm(obtained - pt, axis=1)) for pt in true_pareto])
-    return f1_front, float(igd)
+    return f1_front, _calculate_zdt1_igd(f1_front)
 
 
 def plot_zdt1_benchmark(f1_front: List[ZDT1Individual], igd: float, output_path: Path) -> None:

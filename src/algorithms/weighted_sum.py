@@ -27,6 +27,19 @@ class WeightedSumGA:
         norm_time = ind.total_time / self.problem.t_max
         return weight_score * norm_score - (1.0 - weight_score) * norm_time
 
+    def _generate_offspring(self, population: List[Individual], weight: float) -> List[Individual]:
+        offspring: List[Individual] = []
+        while len(offspring) < self.pop_size:
+            p1 = self._tournament(population, weight)
+            p2 = self._tournament(population, weight)
+            c1, c2 = crossover(p1, p2)
+            c1 = mutate(c1, self.candidates)
+            c2 = mutate(c2, self.candidates)
+            c1.evaluate(self.problem)
+            c2.evaluate(self.problem)
+            offspring.extend([c1, c2])
+        return offspring
+
     def _solve_for_weight(self, weight_score: float) -> Optional[Individual]:
         population = [
             Individual(random.sample(self.candidates, random.randint(2, 7)))
@@ -36,17 +49,7 @@ class WeightedSumGA:
             ind.evaluate(self.problem)
 
         for _ in range(self.generations):
-            offspring: List[Individual] = []
-            while len(offspring) < self.pop_size:
-                p1 = self._tournament(population, weight_score)
-                p2 = self._tournament(population, weight_score)
-                c1, c2 = crossover(p1, p2)
-                c1 = mutate(c1, self.candidates)
-                c2 = mutate(c2, self.candidates)
-                c1.evaluate(self.problem)
-                c2.evaluate(self.problem)
-                offspring.extend([c1, c2])
-
+            offspring = self._generate_offspring(population, weight_score)
             combined = population + offspring
             combined.sort(key=lambda ind: self._fitness(ind, weight_score), reverse=True)
             population = combined[: self.pop_size]
@@ -64,14 +67,8 @@ class WeightedSumGA:
             best = self._solve_for_weight(w)
             if best and not any(p.score == best.score and p.total_time == best.total_time for p in solutions):
                 solutions.append(best)
-
         solutions.sort(key=lambda ind: ind.total_time)
         return self._filter_pareto(solutions)
 
     def _filter_pareto(self, individuals: List[Individual]) -> List[Individual]:
-        pareto: List[Individual] = []
-        for cand in individuals:
-            dominated = any(other.dominates(cand) for other in individuals)
-            if not dominated:
-                pareto.append(cand)
-        return pareto
+        return [c for c in individuals if not any(o.dominates(c) for o in individuals)]
