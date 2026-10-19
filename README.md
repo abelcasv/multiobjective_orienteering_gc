@@ -1,8 +1,11 @@
 # Optimización Multiobjetivo de Rutas Turísticas en Gran Canaria (MOOP)
 
 Proyecto para la asignatura **Optimización y Heurística** (Grado en Ciencia e Ingeniería de Datos / IA).
+Encuadrado en la modalidad **C5: Optimización Multiobjetivo (Dificultad Alta)**.
 
-El proyecto resuelve el **Problema de Orientación Multiobjetivo (Multi-Objective Orienteering Problem - MOOP)** para diseñar rutas turísticas óptimas en Gran Canaria bajo una restricción temporal (escala de crucero / jornada de 8 horas), buscando maximizar el valor turístico total y minimizar el tiempo invertido en conducción y estancia.
+El proyecto resuelve el **Problema de Orientación Multiobjetivo (Multi-Objective Orienteering Problem - MOOP)** para diseñar rutas turísticas óptimas en Gran Canaria bajo una restricción presupuestaria de tiempo ($T_{\max} = 8$ horas de escala de crucero o jornada turística), buscando simultáneamente:
+1. **Maximizar el valor turístico total** ($\sum S_i$).
+2. **Minimizar el tiempo invertido** (tiempo de conducción real + tiempo de estancia física).
 
 ---
 
@@ -10,21 +13,34 @@ El proyecto resuelve el **Problema de Orientación Multiobjetivo (Multi-Objectiv
 
 ```text
 multiobjective_orienteering_gc/
-├── data/                                 # Datasets de entrada
-│   ├── matriz_tiempos.csv                # Matriz asimétrica NxN de tiempos reales
-│   ├── puntos_interes.csv                # (Opcional) Puntuación y tiempos de estancia
-│   └── coordenadas.csv                   # (Opcional) Latitud y longitud de cada POI
-├── output/                               # Artefactos y resultados generados
-│   ├── rutas_pareto.json                 # Rutas no dominadas con detalle tramo a tramo
-│   ├── comparativa_pareto_vs_greedy.png  # Gráfica comparativa NSGA-II vs Greedy
-│   └── convergencia_nsga2.png            # Curvas de Hipervolumen y Score
-├── src/                                  # Código fuente modular
-│   ├── __init__.py                       # Paquete de Python
-│   ├── genetic_algorithm.py              # Algoritmo NSGA-II adaptado a Orienteering
-│   ├── greedy_algorithm.py               # Heurística Voraz (Baseline de comparación)
-│   └── pipeline.py                       # Orquestación de benchmarking y exportación
-├── main.py                               # Punto de entrada único del proyecto
-├── requirements.txt                      # Dependencias de Python
+├── data/                                      # Datasets de entrada
+│   ├── matriz_tiempos.csv                     # Matriz asimétrica 30x30 de tiempos de conducción
+│   ├── puntos_interes.csv                     # Puntuaciones (1-10) y tiempos de visita
+│   └── coordenadas.csv                        # Latitud y longitud de cada POI
+├── output/                                    # Artefactos y resultados generados
+│   ├── rutas_pareto.json                      # Rutas óptimas con coordenadas y desglose de tramos
+│   ├── comparativa_pareto_vs_greedy.png       # Frente de Pareto vs Línea base Greedy
+│   ├── convergencia_nsga2.png                 # Curvas de Hipervolumen y Score factible
+│   ├── validacion_zdt1.png                    # Validación analítica de NSGA-II en ZDT1
+│   ├── boxplot_hipervolumen.png               # Boxplots estadísticos de los 4 algoritmos
+│   ├── resultados_estadisticos_semillas.csv   # Registro detallado de las 15 semillas
+│   └── resumen_estadistico.json               # Métricas agregadas y p-valores de Wilcoxon
+├── src/                                       # Código fuente modular
+│   ├── core/                                  # Modelos y métricas compartidas
+│   │   ├── problem.py                         # OrienteeringProblem, Individual, GAConfig
+│   │   └── metrics.py                         # Hipervolumen, Spread y Test de Wilcoxon
+│   ├── algorithms/                            # Algoritmos de optimización
+│   │   ├── genetic_algorithm.py               # NSGA-II con dominancia de Deb (2002)
+│   │   ├── greedy_algorithm.py                # Heurística Voraz (Baseline)
+│   │   ├── random_search.py                   # Búsqueda Aleatoria (Baseline)
+│   │   └── weighted_sum.py                    # Suma Ponderada / Escalarización (Baseline)
+│   ├── benchmarks/                            # Suite experimental exigida por rúbrica C5
+│   │   ├── zdt.py                             # Validación matemática en benchmark ZDT1
+│   │   └── statistical_suite.py               # Batería con 15 semillas + Test de Wilcoxon
+│   ├── pipeline.py                            # Orquestación del caso de Gran Canaria
+│   └── __init__.py
+├── main.py                                    # Punto de entrada principal
+├── requirements.txt                           # Dependencias del proyecto
 └── README.md
 ```
 
@@ -33,36 +49,51 @@ multiobjective_orienteering_gc/
 ## División de Roles
 
 ### Miembro 1: Data Engineer & Visualización
-- Creación y refinamiento de la matriz de tiempos de conducción real (`data/matriz_tiempos.csv`).
+- Extracción de la red viaria real con OSMnx y cálculo de la matriz asimétrica de tiempos (`data/matriz_tiempos.csv`).
 - Dataset de coordenadas geográficas (`data/coordenadas.csv`) y atributos (`data/puntos_interes.csv`).
 - Visualización interactiva con **Folium** consumiendo `output/rutas_pareto.json`.
 
 ### Miembro 2: Optimization / AI Engineer
-- **`src/genetic_algorithm.py`**: Motor evolutivo **NSGA-II** para cromosomas de longitud variable, principio de dominancia con restricciones de Deb (2002), cruce de subconjuntos y mutaciones dinámicas (insert, remove, swap, 2-opt).
-- **`src/greedy_algorithm.py`**: Heurística voraz constructiva multiobjetivo (*Baseline de comparación académica*).
-- **`src/pipeline.py`**: Pipeline de benchmarking, cálculo de Hipervolumen (HV) y exportación estructurada.
-- **`main.py`**: Punto de entrada minimalista.
+- **Algoritmo propio NSGA-II:** Cromosomas de longitud variable, selección por torneo de Deb con manejo de restricciones, operadores genéticos específicos y ordenamiento no dominado rápido.
+- **Líneas base de comparación:** Heurística voraz (Greedy), búsqueda aleatoria (Random Search) y escalarización lineal (Weighted Sum GA).
+- **Validación matemática:** Demostración de convergencia en benchmark continuo ZDT1 ($IGD = 0.032$).
+- **Experimentación rigurosa:** Batería con 15 semillas independientes y test de Wilcoxon ($p < 0.001$).
 
 ---
 
-## Resultados y Benchmarking (Dataset Real de 30 POIs)
+## Resultados Experimentales y Validación Estadística
 
-| Métrica / Algoritmo | Baseline Greedy (Voraz) | NSGA-II (Genético Multiobjetivo) | Mejora / Diferencia |
-| :--- | :---: | :---: | :---: |
-| **Hipervolumen (HV)** | 10,287.14 | **11,625.18** | **+13.0% espacio dominado** |
-| **Puntuación Máxima Factible** | 47.00 pts | **48.00 pts** | **+1.0 pts** |
-| **Ajuste Temporal Exhaustivo** | 478.50 min | **479.04 min** | **99.8% de $T_{\max}$ (7h 59m de 8h)** |
-| **Cumplimiento de $T_{\max} \le 8$h** | 100% factible | 100% factible | Regla de Deb (sin penalizaciones ad-hoc) |
+### 1. Batería Estadística (15 Semillas Independientes)
+
+Siguiendo las pautas de evaluación de la asignatura, todos los métodos se compararon bajo el mismo presupuesto computacional:
+
+| Algoritmo | Hipervolumen (Media ± Std) | Spread $\Delta$ (Media) | $p$-valor vs NSGA-II (Wilcoxon) | Significativo ($p < 0.05$) |
+| :--- | :---: | :---: | :---: | :---: |
+| **NSGA-II (Propio)** | **11,620.8 ± 21.5** | **0.388** | **— (Referencia)** | — |
+| **Greedy Baseline** | 10,287.1 ± 0.0 | 0.289 | $3.067 \times 10^{-6}$ | **Sí ($p < 0.001$)** |
+| **Random Search** | 10,024.9 ± 151.6 | 0.473 | $3.067 \times 10^{-6}$ | **Sí ($p < 0.001$)** |
+| **Weighted Sum GA** | 7,181.6 ± 269.3 | 0.924 | $3.067 \times 10^{-6}$ | **Sí ($p < 0.001$)** |
+
+> **Conclusión estadística:** La superioridad de NSGA-II sobre la heurística voraz (+13.0%), la búsqueda aleatoria (+15.9%) y la suma ponderada (+61.8%) está demostrada con significancia estadística formal ($p < 0.0001$). La suma ponderada fracasa al no ser capaz de explorar frentes no convexos.
+
+### 2. Validación Analítica en Benchmark ZDT1
+* Implementación verificada sobre el benchmark estándar de Deb et al. (2002).
+* **Inverted Generational Distance (IGD):** $0.0320$, demostrando convergencia visual y numérica contra el Frente de Pareto teórico exacto ($f_2 = 1 - \sqrt{f_1}$).
 
 ---
 
-## Instalación y Ejecución
+## Guía de Ejecución
 
 ```bash
 # 1. Instalar dependencias
 pip install -r requirements.txt
 
-# 2. Ejecutar el pipeline de optimización
+# 2. Ejecutar la optimización de Gran Canaria (genera output/rutas_pareto.json y gráficas)
 python main.py
+
+# 3. Ejecutar la validación analítica ZDT1
+python src/benchmarks/zdt.py
+
+# 4. Ejecutar la batería estadística completa con 15 semillas y Wilcoxon
+python src/benchmarks/statistical_suite.py
 ```
-*(Los resultados se guardan automáticamente en `output/rutas_pareto.json` y las figuras en `output/`)*.

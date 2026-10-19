@@ -6,15 +6,10 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-from .genetic_algorithm import (
-    OrienteeringProblem,
-    GAConfig,
-    Individual,
-    NSGA2Orienteering,
-    seleccionar_3_opciones_turisticas,
-    calcular_hipervolumen,
-)
-from .greedy_algorithm import GreedyOrienteering
+from .core.problem import OrienteeringProblem, GAConfig, Individual
+from .core.metrics import calcular_hipervolumen
+from .algorithms.genetic_algorithm import NSGA2Orienteering, seleccionar_3_opciones_turisticas
+from .algorithms.greedy_algorithm import GreedyOrienteering
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent

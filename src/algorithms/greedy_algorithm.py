@@ -1,10 +1,6 @@
-from typing import List, Dict, Any, Set, Optional, Tuple
+from typing import List, Dict, Any, Set, Optional
 import numpy as np
-
-try:
-    from .genetic_algorithm import OrienteeringProblem
-except ImportError:
-    from genetic_algorithm import OrienteeringProblem
+from ..core.problem import OrienteeringProblem
 
 
 class GreedyOrienteering:
