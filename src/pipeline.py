@@ -16,6 +16,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = BASE_DIR / "data"
 OUTPUT_DIR = BASE_DIR / "output"
 
+# Escenarios: carpeta dentro de data/ -> nombre del nodo hotel (depósito) en la matriz.
+ESCENARIOS: Dict[str, str] = {
+    "santa_catalina": "Hotel Santa Catalina (Las Palmas)",
+    "lopesan_villa_del_conde": "Hotel Lopesan Villa del Conde",
+}
+
 CATALOGO_PUNTOS: Dict[str, Dict[str, float]] = {
     "Roque Nublo": {"score": 9.8, "visita": 60},
     "Dunas de Maspalomas": {"score": 9.5, "visita": 45},
@@ -49,13 +55,21 @@ CATALOGO_PUNTOS: Dict[str, Dict[str, float]] = {
 }
 
 
-def _resolve_data_path(filename: str) -> Path:
+def _resolve_data_path(filename: str, scenario: Optional[str] = None) -> Path:
+    if scenario is not None:
+        if scenario not in ESCENARIOS:
+            raise ValueError(f"Escenario desconocido '{scenario}'. Disponibles: {list(ESCENARIOS)}")
+        return DATA_DIR / scenario / filename
     in_data = DATA_DIR / filename
     return in_data if in_data.exists() else BASE_DIR / filename
 
 
-def load_poi_catalog(filename: str = "puntos_interes.csv") -> Dict[str, Dict[str, float]]:
-    filepath = _resolve_data_path(filename)
+def scenario_output_dir(scenario: Optional[str]) -> Path:
+    return OUTPUT_DIR / scenario if scenario else OUTPUT_DIR
+
+
+def load_poi_catalog(filename: str = "puntos_interes.csv", scenario: Optional[str] = None) -> Dict[str, Dict[str, float]]:
+    filepath = _resolve_data_path(filename, scenario)
     if not filepath.exists():
         return CATALOGO_PUNTOS
     df = pd.read_csv(filepath)
@@ -68,8 +82,8 @@ def load_poi_catalog(filename: str = "puntos_interes.csv") -> Dict[str, Dict[str
     }
 
 
-def load_coordinates(filename: str = "coordenadas.csv") -> Dict[str, Dict[str, float]]:
-    filepath = _resolve_data_path(filename)
+def load_coordinates(filename: str = "coordenadas.csv", scenario: Optional[str] = None) -> Dict[str, Dict[str, float]]:
+    filepath = _resolve_data_path(filename, scenario)
     if not filepath.exists():
         return {}
     df = pd.read_csv(filepath)
@@ -82,8 +96,8 @@ def load_coordinates(filename: str = "coordenadas.csv") -> Dict[str, Dict[str, f
     }
 
 
-def load_distance_matrix(filename: str = "matriz_tiempos.csv") -> Tuple[np.ndarray, List[str]]:
-    filepath = _resolve_data_path(filename)
+def load_distance_matrix(filename: str = "matriz_tiempos.csv", scenario: Optional[str] = None) -> Tuple[np.ndarray, List[str]]:
+    filepath = _resolve_data_path(filename, scenario)
     df = pd.read_csv(filepath, index_col=0)
     df.replace([np.inf, -np.inf], np.nan, inplace=True)
     broken_nodes = df.index[df.isnull().any(axis=1)].tolist()
@@ -97,9 +111,12 @@ def create_problem_instance(
     depot_name: str = "Vegueta (Las Palmas)",
     t_max: float = 480.0,
     poi_filename: str = "puntos_interes.csv",
+    scenario: Optional[str] = None,
 ) -> OrienteeringProblem:
-    depot_idx = node_names.index(depot_name) if depot_name in node_names else 0
-    catalog = load_poi_catalog(poi_filename)
+    if depot_name not in node_names:
+        raise ValueError(f"El depósito '{depot_name}' no está en la matriz de tiempos.")
+    depot_idx = node_names.index(depot_name)
+    catalog = load_poi_catalog(poi_filename, scenario)
     scores = np.array([catalog.get(n, {}).get("score", 7.0) for n in node_names])
     visits = np.array([catalog.get(n, {}).get("visita", 40.0) for n in node_names])
     return OrienteeringProblem(matrix, scores, visits, depot_idx, t_max)
@@ -131,12 +148,18 @@ def _build_leg_detail(
     return leg_info
 
 
-def serialize_route(ind: Optional[Individual], label: str, problem: OrienteeringProblem, names: List[str]) -> Dict[str, Any]:
+def serialize_route(
+    ind: Optional[Individual],
+    label: str,
+    problem: OrienteeringProblem,
+    names: List[str],
+    scenario: Optional[str] = None,
+) -> Dict[str, Any]:
     if not ind:
         return {}
     stops = ind.genes
     route = [problem.depot_idx] + stops + [problem.depot_idx]
-    coords = load_coordinates()
+    coords = load_coordinates(scenario=scenario)
     tramos = [
         _build_leg_detail(k, route[k], route[k + 1], k == len(stops), problem, names, coords)
         for k in range(len(route) - 1)
@@ -171,6 +194,7 @@ def export_results_json(
     balanced: Optional[Individual],
     exhaustive: Optional[Individual],
     pareto_front: List[Individual],
+    scenario: Optional[str] = None,
 ) -> None:
     filepath.parent.mkdir(parents=True, exist_ok=True)
     data = {
@@ -186,9 +210,9 @@ def export_results_json(
             "mejora_porcentual_hv": round(((hv_nsga2 - hv_greedy) / max(1.0, hv_greedy)) * 100.0, 2),
         },
         "opciones_recomendadas": {
-            "express": serialize_route(express, "Opción Express", problem, names),
-            "equilibrada": serialize_route(balanced, "Opción Equilibrada", problem, names),
-            "exhaustiva": serialize_route(exhaustive, "Opción Exhaustiva", problem, names),
+            "express": serialize_route(express, "Opción Express", problem, names, scenario),
+            "equilibrada": serialize_route(balanced, "Opción Equilibrada", problem, names, scenario),
+            "exhaustiva": serialize_route(exhaustive, "Opción Exhaustiva", problem, names, scenario),
         },
         "frente_pareto_completo": [
             {
@@ -275,9 +299,16 @@ def plot_convergence(
     plt.close()
 
 
-def run_pipeline() -> None:
-    matrix, names = load_distance_matrix("matriz_tiempos.csv")
-    problem = create_problem_instance(matrix, names, depot_name="Vegueta (Las Palmas)", t_max=480.0)
+def run_pipeline(scenario: Optional[str] = "santa_catalina") -> None:
+    """Ejecuta el pipeline de un escenario (hotel). Con scenario=None usa los ficheros
+    legados de data/ (modelo antiguo con depósito en Vegueta)."""
+    if scenario is None:
+        depot_name = "Vegueta (Las Palmas)"
+    else:
+        depot_name = ESCENARIOS[scenario]
+    out_dir = scenario_output_dir(scenario)
+    matrix, names = load_distance_matrix("matriz_tiempos.csv", scenario)
+    problem = create_problem_instance(matrix, names, depot_name=depot_name, t_max=480.0, scenario=scenario)
 
     greedy = GreedyOrienteering(problem)
     greedy_front = greedy.generate_greedy_front(step_minutes=15.0)
@@ -292,7 +323,7 @@ def run_pipeline() -> None:
     express, balanced, exhaustive = seleccionar_3_opciones_turisticas(pareto_front)
 
     export_results_json(
-        OUTPUT_DIR / "rutas_pareto.json",
+        out_dir / "rutas_pareto.json",
         problem,
         names,
         hv_nsga2,
@@ -301,10 +332,11 @@ def run_pipeline() -> None:
         balanced,
         exhaustive,
         pareto_front,
+        scenario,
     )
 
     plot_pareto_comparison(
-        OUTPUT_DIR / "comparativa_pareto_vs_greedy.png",
+        out_dir / "comparativa_pareto_vs_greedy.png",
         pareto_front,
         greedy_front,
         hv_nsga2,
@@ -316,7 +348,7 @@ def run_pipeline() -> None:
     )
 
     plot_convergence(
-        OUTPUT_DIR / "convergencia_nsga2.png",
+        out_dir / "convergencia_nsga2.png",
         nsga2.history_hypervolume,
         nsga2.history_best_score,
         hv_greedy,
@@ -324,4 +356,4 @@ def run_pipeline() -> None:
 
     improvement = ((hv_nsga2 - hv_greedy) / max(1.0, hv_greedy)) * 100.0
     print(f"Benchmarking completado: NSGA-II HV={hv_nsga2:.1f} vs Greedy HV={hv_greedy:.1f} (+{improvement:.1f}%)")
-    print(f"Archivos exportados exitosamente en la carpeta '{OUTPUT_DIR.name}/'")
+    print(f"Archivos exportados exitosamente en '{out_dir.relative_to(BASE_DIR)}/'")
