@@ -1,7 +1,8 @@
 import json
 import time
 from pathlib import Path
-from typing import Dict, List, Any
+import argparse
+from typing import Dict, List, Any, Optional, Tuple
 import random
 import numpy as np
 import pandas as pd
@@ -19,7 +20,7 @@ try:
     from ..algorithms.greedy_algorithm import GreedyOrienteering
     from ..algorithms.random_search import RandomSearchOrienteering
     from ..algorithms.weighted_sum import WeightedSumGA
-    from ..pipeline import load_distance_matrix, create_problem_instance
+    from ..pipeline import ESCENARIOS, load_distance_matrix, create_problem_instance, scenario_output_dir
 except (ImportError, ValueError):
     import sys
     sys.path.append(str(Path(__file__).resolve().parent.parent.parent))
@@ -34,10 +35,9 @@ except (ImportError, ValueError):
     from src.algorithms.greedy_algorithm import GreedyOrienteering
     from src.algorithms.random_search import RandomSearchOrienteering
     from src.algorithms.weighted_sum import WeightedSumGA
-    from src.pipeline import load_distance_matrix, create_problem_instance
+    from src.pipeline import ESCENARIOS, load_distance_matrix, create_problem_instance, scenario_output_dir
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
-OUTPUT_DIR = BASE_DIR / "output"
 
 
 def _evaluate_algorithm_run(
@@ -80,6 +80,7 @@ def _build_summary_report(
 def run_statistical_benchmark(
     seeds: List[int],
     problem: OrienteeringProblem,
+    output_dir: Path,
 ) -> Dict[str, Any]:
     algorithms = ["NSGA-II", "Greedy", "Random Search", "Weighted Sum"]
     results: Dict[str, Dict[str, List[float]]] = {
@@ -101,13 +102,13 @@ def run_statistical_benchmark(
             results[algo]["tiempo_segundos"].append(elapsed)
             raw_records.append({"semilla": seed, "algoritmo": algo, "hipervolumen": hv, "spread": sp, "tiempo_s": elapsed})
 
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    pd.DataFrame(raw_records).to_csv(OUTPUT_DIR / "resultados_estadisticos_semillas.csv", index=False)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    pd.DataFrame(raw_records).to_csv(output_dir / "resultados_estadisticos_semillas.csv", index=False)
     summary_report = _build_summary_report(algorithms, results)
-    with open(OUTPUT_DIR / "resumen_estadistico.json", "w", encoding="utf-8") as f:
+    with open(output_dir / "resumen_estadistico.json", "w", encoding="utf-8") as f:
         json.dump(summary_report, f, ensure_ascii=False, indent=2)
 
-    _plot_boxplots(results, OUTPUT_DIR / "boxplot_hipervolumen.png")
+    _plot_boxplots(results, output_dir / "boxplot_hipervolumen.png")
     return summary_report
 
 
@@ -130,15 +131,18 @@ def _plot_boxplots(results: Dict[str, Dict[str, List[float]]], output_path: Path
     plt.close()
 
 
-def main() -> None:
-    matrix, names = load_distance_matrix("matriz_tiempos.csv")
-    problem = create_problem_instance(matrix, names, depot_name="Vegueta (Las Palmas)", t_max=480.0)
-    seeds = [42, 101, 203, 314, 456, 578, 619, 723, 831, 954, 1024, 1234, 2048, 3072, 4096]
+def run_scenario(scenario: str, seeds: List[int]) -> None:
+    out_dir = scenario_output_dir(scenario)
+    matrix, names = load_distance_matrix("matriz_tiempos.csv", scenario)
+    problem = create_problem_instance(
+        matrix, names, depot_name=ESCENARIOS[scenario], t_max=480.0, scenario=scenario
+    )
 
-    summary = run_statistical_benchmark(seeds, problem)
+    print(f"\n##### Escenario: {scenario} (depósito: {ESCENARIOS[scenario]}) #####")
+    summary = run_statistical_benchmark(seeds, problem, out_dir)
 
     print("\n" + "=" * 80)
-    print("  RESULTADOS DE LA BATERÍA ESTADÍSTICA (15 SEMILLAS)")
+    print(f"  RESULTADOS DE LA BATERÍA ESTADÍSTICA ({len(seeds)} SEMILLAS) - {scenario}")
     print("=" * 80)
     print(f"{'Algoritmo':<18} | {'HV (Media ± Std)':<22} | {'Spread (Media)':<15} | {'p-valor vs NSGA-II':<18}")
     print("-" * 80)
@@ -152,7 +156,17 @@ def main() -> None:
 
     print("=" * 80)
     print("  * Diferencia estadísticamente significativa (p < 0.05)")
-    print(f"  Ficheros guardados en '{OUTPUT_DIR.name}/'\n")
+    print(f"  Ficheros guardados en '{out_dir.relative_to(BASE_DIR)}/'\n")
+
+
+def main(argv: Optional[List[str]] = None) -> None:
+    parser = argparse.ArgumentParser(description="Batería estadística multi-semilla")
+    parser.add_argument("--escenario", choices=list(ESCENARIOS), default=None,
+                        help="Escenario (hotel). Por defecto, todos.")
+    args = parser.parse_args(argv)
+    seeds = [42, 101, 203, 314, 456, 578, 619, 723, 831, 954, 1024, 1234, 2048, 3072, 4096]
+    for scenario in ([args.escenario] if args.escenario else list(ESCENARIOS)):
+        run_scenario(scenario, seeds)
 
 
 if __name__ == "__main__":
