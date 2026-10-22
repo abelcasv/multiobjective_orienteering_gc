@@ -98,10 +98,15 @@ def create_problem_instance(
     t_max: float = 480.0,
     poi_filename: str = "puntos_interes.csv",
 ) -> OrienteeringProblem:
-    depot_idx = node_names.index(depot_name) if depot_name in node_names else 0
+    if depot_name not in node_names:
+        raise ValueError(f"Depot '{depot_name}' no encontrado en los nodos de la matriz.")
+    depot_idx = node_names.index(depot_name)
     catalog = load_poi_catalog(poi_filename)
-    scores = np.array([catalog.get(n, {}).get("score", 7.0) for n in node_names])
-    visits = np.array([catalog.get(n, {}).get("visita", 40.0) for n in node_names])
+    missing = [n for n in node_names if n not in catalog]
+    if missing:
+        raise ValueError(f"Los siguientes nodos no existen en el catalogo de POIs: {missing}")
+    scores = np.array([catalog[n]["score"] for n in node_names])
+    visits = np.array([catalog[n]["visita"] for n in node_names])
     return OrienteeringProblem(matrix, scores, visits, depot_idx, t_max)
 
 
@@ -275,7 +280,11 @@ def plot_convergence(
     plt.close()
 
 
-def run_pipeline() -> None:
+def run_pipeline(seed: int = 42) -> None:
+    import random
+    random.seed(seed)
+    np.random.seed(seed)
+
     matrix, names = load_distance_matrix("matriz_tiempos.csv")
     problem = create_problem_instance(matrix, names, depot_name="Vegueta (Las Palmas)", t_max=480.0)
 

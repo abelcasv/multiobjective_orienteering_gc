@@ -110,11 +110,16 @@ def crowding_distance_zdt(front: List[ZDT1Individual]) -> None:
                 front[i].crowding_distance += (obj(front[i + 1]) - obj(front[i - 1])) / val_range
 
 
-def _reproduce_zdt_pair(population: List[ZDT1Individual], num_vars: int) -> Tuple[ZDT1Individual, ZDT1Individual]:
+def _tournament_selection(population: List[ZDT1Individual]) -> ZDT1Individual:
     p1, p2 = random.sample(population, 2)
-    p = p1 if p1.rank < p2.rank else p2
-    q1, q2 = random.sample(population, 2)
-    q = q1 if q1.rank < q2.rank else q2
+    if p1.rank != p2.rank:
+        return p1 if p1.rank < p2.rank else p2
+    return p1 if p1.crowding_distance >= p2.crowding_distance else p2
+
+
+def _reproduce_zdt_pair(population: List[ZDT1Individual], num_vars: int) -> Tuple[ZDT1Individual, ZDT1Individual]:
+    p = _tournament_selection(population)
+    q = _tournament_selection(population)
     c1_x, c2_x = _sbx_crossover(p.x, q.x)
     c1_x = _polynomial_mutation(c1_x, pm=1.0 / num_vars)
     c2_x = _polynomial_mutation(c2_x, pm=1.0 / num_vars)
@@ -154,13 +159,21 @@ def _calculate_zdt1_igd(front: List[ZDT1Individual]) -> float:
 def run_zdt1_validation(
     num_variables: int = 30,
     pop_size: int = 100,
-    generations: int = 150,
+    generations: int = 250,
+    seed: int = 42,
 ) -> Tuple[List[ZDT1Individual], float]:
+    random.seed(seed)
+    np.random.seed(seed)
     population = [ZDT1Individual(np.random.rand(num_variables)) for _ in range(pop_size)]
+    for front in fast_sort_zdt(population):
+        crowding_distance_zdt(front)
+
     for _ in range(generations):
         offspring = _generate_zdt_offspring(population, pop_size, num_variables)
         population = _select_next_generation_zdt(population + offspring, pop_size)
+
     f1_front = fast_sort_zdt(population)[0]
+    crowding_distance_zdt(f1_front)
     return f1_front, _calculate_zdt1_igd(f1_front)
 
 

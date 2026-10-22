@@ -48,15 +48,23 @@ def calcular_spread(points: List[Tuple[float, float]]) -> float:
 
 
 def test_wilcoxon(sample_a: List[float], sample_b: List[float]) -> Dict[str, Any]:
+    diffs = np.array(sample_a) - np.array(sample_b)
+    if np.all(diffs == 0):
+        return {"statistic": 0.0, "p_value": 1.0, "significant_at_005": False}
     try:
+        res = stats.wilcoxon(sample_a, sample_b, alternative="two-sided")
+        return {
+            "statistic": float(res.statistic),
+            "p_value": float(res.pvalue),
+            "significant_at_005": bool(res.pvalue < 0.05),
+        }
+    except Exception:
         stat, p_val = stats.ranksums(sample_a, sample_b)
         return {
             "statistic": float(stat),
             "p_value": float(p_val),
             "significant_at_005": bool(p_val < 0.05),
         }
-    except Exception:
-        return {"statistic": 0.0, "p_value": 1.0, "significant_at_005": False}
 
 
 def resumen_estadistico(sample: List[float]) -> Dict[str, float]:

@@ -53,10 +53,10 @@ def _evaluate_algorithm_run(
         front_greedy = GreedyOrienteering(problem).generate_greedy_front(step_minutes=15.0)
         pts = [(s["total_time"], s["score"]) for s in front_greedy]
     elif algo_name == "Random Search":
-        front_rs = RandomSearchOrienteering(problem, total_evaluations=15000).run()
+        front_rs = RandomSearchOrienteering(problem, total_evaluations=20100).run()
         pts = [(ind.total_time, ind.score) for ind in front_rs]
     else:
-        front_ws = WeightedSumGA(problem, pop_size=30, generations=40).run()
+        front_ws = WeightedSumGA(problem, pop_size=50, generations=39).run()
         pts = [(ind.total_time, ind.score) for ind in front_ws]
     return pts, time.time() - t0
 

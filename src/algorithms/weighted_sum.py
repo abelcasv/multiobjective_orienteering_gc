@@ -9,14 +9,14 @@ class WeightedSumGA:
     def __init__(
         self,
         problem: OrienteeringProblem,
-        pop_size: int = 40,
-        generations: int = 50,
+        pop_size: int = 50,
+        generations: int = 39,
         weights: Optional[List[float]] = None,
     ):
         self.problem = problem
         self.pop_size = pop_size
         self.generations = generations
-        self.weights = weights or [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+        self.weights = weights or [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95]
         self.candidates = problem.available_nodes()
         self.max_theoretical_score = max(1.0, float(np.sum(problem.scores)))
 

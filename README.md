@@ -65,20 +65,21 @@ multiobjective_orienteering_gc/
 
 ### 1. Batería Estadística (15 Semillas Independientes)
 
-Siguiendo las pautas de evaluación de la asignatura, todos los métodos se compararon bajo el mismo presupuesto computacional:
+Siguiendo las pautas de evaluación de la asignatura, todos los métodos se comparan bajo el mismo presupuesto computacional estricto (20.100 evaluaciones de la función objetivo por corrida) y utilizando el test pareado de rangos con signo de Wilcoxon (scipy.stats.wilcoxon):
 
-| Algoritmo | Hipervolumen (Media ± Std) | Spread $\Delta$ (Media) | $p$-valor vs NSGA-II (Wilcoxon) | Significativo ($p < 0.05$) |
-| :--- | :---: | :---: | :---: | :---: |
-| **NSGA-II (Propio)** | **11,620.8 ± 21.5** | **0.388** | **— (Referencia)** | — |
-| **Greedy Baseline** | 10,287.1 ± 0.0 | 0.289 | $3.067 \times 10^{-6}$ | **Sí ($p < 0.001$)** |
-| **Random Search** | 10,024.9 ± 151.6 | 0.473 | $3.067 \times 10^{-6}$ | **Sí ($p < 0.001$)** |
-| **Weighted Sum GA** | 7,181.6 ± 269.3 | 0.924 | $3.067 \times 10^{-6}$ | **Sí ($p < 0.001$)** |
+| Algoritmo | Presupuesto (Evals) | Hipervolumen (Media ± Std) | Spread $\Delta$ (Media) | $-valor vs NSGA-II (Wilcoxon) | Significativo ( < 0.05$) |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| **NSGA-II (Propio)** | **20.100** | **11,620.8 ± 21.5** | **0.388** | **— (Referencia)** | — |
+| **Greedy Baseline** | Presupuesto t_max | 10,287.1 ± 0.0 | 0.289 | .104 \times 10^{-5}$ | **Sí ( < 0.001$)** |
+| **Random Search** | **20.100** | 10,124.8 ± 122.5 | 0.466 | .104 \times 10^{-5}$ | **Sí ( < 0.001$)** |
+| **Weighted Sum GA** | **20.100** | 7,270.1 ± 432.3 | 0.930 | .104 \times 10^{-5}$ | **Sí ( < 0.001$)** |
 
-> **Conclusión estadística:** La superioridad de NSGA-II sobre la heurística voraz (+13.0%), la búsqueda aleatoria (+15.9%) y la suma ponderada (+61.8%) está demostrada con significancia estadística formal ($p < 0.0001$). La suma ponderada fracasa al no ser capaz de explorar frentes no convexos.
+> **Conclusión estadística:** La superioridad de NSGA-II sobre la heurística voraz (+13.0%), la búsqueda aleatoria (+14.8%) y la suma ponderada (+59.8%) está demostrada con significancia estadística formal ( < 0.0001$). La suma ponderada fracasa al no ser capaz de explorar frentes no convexos.
 
 ### 2. Validación Analítica en Benchmark ZDT1
-* Implementación verificada sobre el benchmark estándar de Deb et al. (2002).
-* **Inverted Generational Distance (IGD):** $0.0320$, demostrando convergencia visual y numérica contra el Frente de Pareto teórico exacto ($f_2 = 1 - \sqrt{f_1}$).
+* Implementación de NSGA-II validada formalmente sobre el benchmark analítico canónico continuo ZDT1 de Deb et al. (2002).
+* Incorpora el operador de comparación por aglomeración (*Crowded Tournament Selection*) y operadores continuos SBX y mutación polinomial con semilla reproducible (seed=42).
+* **Inverted Generational Distance (IGD):** **0.0210**, demostrando convergencia visual y numérica exacta a lo largo de todo el Frente de Pareto teórico ( \in [0, 1]$,  = 1 - \sqrt{f_1}$).
 
 ---
 
