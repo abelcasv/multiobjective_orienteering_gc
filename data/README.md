@@ -22,7 +22,7 @@ Con `scripts/build_time_matrix.ipynb` (ejecutable en Colab):
 1. Red viaria de Gran Canaria (`network_type='drive'`) con OSMnx, quedándose con la mayor componente fuertemente conexa.
 2. Cada POI y cada hotel se asocia al nodo de red más cercano.
 3. Tiempos por camino mínimo (Dijkstra) con velocidades por tipo de vía y una penalización por sinuosidad de las carreteras.
-4. Calibración con 12 pares medidos en Google Maps y un factor global de ajuste (mediana de la razón matriz final / matriz sin factor global: ver `auxiliar/`).
+4. Calibración con 12 pares medidos en Google Maps: se elige la penalización por curvas que menos error deja y se aplica un factor global por mínimos cuadrados por el origen (×1,09; es la razón matriz final / matriz sin factor global de `auxiliar/`). El error medio frente a Google baja de 4,0 a 2,9 min (`output/figuras/calibracion_google.csv`).
 
 ## Origen y licencia
 
@@ -34,6 +34,7 @@ Con `scripts/build_time_matrix.ipynb` (ejecutable en Colab):
 ## Limitaciones
 
 - Los tiempos son aproximados: no incluyen tráfico ni aparcamiento y pueden desviarse de Google Maps, sobre todo en rutas de montaña.
+- Presa de las Niñas parece mal conectada en el grafo: todos sus tiempos hacia la cumbre son muy altos (Tejeda 132 min, Roque Nublo 108 min) porque el camino mínimo rodea por Mogán. Probablemente falta o está restringido el tramo de la GC-605 hacia Ayacata en OSM. Pendiente de revisar en el notebook y de comprobar en Google Maps; mientras tanto, este POI casi nunca entra en las rutas.
 - Las puntuaciones y los tiempos de visita son subjetivos: otro criterio cambiaría el frente de Pareto y las rutas recomendadas.
 - Validación con 4 pares con hotel medidos en Google Maps después de construir la matriz (no se usaron para calibrar). La matriz es optimista en todos, con un error medio de 8,2 min frente a los 2,9 min de los pares de calibración (`output/figuras/validacion_hoteles.csv`):
 
