@@ -133,7 +133,7 @@ def _plot_boxplots(results: Dict[str, Dict[str, List[float]]], output_path: Path
 
 def run_scenario(scenario: str, seeds: List[int]) -> None:
     out_dir = scenario_output_dir(scenario)
-    matrix, names = load_distance_matrix("matriz_tiempos.csv", scenario)
+    matrix, names = load_distance_matrix(scenario)
     problem = create_problem_instance(
         matrix, names, depot_name=ESCENARIOS[scenario], t_max=480.0, scenario=scenario
     )

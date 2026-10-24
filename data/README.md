@@ -36,4 +36,3 @@ Con `scripts/build_time_matrix.ipynb` (ejecutable en Colab):
 - Los tiempos son aproximados: no incluyen tráfico ni aparcamiento y pueden desviarse de Google Maps, sobre todo en rutas de montaña.
 - Las puntuaciones y los tiempos de visita son subjetivos: otro criterio cambiaría el frente de Pareto y las rutas recomendadas.
 - Pares pendientes de validar con Google Maps: Lopesan -> Dunas de Maspalomas (matriz: 2 min, parece corto), Lopesan -> Roque Nublo (56 min), Santa Catalina <-> Vegueta (4,3 min ida / 7,3 min vuelta).
-- Los ficheros `puntos_interes.csv`, `matriz_tiempos.csv` y `coordenadas.csv` de la raíz de `data/` pertenecen al modelo anterior (depósito en Vegueta) y ya no los usa `main.py`.

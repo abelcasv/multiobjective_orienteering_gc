@@ -23,56 +23,19 @@ ESCENARIOS: Dict[str, str] = {
     "lopesan_villa_del_conde": "Hotel Lopesan Villa del Conde",
 }
 
-CATALOGO_PUNTOS: Dict[str, Dict[str, float]] = {
-    "Roque Nublo": {"score": 9.8, "visita": 60},
-    "Dunas de Maspalomas": {"score": 9.5, "visita": 45},
-    "Puerto de Mogán": {"score": 8.7, "visita": 60},
-    "Vegueta (Las Palmas)": {"score": 9.2, "visita": 60},
-    "Pico de las Nieves": {"score": 9.0, "visita": 30},
-    "Teror (Basílica)": {"score": 8.2, "visita": 45},
-    "Arucas (Iglesia)": {"score": 8.0, "visita": 40},
-    "Barranco de Guayadeque": {"score": 8.4, "visita": 50},
-    "Cenobio de Valerón": {"score": 7.3, "visita": 35},
-    "Puerto de las Nieves (Agaete)": {"score": 8.6, "visita": 45},
-    "Playa de las Canteras": {"score": 9.0, "visita": 60},
-    "Jardín Botánico Viera y Clavijo": {"score": 8.1, "visita": 50},
-    "Cueva Pintada (Gáldar)": {"score": 8.5, "visita": 60},
-    "Mirador de Unamuno": {"score": 6.8, "visita": 20},
-    "Tejeda (Pueblo)": {"score": 9.1, "visita": 50},
-    "Bufadero de la Garita": {"score": 6.5, "visita": 25},
-    "Presa de las Niñas": {"score": 7.2, "visita": 30},
-    "Playa del Inglés": {"score": 7.4, "visita": 40},
-    "Caldera de Bandama": {"score": 7.8, "visita": 35},
-    "Los Azulejos de Veneguera": {"score": 7.6, "visita": 25},
-    "Cueva del Rey": {"score": 6.7, "visita": 25},
-    "Mirador del Balcón": {"score": 8.3, "visita": 30},
-    "Barranco de los Cernícalos": {"score": 7.9, "visita": 60},
-    "Charco de San Lorenzo": {"score": 7.0, "visita": 30},
-    "Tufia (Poblado y Playa)": {"score": 7.5, "visita": 35},
-    "Jardín de la Marquesa (Arucas)": {"score": 7.1, "visita": 40},
-    "Mundo Aborigen": {"score": 6.4, "visita": 50},
-    "Barranco de Fataga": {"score": 7.5, "visita": 30},
-    "Playa de Amadores": {"score": 8.0, "visita": 50},
-}
+
+def _resolve_data_path(filename: str, scenario: str) -> Path:
+    if scenario not in ESCENARIOS:
+        raise ValueError(f"Escenario desconocido '{scenario}'. Disponibles: {list(ESCENARIOS)}")
+    return DATA_DIR / scenario / filename
 
 
-def _resolve_data_path(filename: str, scenario: Optional[str] = None) -> Path:
-    if scenario is not None:
-        if scenario not in ESCENARIOS:
-            raise ValueError(f"Escenario desconocido '{scenario}'. Disponibles: {list(ESCENARIOS)}")
-        return DATA_DIR / scenario / filename
-    in_data = DATA_DIR / filename
-    return in_data if in_data.exists() else BASE_DIR / filename
+def scenario_output_dir(scenario: str) -> Path:
+    return OUTPUT_DIR / scenario
 
 
-def scenario_output_dir(scenario: Optional[str]) -> Path:
-    return OUTPUT_DIR / scenario if scenario else OUTPUT_DIR
-
-
-def load_poi_catalog(filename: str = "puntos_interes.csv", scenario: Optional[str] = None) -> Dict[str, Dict[str, float]]:
+def load_poi_catalog(scenario: str, filename: str = "puntos_interes.csv") -> Dict[str, Dict[str, float]]:
     filepath = _resolve_data_path(filename, scenario)
-    if not filepath.exists():
-        return CATALOGO_PUNTOS
     df = pd.read_csv(filepath)
     col_name = next((c for c in df.columns if any(k in c.lower() for k in ["nomb", "poi", "lugar"])), df.columns[0])
     col_score = next((c for c in df.columns if any(k in c.lower() for k in ["punt", "score", "valor"])), df.columns[1])
@@ -83,7 +46,7 @@ def load_poi_catalog(filename: str = "puntos_interes.csv", scenario: Optional[st
     }
 
 
-def load_coordinates(filename: str = "coordenadas.csv", scenario: Optional[str] = None) -> Dict[str, Dict[str, float]]:
+def load_coordinates(scenario: str, filename: str = "coordenadas.csv") -> Dict[str, Dict[str, float]]:
     filepath = _resolve_data_path(filename, scenario)
     if not filepath.exists():
         return {}
@@ -97,7 +60,7 @@ def load_coordinates(filename: str = "coordenadas.csv", scenario: Optional[str] 
     }
 
 
-def load_distance_matrix(filename: str = "matriz_tiempos.csv", scenario: Optional[str] = None) -> Tuple[np.ndarray, List[str]]:
+def load_distance_matrix(scenario: str, filename: str = "matriz_tiempos.csv") -> Tuple[np.ndarray, List[str]]:
     filepath = _resolve_data_path(filename, scenario)
     df = pd.read_csv(filepath, index_col=0)
     df.replace([np.inf, -np.inf], np.nan, inplace=True)
@@ -109,15 +72,15 @@ def load_distance_matrix(filename: str = "matriz_tiempos.csv", scenario: Optiona
 def create_problem_instance(
     matrix: np.ndarray,
     node_names: List[str],
-    depot_name: str = "Vegueta (Las Palmas)",
+    depot_name: str,
+    scenario: str,
     t_max: float = 480.0,
     poi_filename: str = "puntos_interes.csv",
-    scenario: Optional[str] = None,
 ) -> OrienteeringProblem:
     if depot_name not in node_names:
         raise ValueError(f"El depósito '{depot_name}' no está en la matriz de tiempos.")
     depot_idx = node_names.index(depot_name)
-    catalog = load_poi_catalog(poi_filename, scenario)
+    catalog = load_poi_catalog(scenario, poi_filename)
     missing = [n for n in node_names if n not in catalog]
     if missing:
         raise ValueError(f"Los siguientes nodos no existen en el catalogo de POIs: {missing}")
@@ -157,13 +120,13 @@ def serialize_route(
     label: str,
     problem: OrienteeringProblem,
     names: List[str],
-    scenario: Optional[str] = None,
+    scenario: str,
 ) -> Dict[str, Any]:
     if not ind:
         return {}
     stops = ind.genes
     route = [problem.depot_idx] + stops + [problem.depot_idx]
-    coords = load_coordinates(scenario=scenario)
+    coords = load_coordinates(scenario)
     tramos = [
         _build_leg_detail(k, route[k], route[k + 1], k == len(stops), problem, names, coords)
         for k in range(len(route) - 1)
@@ -198,7 +161,7 @@ def export_results_json(
     balanced: Optional[Individual],
     exhaustive: Optional[Individual],
     pareto_front: List[Individual],
-    scenario: Optional[str] = None,
+    scenario: str,
 ) -> None:
     filepath.parent.mkdir(parents=True, exist_ok=True)
     data = {
@@ -303,19 +266,14 @@ def plot_convergence(
     plt.close()
 
 
-def run_pipeline(scenario: Optional[str] = "santa_catalina", seed: int = 42) -> None:
-    """Ejecuta el pipeline de un escenario (hotel). Con scenario=None usa los ficheros
-    legados de data/ (modelo antiguo con depósito en Vegueta)."""
+def run_pipeline(scenario: str, seed: int = 42) -> None:
+    """Ejecuta el pipeline de un escenario (hotel de data/<scenario>/)."""
     random.seed(seed)
     np.random.seed(seed)
 
-    if scenario is None:
-        depot_name = "Vegueta (Las Palmas)"
-    else:
-        depot_name = ESCENARIOS[scenario]
     out_dir = scenario_output_dir(scenario)
-    matrix, names = load_distance_matrix("matriz_tiempos.csv", scenario)
-    problem = create_problem_instance(matrix, names, depot_name=depot_name, t_max=480.0, scenario=scenario)
+    matrix, names = load_distance_matrix(scenario)
+    problem = create_problem_instance(matrix, names, depot_name=ESCENARIOS[scenario], scenario=scenario, t_max=480.0)
 
     greedy = GreedyOrienteering(problem)
     greedy_front = greedy.generate_greedy_front(step_minutes=15.0)

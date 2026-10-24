@@ -26,7 +26,7 @@ OPCIONES: Dict[str, Tuple[str, str]] = {
 
 
 def _load_hotel_coords(scenario: str) -> Tuple[float, float]:
-    coords = load_coordinates(scenario=scenario)[ESCENARIOS[scenario]]
+    coords = load_coordinates(scenario)[ESCENARIOS[scenario]]
     return coords["lat"], coords["lon"]
 
 
