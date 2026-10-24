@@ -120,8 +120,8 @@ pip install -r requirements.txt
 python main.py
 
 # 3. Mapas Folium y figuras de la memoria (requieren el paso 2)
-#    build_road_paths.py es opcional: calcula el recorrido por carretera (pip install osmnx scikit-learn;
-#    descarga la red de OSM la primera vez). Sin él, los mapas dibujan los tramos en línea recta.
+#    build_road_paths.py es opcional: calcula el recorrido por carretera con OSMnx
+#    (descarga la red de OSM la primera vez). Sin él, los mapas dibujan los tramos en línea recta.
 python scripts/build_road_paths.py
 python scripts/make_maps.py
 python scripts/make_figures.py
