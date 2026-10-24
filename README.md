@@ -24,6 +24,7 @@ multiobjective_orienteering_gc/
 ├── output/                                    # Artefactos y resultados generados
 │   ├── <escenario>/                           # Un directorio por hotel
 │   │   ├── rutas_pareto.json                  # Rutas óptimas con coordenadas y desglose de tramos
+│   │   ├── caminos_rutas.json                 # Recorrido por carretera de cada tramo (OSMnx)
 │   │   ├── mapa_rutas.html                    # Mapa Folium de las 3 rutas recomendadas
 │   │   ├── comparativa_pareto_vs_greedy.png   # Frente de Pareto vs Línea base Greedy
 │   │   ├── convergencia_nsga2.png             # Curvas de Hipervolumen y Score factible
@@ -36,6 +37,7 @@ multiobjective_orienteering_gc/
 │   └── memoria_datos_y_modelo.md              # Secciones de la memoria: datos, matriz, calibración, modelo e IA
 ├── scripts/
 │   ├── build_time_matrix.ipynb                # Construcción y calibración de la matriz (OSMnx + Google Maps)
+│   ├── build_road_paths.py                    # Caminos por carretera de las rutas (OSMnx)
 │   ├── make_maps.py                           # Mapas Folium a partir de rutas_pareto.json
 │   └── make_figures.py                        # Mapa de POIs, calibración y frentes de Pareto
 ├── src/                                       # Código fuente modular
@@ -118,6 +120,9 @@ pip install -r requirements.txt
 python main.py
 
 # 3. Mapas Folium y figuras de la memoria (requieren el paso 2)
+#    build_road_paths.py es opcional: calcula el recorrido por carretera (pip install osmnx scikit-learn;
+#    descarga la red de OSM la primera vez). Sin él, los mapas dibujan los tramos en línea recta.
+python scripts/build_road_paths.py
 python scripts/make_maps.py
 python scripts/make_figures.py
 

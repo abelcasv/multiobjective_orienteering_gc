@@ -1,8 +1,9 @@
 """Genera un mapa Folium por escenario (hotel) con las 3 rutas recomendadas.
 
 Lee output/<escenario>/rutas_pareto.json (generado por main.py) y escribe
-output/<escenario>/mapa_rutas.html. Los tramos se dibujan como líneas rectas
-entre paradas: no siguen la carretera real.
+output/<escenario>/mapa_rutas.html. Si existe output/<escenario>/caminos_rutas.json
+(generado por scripts/build_road_paths.py), cada tramo sigue la carretera; si no,
+se dibuja como una línea recta entre paradas.
 
 Uso: python scripts/make_maps.py [--escenario santa_catalina]
 """
@@ -10,7 +11,7 @@ import argparse
 import json
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 import folium
 
@@ -50,7 +51,21 @@ def _stop_popup(number: int, leg: Dict[str, Any], arrival_min: float) -> folium.
     return folium.Popup(html, max_width=280)
 
 
-def _add_route_layer(fmap: folium.Map, key: str, route: Dict[str, Any], hotel: Tuple[float, float]) -> None:
+def _add_road_legs(layer: folium.FeatureGroup, route: Dict[str, Any], road_legs: List[Dict[str, Any]], color: str) -> None:
+    for number, (leg, road) in enumerate(zip(route["detalle_tramos"], road_legs), start=1):
+        folium.PolyLine(
+            road["coordenadas"], color=color, weight=4, opacity=0.8,
+            tooltip=f"Tramo {number}: {road['origen']} → {road['destino']} · {leg['tiempo_conduccion_min']:.0f} min",
+        ).add_to(layer)
+
+
+def _add_route_layer(
+    fmap: folium.Map,
+    key: str,
+    route: Dict[str, Any],
+    hotel: Tuple[float, float],
+    road_legs: Optional[List[Dict[str, Any]]] = None,
+) -> None:
     name, color = OPCIONES[key]
     label = (
         f'<span style="color:{color}">&#9632;</span> {name}: {route["puntuacion_total"]:.0f} pts, '
@@ -74,17 +89,30 @@ def _add_route_layer(fmap: folium.Map, key: str, route: Dict[str, Any], hotel: T
         elapsed += leg["tiempo_estancia_min"]
     path.append(hotel)
 
-    folium.PolyLine(path, color=color, weight=4, opacity=0.8, dash_array="8 6").add_to(layer)
+    if road_legs:
+        _add_road_legs(layer, route, road_legs, color)
+    else:
+        folium.PolyLine(path, color=color, weight=4, opacity=0.8, dash_array="8 6").add_to(layer)
     layer.add_to(fmap)
 
 
-def _add_legend(fmap: folium.Map, data: Dict[str, Any]) -> None:
+def _load_road_paths(out_dir: Path) -> Dict[str, List[Dict[str, Any]]]:
+    path = out_dir / "caminos_rutas.json"
+    if not path.exists():
+        return {}
+    with open(path, encoding="utf-8") as f:
+        return json.load(f)["rutas"]
+
+
+def _add_legend(fmap: folium.Map, data: Dict[str, Any], by_road: bool) -> None:
+    trace = ("Recorrido por la red viaria de OpenStreetMap." if by_road
+             else "Tramos en línea recta, no siguen la carretera.")
     html = (
         '<div style="position:fixed;bottom:24px;left:24px;z-index:9999;background:#fff;'
         'padding:8px 12px;border-radius:6px;box-shadow:0 1px 4px rgba(0,0,0,.3);font:12px sans-serif">'
         f"<b>{data['origen_destino_depot']}</b><br>"
         f"Tiempo máximo: {data['tiempo_maximo_minutos'] / 60:.0f} h · Ruta cerrada (salida y vuelta al hotel)<br>"
-        "<i>Tramos en línea recta, no siguen la carretera.</i></div>"
+        f"<i>{trace}</i></div>"
     )
     fmap.get_root().html.add_child(folium.Element(html))
 
@@ -103,12 +131,13 @@ def build_map(scenario: str) -> Path:
         tooltip=ESCENARIOS[scenario],
     ).add_to(fmap)
 
+    road_paths = _load_road_paths(out_dir)
     for key, route in data["opciones_recomendadas"].items():
         if route:
-            _add_route_layer(fmap, key, route, hotel)
+            _add_route_layer(fmap, key, route, hotel, road_paths.get(key))
 
     folium.LayerControl(collapsed=False).add_to(fmap)
-    _add_legend(fmap, data)
+    _add_legend(fmap, data, by_road=bool(road_paths))
 
     out_path = out_dir / "mapa_rutas.html"
     fmap.save(str(out_path))
