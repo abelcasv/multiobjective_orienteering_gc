@@ -15,7 +15,7 @@ Para resolver el problema de orientación multiobjetivo (*Multi-Objective Orient
 ### 1.1. Representación del Individuo y Espacio de Búsqueda
 
 - **Cromosoma:** Un individuo se codifica como una lista ordenada de enteros $R = [g_1, g_2, \dots, g_k]$ sin duplicados, donde cada gen $g_j \in \{0, \dots, n-1\} \setminus \{h\}$ es el índice de un punto de interés (POI) a visitar.
-- **Longitud variable:** La longitud $k$ no es fija a priori y evoluciona dinámicamente con los operadores genéticos. En las rutas finales del frente de Pareto de ambos hoteles, las soluciones factibles abarcan desde **1 hasta 7 paradas** ($1 \le k \le 7$). La cota superior de seguridad del cruce está fijada en 12 nodos (`max_len = 12` en `crossover`), dado que cualquier ruta de más de 8 paradas supera con holgura las 8 h de conducción y visita en Gran Canaria.
+- **Longitud variable:** La longitud $k$ no es fija a priori y evoluciona dinámicamente con los operadores genéticos. En las rutas finales del frente de Pareto, las soluciones factibles abarcan desde **1 hasta 7 paradas en Santa Catalina (1 a 6 en Lopesan)**. La cota superior de seguridad del cruce está fijada en 12 nodos (`max_len = 12` en `crossover`), dado que en la práctica ninguna solución factible del frente llega a superar las 7 paradas.
 - **Depósito implícito:** El hotel base (nodo depósito $h$, con puntuación 0 y tiempo de visita 0 min) no forma parte del cromosoma. Se añade de forma fija al inicio y al final durante la evaluación: la ruta física evaluada es siempre $[h, g_1, \dots, g_k, h]$.
 
 ### 1.2. Operadores Genéticos Adaptados
@@ -51,7 +51,7 @@ De este modo, las soluciones infactibles actúan como peldaños intermedios haci
 
 ### 1.4. Parámetros Elegidos y Justificación
 
-Los hiperparámetros del algoritmo genético se fijaron de forma **empírica** mediante pruebas preliminares de convergencia y tiempo de cómputo, sin realizar un barrido exhaustivo en rejilla:
+Los hiperparámetros del algoritmo genético se fijaron de forma **empírica**, sin realizar un barrido exhaustivo en rejilla:
 
 | Parámetro | Valor | Justificación empírica |
 |---|:---:|---|
@@ -59,7 +59,7 @@ Los hiperparámetros del algoritmo genético se fijaron de forma **empírica** m
 | Número de generaciones ($G$) | **200** | Permite una convergencia sólida: con la semilla 42 en Santa Catalina, el hipervolumen alcanza el **99 % de su valor final en la generación 139** (11.472 de 11.580) y sigue mejorando despacio hasta la 200 (`convergencia_nsga2.png`). |
 | Probabilidad de cruce ($p_c$) | **0,85** | Tasa alta habitual en algoritmos genéticos para favorecer la recombinación de subrutas eficientes. |
 | Probabilidad de mutación ($p_m$) | **0,35** | Moderadamente alta para compensar el espacio combinatorio discreto y evitar el estancamiento prematuro en óptimos locales. |
-| Rango de inicialización | **3 a 7 POIs** | Cada individuo inicial se genera tomando al azar entre 3 y 7 paradas sin reemplazo. En Santa Catalina, el 77 % de estas rutas iniciales supera las 8 h (mediana de 650 min), lo que permite a las reglas de Deb guiar rápidamente a la población desde el espacio no factible hacia el factible en las primeras 20–30 generaciones. |
+| Rango de inicialización | **3 a 7 POIs** | Cada individuo inicial se genera tomando al azar entre 3 y 7 paradas sin reemplazo. En Santa Catalina, el 77 % de estas rutas iniciales supera las 8 h (mediana de 650 min), lo que permite a las reglas de Deb guiar a la población hacia el espacio factible en apenas unas 4 o 5 generaciones (donde la población alcanza ya el 100 % de factibilidad). |
 | Presupuesto de evaluaciones | **20.100** | $N + N \times G = 100 + 100 \times 200 = \mathbf{20.100}$ evaluaciones de la función objetivo por corrida. |
 
 ---
@@ -111,7 +111,7 @@ Siguiendo las pautas metodológicas de la asignatura:
 
 Los resultados completos están guardados en `output/<hotel>/resumen_estadistico.json` y `resultados_estadisticos_semillas.csv`, y se visualizan en los diagramas de cajas de `output/<hotel>/boxplot_hipervolumen.png`.
 
-> **Nota sobre la dispersión:** Las desviaciones típicas mostradas en las tablas corresponden a la desviación típica poblacional (`np.std`, con $N=15$), que coincide con la guardada en los ficheros JSON del repositorio (24,5 en Santa Catalina frente a 25,4 si se calcula la cuasivarianza muestral con $N-1$).
+> **Nota sobre la dispersión:** Las desviaciones típicas mostradas en las tablas corresponden a la desviación típica poblacional (`np.std`, con $N=15$), que coincide con la guardada en los ficheros JSON del repositorio (24,5 en Santa Catalina frente a 25,4 si se calcula la desviación típica muestral con $N-1$).
 
 ### 4.1. Hotel Santa Catalina (Las Palmas)
 
