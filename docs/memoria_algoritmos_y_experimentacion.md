@@ -15,24 +15,25 @@ Para resolver el problema de orientación multiobjetivo (*Multi-Objective Orient
 ### 1.1. Representación del Individuo y Espacio de Búsqueda
 
 - **Cromosoma:** Un individuo se codifica como una lista ordenada de enteros $R = [g_1, g_2, \dots, g_k]$ sin duplicados, donde cada gen $g_j \in \{0, \dots, n-1\} \setminus \{h\}$ es el índice de un punto de interés (POI) a visitar.
-- **Longitud variable:** La longitud $k$ no es fija ($2 \le k \le 30$). Esto permite que el algoritmo explore de forma simultánea itinerarios cortos y rápidos (como la opción *Express*, con 2 paradas) e itinerarios extensos que aprovechan al máximo la jornada (como la opción *Exhaustiva*, con 7 paradas).
+- **Longitud variable:** La longitud $k$ no es fija a priori y evoluciona dinámicamente con los operadores genéticos. En las rutas finales del frente de Pareto de ambos hoteles, las soluciones factibles abarcan desde **1 hasta 7 paradas** ($1 \le k \le 7$). La cota superior de seguridad del cruce está fijada en 12 nodos (`max_len = 12` en `crossover`), dado que cualquier ruta de más de 8 paradas supera con holgura las 8 h de conducción y visita en Gran Canaria.
 - **Depósito implícito:** El hotel base (nodo depósito $h$, con puntuación 0 y tiempo de visita 0 min) no forma parte del cromosoma. Se añade de forma fija al inicio y al final durante la evaluación: la ruta física evaluada es siempre $[h, g_1, \dots, g_k, h]$.
 
 ### 1.2. Operadores Genéticos Adaptados
 
 Dado que el problema requiere secuencias sin repetición de longitud variable, los operadores continuos estándar no son aplicables. Se han implementado operadores discretos especializados (`src/algorithms/genetic_algorithm.py`):
 
-1. **Cruce de Preservación de Orden con Longitud Variable (*Single-Cut Preservation / Modified OX*):**
+1. **Cruce de Preservación de Orden con Acotación (*Single-Cut Preservation with Remainder*):**
    - Se toma un punto de corte aleatorio en el primer progenitor $P_1$.
-   - El primer descendiente recibe la primera parte de los genes de $P_1$.
-   - El resto de posiciones se completa añadiendo los genes del segundo progenitor $P_2$ en el orden en que aparecen, ignorando los que ya estén presentes.
+   - El primer descendiente recibe el prefijo de $P_1$ hasta el corte.
+   - A continuación, se añaden todos los genes del segundo progenitor $P_2$ que no estuvieran ya en el prefijo, manteniendo su orden relativo de aparición.
+   - La lista resultante se recorta a un máximo de 12 genes (`child_genes[:max_len]`).
    - El segundo descendiente se construye de manera simétrica intercambiando los roles de $P_1$ y $P_2$.
-   - La longitud de cada descendiente queda acotada entre 2 y el máximo de las longitudes de sus progenitores, permitiendo al algoritmo variar dinámicamente el número de paradas.
+   - **Comportamiento sobre la longitud:** Al concatenar el prefijo de uno con el resto del otro, el cruce tiende a generar hijos más largos que cualquiera de los dos padres (unión de genes sin duplicados). El crecimiento indefinido de la ruta lo contiene el límite de `max_len = 12`, el operador de mutación por eliminación y, fundamentalmente, la presión selectiva de la restricción temporal de 8 h.
 
-2. **Mutación Compuesta (4 Operadores Ponderados):**
-   Para modificar tanto el subconjunto de lugares visitados como el orden del trayecto, cada mutación aplica uno de cuatro operadores con probabilidades calibradas:
+2. **Mutación Compuesta (4 Operadores):**
+   Para modificar tanto el subconjunto de lugares visitados como el orden del trayecto, cada mutación aplica uno de cuatro operadores con probabilidades fijadas de forma empírica:
    - **Inserción aleatoria (40 %):** Selecciona un POI disponible que no esté en la ruta y lo inserta en una posición aleatoria. Permite descubrir nuevas atracciones y aumentar la puntuación total.
-   - **Eliminación aleatoria (30 %):** Suprime una parada al azar (siempre que la ruta tenga más de una). Esencial para reducir tiempo y reparar rutas que superan el límite de 8 h.
+   - **Eliminación aleatoria (30 %):** Suprime una parada al azar (siempre que la ruta tenga más de una). Esencial para reducir tiempo, contrarrestar la tendencia expansiva del cruce y reparar rutas que superan el límite de 8 h.
    - **Intercambio / *Swap* (20 %):** Intercambia la posición de dos paradas en la ruta. Permite reordenar el recorrido para aprovechar la asimetría de la red viaria sin cambiar los lugares visitados.
    - **Inversión de segmento (10 %):** Invierte el orden de un tramo completo entre dos posiciones elegidas al azar (operador 2-opt). Deshace bucles ineficientes en trayectos donde la ida y la vuelta se solapan.
 
@@ -50,13 +51,15 @@ De este modo, las soluciones infactibles actúan como peldaños intermedios haci
 
 ### 1.4. Parámetros Elegidos y Justificación
 
-| Parámetro | Valor | Justificación |
+Los hiperparámetros del algoritmo genético se fijaron de forma **empírica** mediante pruebas preliminares de convergencia y tiempo de cómputo, sin realizar un barrido exhaustivo en rejilla:
+
+| Parámetro | Valor | Justificación empírica |
 |---|:---:|---|
 | Tamaño de población ($N$) | **100** | Mantiene suficiente diversidad genética a lo largo de todo el frente sin penalizar el coste por generación ($O(M N^2)$). |
-| Número de generaciones ($G$) | **200** | Comprobado en las curvas de convergencia (`output/<hotel>/convergencia_nsga2.png`): el hipervolumen se estabiliza a partir de las generaciones 120–140. |
-| Probabilidad de cruce ($p_c$) | **0,85** | Tasa alta para favorecer la recombinación de subrutas eficientes entre individuos distintos. |
+| Número de generaciones ($G$) | **200** | Permite una convergencia sólida: con la semilla 42 en Santa Catalina, el hipervolumen alcanza el **99 % de su valor final en la generación 139** (11.472 de 11.580) y sigue mejorando despacio hasta la 200 (`convergencia_nsga2.png`). |
+| Probabilidad de cruce ($p_c$) | **0,85** | Tasa alta habitual en algoritmos genéticos para favorecer la recombinación de subrutas eficientes. |
 | Probabilidad de mutación ($p_m$) | **0,35** | Moderadamente alta para compensar el espacio combinatorio discreto y evitar el estancamiento prematuro en óptimos locales. |
-| Rango de inicialización | **3 a 7 POIs** | Las rutas iniciales se crean con un número de paradas cuyo tiempo estimado cae en un rango viable (150–350 min), acelerando la fase inicial de convergencia. |
+| Rango de inicialización | **3 a 7 POIs** | Cada individuo inicial se genera tomando al azar entre 3 y 7 paradas sin reemplazo. En Santa Catalina, el 77 % de estas rutas iniciales supera las 8 h (mediana de 650 min), lo que permite a las reglas de Deb guiar rápidamente a la población desde el espacio no factible hacia el factible en las primeras 20–30 generaciones. |
 | Presupuesto de evaluaciones | **20.100** | $N + N \times G = 100 + 100 \times 200 = \mathbf{20.100}$ evaluaciones de la función objetivo por corrida. |
 
 ---
@@ -108,6 +111,8 @@ Siguiendo las pautas metodológicas de la asignatura:
 
 Los resultados completos están guardados en `output/<hotel>/resumen_estadistico.json` y `resultados_estadisticos_semillas.csv`, y se visualizan en los diagramas de cajas de `output/<hotel>/boxplot_hipervolumen.png`.
 
+> **Nota sobre la dispersión:** Las desviaciones típicas mostradas en las tablas corresponden a la desviación típica poblacional (`np.std`, con $N=15$), que coincide con la guardada en los ficheros JSON del repositorio (24,5 en Santa Catalina frente a 25,4 si se calcula la cuasivarianza muestral con $N-1$).
+
 ### 4.1. Hotel Santa Catalina (Las Palmas)
 
 | Algoritmo | Presupuesto | Hipervolumen (Media ± Std) | Spread $\Delta$ (Media) | $p$-valor vs NSGA-II | ¿Significativo? |
@@ -142,8 +147,8 @@ $$f_1(x) = x_1, \qquad g(x) = 1 + \frac{9}{m-1} \sum_{i=2}^{m} x_i, \qquad f_2(x
 El frente de Pareto teórico exacto se alcanza con $g(x) = 1$, dando la curva convexa $f_2 = 1 - \sqrt{f_1}$ para $f_1 \in [0, 1]$.
 
 ### 5.1. Operadores Continuos y Selección
-- **Cruce:** *Simulated Binary Crossover* (SBX) con índice de distribución $\eta_c = 15{,}0$ y probabilidad $p_c = 0{,}9$.
-- **Mutación:** Mutación polinomial con índice de distribución $\eta_m = 20{,}0$ y probabilidad $p_m = 1/m = 1/30$.
+- **Cruce:** *Simulated Binary Crossover* (SBX) con índice de distribución $\eta_c = 15{,}0$. El operador se aplica a cada par seleccionado y realiza el cruce en cada variable con una probabilidad de intercambio independiente de 0,5 (`random.random() <= 0.5`).
+- **Mutación:** Mutación polinomial con índice de distribución $\eta_m = 20{,}0$ y probabilidad $p_m = 1/m = 1/30$ por variable.
 - **Selección:** Torneo binario aglomerado (*Crowded Tournament Selection* de Deb et al., 2002), seleccionando por rango de dominancia y desempatando por mayor distancia de aglomeración.
 - **Configuración:** Población de 100 individuos, 250 generaciones y semilla fija (`seed=42`).
 
