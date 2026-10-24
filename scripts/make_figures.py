@@ -3,7 +3,8 @@
 Genera en output/figuras/:
 - mapa_pois_hoteles.png: los 30 POIs (color = puntuación, tamaño = tiempo de visita) y los 2 hoteles.
 - calibracion_google.png y calibracion_google.csv: los 12 pares medidos en Google Maps frente a
-  la matriz sin factor global y la matriz calibrada (reproduce la celda 5b del notebook).
+  la matriz sin factor global y la matriz calibrada (reproduce la celda 5b del notebook), más
+  4 pares de validación con hotel (validacion_hoteles.csv) que no se usaron para calibrar.
 - frentes_pareto.png: frente de Pareto de NSGA-II de cada hotel con las 3 rutas recomendadas.
 
 Uso: python scripts/make_figures.py   (requiere haber ejecutado antes main.py)
@@ -63,6 +64,15 @@ PARES_GOOGLE: List[Tuple[str, str, float]] = [
     ("Pico de las Nieves", "Vegueta (Las Palmas)", 52),
     ("Mirador del Balcón", "Puerto de las Nieves (Agaete)", 35),
     ("Barranco de Fataga", "Dunas de Maspalomas", 28),
+]
+
+# Pares con hotel medidos en Google Maps después de construir la matriz (no se usaron para calibrar):
+# origen, destino, mínimo y máximo en Google (Dunas depende del acceso).
+PARES_VALIDACION: List[Tuple[str, str, float, float]] = [
+    ("Hotel Lopesan Villa del Conde", "Dunas de Maspalomas", 4, 10),
+    ("Hotel Lopesan Villa del Conde", "Roque Nublo", 76, 76),
+    ("Hotel Santa Catalina (Las Palmas)", "Vegueta (Las Palmas)", 10, 10),
+    ("Vegueta (Las Palmas)", "Hotel Santa Catalina (Las Palmas)", 10, 10),
 ]
 
 plt.rcParams.update({
@@ -129,7 +139,16 @@ def build_calibration_table() -> pd.DataFrame:
     return table.round(1)
 
 
-def plot_calibration(table: pd.DataFrame, output_path: Path) -> None:
+def build_validation_table() -> pd.DataFrame:
+    calibrated = pd.read_csv(AUX_DIR / "Matriz_completa_con_hoteles.csv", index_col=0)
+    table = pd.DataFrame(PARES_VALIDACION, columns=["origen", "destino", "google_min_min", "google_max_min"])
+    table["google_min"] = (table["google_min_min"] + table["google_max_min"]) / 2
+    table["calibrado_min"] = [calibrated.loc[o, d] for o, d, _, _ in PARES_VALIDACION]
+    table["error_calibrado_min"] = table["calibrado_min"] - table["google_min"]
+    return table.round(1)
+
+
+def plot_calibration(table: pd.DataFrame, validation: pd.DataFrame, output_path: Path) -> None:
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(13, 5.5), gridspec_kw={"width_ratios": [1, 1.4]})
     series = [("sin_factor_min", "Sin factor global", "#2a78d6"), ("calibrado_min", "Calibrada", "#eb6834")]
 
@@ -139,6 +158,13 @@ def plot_calibration(table: pd.DataFrame, output_path: Path) -> None:
         mae = (table[col] - table["google_min"]).abs().mean()
         ax1.scatter(table["google_min"], table[col], s=50, color=color, edgecolors="white",
                     linewidths=1.5, zorder=3, label=f"{label} (error medio {mae:.1f} min)")
+    mae_val = validation["error_calibrado_min"].abs().mean()
+    ax1.errorbar(validation["google_min"], validation["calibrado_min"],
+                 xerr=[validation["google_min"] - validation["google_min_min"],
+                       validation["google_max_min"] - validation["google_min"]],
+                 fmt="D", markersize=7, markerfacecolor="white", markeredgecolor="#1baf7a", markeredgewidth=1.8,
+                 ecolor="#1baf7a", elinewidth=1.2, capsize=3, zorder=4,
+                 label=f"Validación con hoteles, calibrada (error medio {mae_val:.1f} min)")
     ax1.set_xlim(0, lim)
     ax1.set_ylim(0, lim)
     ax1.set_aspect("equal")
@@ -208,11 +234,14 @@ def main() -> None:
     plot_pois_map(FIG_DIR / "mapa_pois_hoteles.png")
     table = build_calibration_table()
     table.to_csv(FIG_DIR / "calibracion_google.csv", index=False)
-    plot_calibration(table, FIG_DIR / "calibracion_google.png")
+    validation = build_validation_table()
+    validation.to_csv(FIG_DIR / "validacion_hoteles.csv", index=False)
+    plot_calibration(table, validation, FIG_DIR / "calibracion_google.png")
     plot_pareto_fronts(FIG_DIR / "frentes_pareto.png")
     print(table.to_string(index=False))
     print(f"\nError medio absoluto: sin factor {table['error_sin_factor_min'].abs().mean():.1f} min | "
           f"calibrada {table['error_calibrado_min'].abs().mean():.1f} min")
+    print("\n" + validation.to_string(index=False))
     print(f"Factor global aplicado (calibrada / sin factor): x{(table['calibrado_min'] / table['sin_factor_min']).median():.3f}")
     print(f"Figuras guardadas en {FIG_DIR.relative_to(BASE_DIR)}/")
 

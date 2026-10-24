@@ -35,4 +35,13 @@ Con `scripts/build_time_matrix.ipynb` (ejecutable en Colab):
 
 - Los tiempos son aproximados: no incluyen tráfico ni aparcamiento y pueden desviarse de Google Maps, sobre todo en rutas de montaña.
 - Las puntuaciones y los tiempos de visita son subjetivos: otro criterio cambiaría el frente de Pareto y las rutas recomendadas.
-- Pares pendientes de validar con Google Maps: Lopesan -> Dunas de Maspalomas (matriz: 2 min, parece corto), Lopesan -> Roque Nublo (56 min), Santa Catalina <-> Vegueta (4,3 min ida / 7,3 min vuelta).
+- Validación con 4 pares con hotel medidos en Google Maps después de construir la matriz (no se usaron para calibrar). La matriz es optimista en todos, con un error medio de 8,2 min frente a los 2,9 min de los pares de calibración (`output/figuras/validacion_hoteles.csv`):
+
+  | Par | Matriz (min) | Google Maps (min) |
+  |---|---|---|
+  | Lopesan -> Dunas de Maspalomas | 2,3 | 4-10 (según el acceso) |
+  | Lopesan -> Roque Nublo | 56,3 | 76 |
+  | Santa Catalina -> Vegueta | 4,3 | 10 |
+  | Vegueta -> Santa Catalina | 7,3 | 10 |
+
+  Los mayores errores están en montaña (como Roque Nublo -> Puerto de Mogán en la calibración) y en tramos urbanos cortos, donde semáforos y tráfico pesan más que la velocidad de la vía. Las rutas que suben a la cumbre desde el sur y los trayectos urbanos son, por tanto, más largos en la realidad.

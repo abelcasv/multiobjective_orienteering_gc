@@ -1,0 +1,5 @@
+origen,destino,google_min_min,google_max_min,google_min,calibrado_min,error_calibrado_min
+Hotel Lopesan Villa del Conde,Dunas de Maspalomas,4,10,7.0,2.3,-4.7
+Hotel Lopesan Villa del Conde,Roque Nublo,76,76,76.0,56.3,-19.7
+Hotel Santa Catalina (Las Palmas),Vegueta (Las Palmas),10,10,10.0,4.3,-5.7
+Vegueta (Las Palmas),Hotel Santa Catalina (Las Palmas),10,10,10.0,7.3,-2.7
