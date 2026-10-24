@@ -32,6 +32,8 @@ multiobjective_orienteering_gc/
 │   │   └── resumen_estadistico.json           # Métricas agregadas y p-valores de Wilcoxon
 │   ├── figuras/                               # Figuras para la memoria (scripts/make_figures.py)
 │   └── validacion_zdt1.png                    # Validación analítica de NSGA-II en ZDT1
+├── docs/
+│   └── memoria_datos_y_modelo.md              # Secciones de la memoria: datos, matriz, calibración, modelo e IA
 ├── scripts/
 │   ├── build_time_matrix.ipynb                # Construcción y calibración de la matriz (OSMnx + Google Maps)
 │   ├── make_maps.py                           # Mapas Folium a partir de rutas_pareto.json
