@@ -29,10 +29,11 @@ Con `scripts/build_time_matrix.ipynb` (ejecutable en Colab):
 - Red viaria: © colaboradores de OpenStreetMap, licencia ODbL (https://www.openstreetmap.org/copyright).
 - Tiempos de referencia para la calibración: consultas manuales a Google Maps (solo una muestra pequeña, no se redistribuyen datos de Google).
 - Coordenadas de los hoteles: obtenidas de Google Maps.
-- Puntuaciones y tiempos de visita de los POIs: TODO (Hugo): indicar el criterio o la fuente.
+- Puntuaciones (escala 0-10) y tiempos de visita (min) de los POIs: propuestos con un asistente de IA a partir del interés turístico general de cada lugar y revisados a mano por el equipo. Son valores ilustrativos, no proceden de una fuente medible (ver la sección de uso de IA de la memoria). Los hoteles tienen puntuación 0 y visita 0 por ser el depósito.
 
 ## Limitaciones
 
 - Los tiempos son aproximados: no incluyen tráfico ni aparcamiento y pueden desviarse de Google Maps, sobre todo en rutas de montaña.
+- Las puntuaciones y los tiempos de visita son subjetivos: otro criterio cambiaría el frente de Pareto y las rutas recomendadas.
 - Pares pendientes de validar con Google Maps: Lopesan -> Dunas de Maspalomas (matriz: 2 min, parece corto), Lopesan -> Roque Nublo (56 min), Santa Catalina <-> Vegueta (4,3 min ida / 7,3 min vuelta).
 - Los ficheros `puntos_interes.csv`, `matriz_tiempos.csv` y `coordenadas.csv` de la raíz de `data/` pertenecen al modelo anterior (depósito en Vegueta) y ya no los usa `main.py`.
