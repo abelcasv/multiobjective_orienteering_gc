@@ -9,8 +9,8 @@ class WeightedSumGA:
     def __init__(
         self,
         problem: OrienteeringProblem,
-        pop_size: int = 50,
-        generations: int = 39,
+        pop_size: int = 30,
+        generations: int = 66,
         weights: Optional[List[float]] = None,
     ):
         self.problem = problem

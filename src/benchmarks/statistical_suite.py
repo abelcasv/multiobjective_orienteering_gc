@@ -56,7 +56,7 @@ def _evaluate_algorithm_run(
         front_rs = RandomSearchOrienteering(problem, total_evaluations=20100).run()
         pts = [(ind.total_time, ind.score) for ind in front_rs]
     else:
-        front_ws = WeightedSumGA(problem, pop_size=50, generations=39).run()
+        front_ws = WeightedSumGA(problem, pop_size=30, generations=66).run()
         pts = [(ind.total_time, ind.score) for ind in front_ws]
     return pts, time.time() - t0
 
