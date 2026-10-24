@@ -74,7 +74,7 @@ La matriz es optimista en los cuatro casos. El error de validación (8,2 min) es
 - **Montaña.** Es el mayor error: Lopesan → Roque Nublo sale 20 min corto (−26 %) y Roque Nublo → Puerto de Mogán 11 min corto, incluso después de calibrar. Un único factor global no basta para las carreteras sinuosas de la cumbre.
 - **Ciudad.** En trayectos urbanos cortos pesan semáforos, tráfico y aparcamiento, que el modelo no incluye. Santa Catalina → Vegueta da 4,3 min frente a 10 min en Google.
 - **Acceso a las playas.** La posición del POI es un punto, pero llegar a las Dunas desde el hotel tarda de 4 a 10 min según el acceso.
-- **Conexión de Presa de las Niñas.** En el grafo parece faltar la conexión directa hacia la cumbre: Presa de las Niñas → Tejeda da 132 min porque el camino mínimo rodea por Mogán. Probablemente falta o está restringido en OSM el tramo de la GC-605 hacia Ayacata. Este POI no aparece en ninguna ruta del frente.
+- **Carreteras cortadas.** La red refleja los cortes de carretera actuales. Por eso Presa de las Niñas → Tejeda tarda 132 min: el camino mínimo rodea por Mogán. El tiempo es correcto con esos cortes, pero si se reabren las carreteras habría que regenerar la matriz. Este POI no aparece en ninguna ruta del frente.
 - **Tráfico.** No se modela variación horaria; los tiempos de referencia corresponden a un día laborable a media mañana.
 
 En consecuencia, las rutas que suben a la cumbre desde el sur o que encadenan tramos urbanos durarán en la realidad algo más que lo calculado. Una mejora natural sería usar factores distintos por tipo de trayecto (urbano, autopista, montaña) o una API de rutas con tráfico.

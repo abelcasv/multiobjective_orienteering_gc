@@ -34,7 +34,7 @@ Con `scripts/build_time_matrix.ipynb` (ejecutable en Colab):
 ## Limitaciones
 
 - Los tiempos son aproximados: no incluyen tráfico ni aparcamiento y pueden desviarse de Google Maps, sobre todo en rutas de montaña.
-- Presa de las Niñas parece mal conectada en el grafo: todos sus tiempos hacia la cumbre son muy altos (Tejeda 132 min, Roque Nublo 108 min) porque el camino mínimo rodea por Mogán. Probablemente falta o está restringido el tramo de la GC-605 hacia Ayacata en OSM. Pendiente de revisar en el notebook y de comprobar en Google Maps; mientras tanto, este POI no aparece en ninguna ruta del frente de Pareto.
+- Presa de las Niñas tiene tiempos muy altos hacia la cumbre (Tejeda 132 min, Roque Nublo 108 min) porque hay carreteras cortadas en la zona y el camino mínimo rodea por Mogán. Es un tiempo correcto con los cortes actuales: si se reabren, habría que regenerar la matriz. Este POI no aparece en ninguna ruta del frente de Pareto.
 - Las puntuaciones y los tiempos de visita son subjetivos: otro criterio cambiaría el frente de Pareto y las rutas recomendadas.
 - Validación con 4 pares con hotel medidos en Google Maps después de construir la matriz (no se usaron para calibrar). La matriz es optimista en todos, con un error medio de 8,2 min frente a los 2,9 min de los pares de calibración (`output/figuras/validacion_hoteles.csv`):
 
