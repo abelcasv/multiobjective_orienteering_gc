@@ -17,3 +17,7 @@ ENV/
 
 # IAs
 .claude/
+
+# Grafo de OSMnx (se descarga con scripts/build_road_paths.py)
+*.graphml
+cache/
