@@ -1,0 +1,614 @@
+{
+  "proyecto": "Optimización Multiobjetivo de Rutas Turísticas en Gran Canaria",
+  "asignatura": "Optimización y Heurística",
+  "algoritmo": "NSGA-II (Deb et al., 2002)",
+  "baseline_comparado": "Greedy Multi-Objetivo",
+  "origen_destino_depot": "Hotel Lopesan Villa del Conde",
+  "tiempo_maximo_minutos": 480.0,
+  "metricas_comparativas": {
+    "hipervolumen_nsga2": 10027.14,
+    "hipervolumen_greedy": 9095.05,
+    "mejora_porcentual_hv": 10.25
+  },
+  "opciones_recomendadas": {
+    "express": {
+      "tipo_opcion": "Opción Express",
+      "puntuacion_total": 22.0,
+      "tiempo_total_min": 218.37,
+      "tiempo_total_horas": 3.64,
+      "tiempo_conduccion_min": 98.37,
+      "tiempo_visitas_min": 120.0,
+      "eficiencia_score_hora": 6.04,
+      "numero_paradas": 3,
+      "paradas_ordenadas": [
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita",
+        "Barranco de Fataga"
+      ],
+      "paradas_detalle": [
+        {
+          "nombre": "Tufia (Poblado y Playa)",
+          "coordenadas": {
+            "lat": 27.9602,
+            "lon": -15.3822
+          }
+        },
+        {
+          "nombre": "Bufadero de la Garita",
+          "coordenadas": {
+            "lat": 27.9926,
+            "lon": -15.3853
+          }
+        },
+        {
+          "nombre": "Barranco de Fataga",
+          "coordenadas": {
+            "lat": 27.860383,
+            "lon": -15.568587
+          }
+        }
+      ],
+      "itinerario_completo": [
+        "Hotel Lopesan Villa del Conde",
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita",
+        "Barranco de Fataga",
+        "Hotel Lopesan Villa del Conde"
+      ],
+      "detalle_tramos": [
+        {
+          "tramo": 1,
+          "origen": "Hotel Lopesan Villa del Conde",
+          "destino": "Tufia (Poblado y Playa)",
+          "tiempo_conduccion_min": 29.08,
+          "tiempo_estancia_min": 45.0,
+          "score_parada": 7.0,
+          "coordenadas_destino": {
+            "lat": 27.9602,
+            "lon": -15.3822
+          }
+        },
+        {
+          "tramo": 2,
+          "origen": "Tufia (Poblado y Playa)",
+          "destino": "Bufadero de la Garita",
+          "tiempo_conduccion_min": 6.51,
+          "tiempo_estancia_min": 30.0,
+          "score_parada": 7.0,
+          "coordenadas_destino": {
+            "lat": 27.9926,
+            "lon": -15.3853
+          }
+        },
+        {
+          "tramo": 3,
+          "origen": "Bufadero de la Garita",
+          "destino": "Barranco de Fataga",
+          "tiempo_conduccion_min": 38.37,
+          "tiempo_estancia_min": 45.0,
+          "score_parada": 8.0,
+          "coordenadas_destino": {
+            "lat": 27.860383,
+            "lon": -15.568587
+          }
+        },
+        {
+          "tramo": 4,
+          "origen": "Barranco de Fataga",
+          "destino": "Hotel Lopesan Villa del Conde",
+          "tiempo_conduccion_min": 24.41,
+          "tiempo_estancia_min": 0.0,
+          "score_parada": 0.0,
+          "coordenadas_destino": {
+            "lat": 27.742417,
+            "lon": -15.606604
+          }
+        }
+      ]
+    },
+    "equilibrada": {
+      "tipo_opcion": "Opción Equilibrada",
+      "puntuacion_total": 22.0,
+      "tiempo_total_min": 218.37,
+      "tiempo_total_horas": 3.64,
+      "tiempo_conduccion_min": 98.37,
+      "tiempo_visitas_min": 120.0,
+      "eficiencia_score_hora": 6.04,
+      "numero_paradas": 3,
+      "paradas_ordenadas": [
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita",
+        "Barranco de Fataga"
+      ],
+      "paradas_detalle": [
+        {
+          "nombre": "Tufia (Poblado y Playa)",
+          "coordenadas": {
+            "lat": 27.9602,
+            "lon": -15.3822
+          }
+        },
+        {
+          "nombre": "Bufadero de la Garita",
+          "coordenadas": {
+            "lat": 27.9926,
+            "lon": -15.3853
+          }
+        },
+        {
+          "nombre": "Barranco de Fataga",
+          "coordenadas": {
+            "lat": 27.860383,
+            "lon": -15.568587
+          }
+        }
+      ],
+      "itinerario_completo": [
+        "Hotel Lopesan Villa del Conde",
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita",
+        "Barranco de Fataga",
+        "Hotel Lopesan Villa del Conde"
+      ],
+      "detalle_tramos": [
+        {
+          "tramo": 1,
+          "origen": "Hotel Lopesan Villa del Conde",
+          "destino": "Tufia (Poblado y Playa)",
+          "tiempo_conduccion_min": 29.08,
+          "tiempo_estancia_min": 45.0,
+          "score_parada": 7.0,
+          "coordenadas_destino": {
+            "lat": 27.9602,
+            "lon": -15.3822
+          }
+        },
+        {
+          "tramo": 2,
+          "origen": "Tufia (Poblado y Playa)",
+          "destino": "Bufadero de la Garita",
+          "tiempo_conduccion_min": 6.51,
+          "tiempo_estancia_min": 30.0,
+          "score_parada": 7.0,
+          "coordenadas_destino": {
+            "lat": 27.9926,
+            "lon": -15.3853
+          }
+        },
+        {
+          "tramo": 3,
+          "origen": "Bufadero de la Garita",
+          "destino": "Barranco de Fataga",
+          "tiempo_conduccion_min": 38.37,
+          "tiempo_estancia_min": 45.0,
+          "score_parada": 8.0,
+          "coordenadas_destino": {
+            "lat": 27.860383,
+            "lon": -15.568587
+          }
+        },
+        {
+          "tramo": 4,
+          "origen": "Barranco de Fataga",
+          "destino": "Hotel Lopesan Villa del Conde",
+          "tiempo_conduccion_min": 24.41,
+          "tiempo_estancia_min": 0.0,
+          "score_parada": 0.0,
+          "coordenadas_destino": {
+            "lat": 27.742417,
+            "lon": -15.606604
+          }
+        }
+      ]
+    },
+    "exhaustiva": {
+      "tipo_opcion": "Opción Exhaustiva",
+      "puntuacion_total": 46.0,
+      "tiempo_total_min": 479.86,
+      "tiempo_total_horas": 8.0,
+      "tiempo_conduccion_min": 194.86,
+      "tiempo_visitas_min": 285.0,
+      "eficiencia_score_hora": 5.75,
+      "numero_paradas": 6,
+      "paradas_ordenadas": [
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita",
+        "Cueva Pintada (Gáldar)",
+        "Firgas (Paseo de Gran Canaria)",
+        "Arucas (Iglesia)",
+        "Barranco de Fataga"
+      ],
+      "paradas_detalle": [
+        {
+          "nombre": "Tufia (Poblado y Playa)",
+          "coordenadas": {
+            "lat": 27.9602,
+            "lon": -15.3822
+          }
+        },
+        {
+          "nombre": "Bufadero de la Garita",
+          "coordenadas": {
+            "lat": 27.9926,
+            "lon": -15.3853
+          }
+        },
+        {
+          "nombre": "Cueva Pintada (Gáldar)",
+          "coordenadas": {
+            "lat": 28.1451,
+            "lon": -15.654
+          }
+        },
+        {
+          "nombre": "Firgas (Paseo de Gran Canaria)",
+          "coordenadas": {
+            "lat": 28.1086,
+            "lon": -15.5638
+          }
+        },
+        {
+          "nombre": "Arucas (Iglesia)",
+          "coordenadas": {
+            "lat": 28.1186,
+            "lon": -15.5222
+          }
+        },
+        {
+          "nombre": "Barranco de Fataga",
+          "coordenadas": {
+            "lat": 27.860383,
+            "lon": -15.568587
+          }
+        }
+      ],
+      "itinerario_completo": [
+        "Hotel Lopesan Villa del Conde",
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita",
+        "Cueva Pintada (Gáldar)",
+        "Firgas (Paseo de Gran Canaria)",
+        "Arucas (Iglesia)",
+        "Barranco de Fataga",
+        "Hotel Lopesan Villa del Conde"
+      ],
+      "detalle_tramos": [
+        {
+          "tramo": 1,
+          "origen": "Hotel Lopesan Villa del Conde",
+          "destino": "Tufia (Poblado y Playa)",
+          "tiempo_conduccion_min": 29.08,
+          "tiempo_estancia_min": 45.0,
+          "score_parada": 7.0,
+          "coordenadas_destino": {
+            "lat": 27.9602,
+            "lon": -15.3822
+          }
+        },
+        {
+          "tramo": 2,
+          "origen": "Tufia (Poblado y Playa)",
+          "destino": "Bufadero de la Garita",
+          "tiempo_conduccion_min": 6.51,
+          "tiempo_estancia_min": 30.0,
+          "score_parada": 7.0,
+          "coordenadas_destino": {
+            "lat": 27.9926,
+            "lon": -15.3853
+          }
+        },
+        {
+          "tramo": 3,
+          "origen": "Bufadero de la Garita",
+          "destino": "Cueva Pintada (Gáldar)",
+          "tiempo_conduccion_min": 36.63,
+          "tiempo_estancia_min": 60.0,
+          "score_parada": 9.0,
+          "coordenadas_destino": {
+            "lat": 28.1451,
+            "lon": -15.654
+          }
+        },
+        {
+          "tramo": 4,
+          "origen": "Cueva Pintada (Gáldar)",
+          "destino": "Firgas (Paseo de Gran Canaria)",
+          "tiempo_conduccion_min": 29.43,
+          "tiempo_estancia_min": 45.0,
+          "score_parada": 7.0,
+          "coordenadas_destino": {
+            "lat": 28.1086,
+            "lon": -15.5638
+          }
+        },
+        {
+          "tramo": 5,
+          "origen": "Firgas (Paseo de Gran Canaria)",
+          "destino": "Arucas (Iglesia)",
+          "tiempo_conduccion_min": 12.91,
+          "tiempo_estancia_min": 60.0,
+          "score_parada": 8.0,
+          "coordenadas_destino": {
+            "lat": 28.1186,
+            "lon": -15.5222
+          }
+        },
+        {
+          "tramo": 6,
+          "origen": "Arucas (Iglesia)",
+          "destino": "Barranco de Fataga",
+          "tiempo_conduccion_min": 55.89,
+          "tiempo_estancia_min": 45.0,
+          "score_parada": 8.0,
+          "coordenadas_destino": {
+            "lat": 27.860383,
+            "lon": -15.568587
+          }
+        },
+        {
+          "tramo": 7,
+          "origen": "Barranco de Fataga",
+          "destino": "Hotel Lopesan Villa del Conde",
+          "tiempo_conduccion_min": 24.41,
+          "tiempo_estancia_min": 0.0,
+          "score_parada": 0.0,
+          "coordenadas_destino": {
+            "lat": 27.742417,
+            "lon": -15.606604
+          }
+        }
+      ]
+    }
+  },
+  "frente_pareto_completo": [
+    {
+      "score": 7.0,
+      "tiempo_total_min": 90.32,
+      "paradas": [
+        "Bufadero de la Garita"
+      ]
+    },
+    {
+      "score": 8.0,
+      "tiempo_total_min": 94.55,
+      "paradas": [
+        "Barranco de Fataga"
+      ]
+    },
+    {
+      "score": 10.0,
+      "tiempo_total_min": 124.44,
+      "paradas": [
+        "Dunas de Maspalomas"
+      ]
+    },
+    {
+      "score": 14.0,
+      "tiempo_total_min": 140.95,
+      "paradas": [
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita"
+      ]
+    },
+    {
+      "score": 15.0,
+      "tiempo_total_min": 167.74,
+      "paradas": [
+        "Bufadero de la Garita",
+        "Barranco de Fataga"
+      ]
+    },
+    {
+      "score": 16.0,
+      "tiempo_total_min": 212.14,
+      "paradas": [
+        "Los Azulejos de Veneguera",
+        "Puerto de Mogán"
+      ]
+    },
+    {
+      "score": 17.0,
+      "tiempo_total_min": 212.72,
+      "paradas": [
+        "Bufadero de la Garita",
+        "Dunas de Maspalomas"
+      ]
+    },
+    {
+      "score": 18.0,
+      "tiempo_total_min": 216.95,
+      "paradas": [
+        "Barranco de Fataga",
+        "Dunas de Maspalomas"
+      ]
+    },
+    {
+      "score": 22.0,
+      "tiempo_total_min": 218.37,
+      "paradas": [
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita",
+        "Barranco de Fataga"
+      ]
+    },
+    {
+      "score": 23.0,
+      "tiempo_total_min": 260.13,
+      "paradas": [
+        "Bufadero de la Garita",
+        "Caldera de Bandama",
+        "Barranco de Fataga"
+      ]
+    },
+    {
+      "score": 24.0,
+      "tiempo_total_min": 263.35,
+      "paradas": [
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita",
+        "Dunas de Maspalomas"
+      ]
+    },
+    {
+      "score": 25.0,
+      "tiempo_total_min": 290.14,
+      "paradas": [
+        "Bufadero de la Garita",
+        "Barranco de Fataga",
+        "Dunas de Maspalomas"
+      ]
+    },
+    {
+      "score": 29.0,
+      "tiempo_total_min": 304.3,
+      "paradas": [
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita",
+        "Jardín de la Marquesa (Arucas)",
+        "Arucas (Iglesia)"
+      ]
+    },
+    {
+      "score": 30.0,
+      "tiempo_total_min": 310.76,
+      "paradas": [
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita",
+        "Caldera de Bandama",
+        "Barranco de Fataga"
+      ]
+    },
+    {
+      "score": 31.0,
+      "tiempo_total_min": 332.94,
+      "paradas": [
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita",
+        "Pico de las Nieves",
+        "Barranco de Fataga"
+      ]
+    },
+    {
+      "score": 32.0,
+      "tiempo_total_min": 340.77,
+      "paradas": [
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita",
+        "Barranco de Fataga",
+        "Dunas de Maspalomas"
+      ]
+    },
+    {
+      "score": 33.0,
+      "tiempo_total_min": 369.34,
+      "paradas": [
+        "Bufadero de la Garita",
+        "Pico de las Nieves",
+        "Tejeda (Pueblo)",
+        "Barranco de Fataga"
+      ]
+    },
+    {
+      "score": 36.0,
+      "tiempo_total_min": 370.68,
+      "paradas": [
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita",
+        "Firgas (Paseo de Gran Canaria)",
+        "Jardín de la Marquesa (Arucas)",
+        "Arucas (Iglesia)"
+      ]
+    },
+    {
+      "score": 37.0,
+      "tiempo_total_min": 381.72,
+      "paradas": [
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita",
+        "Jardín de la Marquesa (Arucas)",
+        "Arucas (Iglesia)",
+        "Barranco de Fataga"
+      ]
+    },
+    {
+      "score": 38.0,
+      "tiempo_total_min": 396.59,
+      "paradas": [
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita",
+        "Arucas (Iglesia)",
+        "Caldera de Bandama",
+        "Barranco de Fataga"
+      ]
+    },
+    {
+      "score": 39.0,
+      "tiempo_total_min": 405.48,
+      "paradas": [
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita",
+        "Caldera de Bandama",
+        "Pico de las Nieves",
+        "Barranco de Fataga"
+      ]
+    },
+    {
+      "score": 40.0,
+      "tiempo_total_min": 419.97,
+      "paradas": [
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita",
+        "Pico de las Nieves",
+        "Tejeda (Pueblo)",
+        "Barranco de Fataga"
+      ]
+    },
+    {
+      "score": 41.0,
+      "tiempo_total_min": 441.88,
+      "paradas": [
+        "Bufadero de la Garita",
+        "Caldera de Bandama",
+        "Pico de las Nieves",
+        "Tejeda (Pueblo)",
+        "Barranco de Fataga"
+      ]
+    },
+    {
+      "score": 44.0,
+      "tiempo_total_min": 449.34,
+      "paradas": [
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita",
+        "Arucas (Iglesia)",
+        "Firgas (Paseo de Gran Canaria)",
+        "Jardín de la Marquesa (Arucas)",
+        "Barranco de Fataga"
+      ]
+    },
+    {
+      "score": 45.0,
+      "tiempo_total_min": 460.17,
+      "paradas": [
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita",
+        "Jardín de la Marquesa (Arucas)",
+        "Arucas (Iglesia)",
+        "Caldera de Bandama",
+        "Barranco de Fataga"
+      ]
+    },
+    {
+      "score": 46.0,
+      "tiempo_total_min": 479.86,
+      "paradas": [
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita",
+        "Cueva Pintada (Gáldar)",
+        "Firgas (Paseo de Gran Canaria)",
+        "Arucas (Iglesia)",
+        "Barranco de Fataga"
+      ]
+    }
+  ]
+}

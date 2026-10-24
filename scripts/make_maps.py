@@ -19,9 +19,9 @@ sys.path.append(str(BASE_DIR))
 from src.pipeline import ESCENARIOS, load_coordinates, scenario_output_dir  # noqa: E402
 
 OPCIONES: Dict[str, Tuple[str, str]] = {
-    "express": ("Express", "#2980b9"),
-    "equilibrada": ("Equilibrada", "#27ae60"),
-    "exhaustiva": ("Exhaustiva", "#c0392b"),
+    "express": ("Express", "#2a78d6"),
+    "equilibrada": ("Equilibrada", "#eb6834"),
+    "exhaustiva": ("Exhaustiva", "#1baf7a"),
 }
 
 

@@ -1,0 +1,622 @@
+{
+  "proyecto": "Optimización Multiobjetivo de Rutas Turísticas en Gran Canaria",
+  "asignatura": "Optimización y Heurística",
+  "algoritmo": "NSGA-II (Deb et al., 2002)",
+  "baseline_comparado": "Greedy Multi-Objetivo",
+  "origen_destino_depot": "Hotel Santa Catalina (Las Palmas)",
+  "tiempo_maximo_minutos": 480.0,
+  "metricas_comparativas": {
+    "hipervolumen_nsga2": 11579.7,
+    "hipervolumen_greedy": 10188.89,
+    "mejora_porcentual_hv": 13.65
+  },
+  "opciones_recomendadas": {
+    "express": {
+      "tipo_opcion": "Opción Express",
+      "puntuacion_total": 14.0,
+      "tiempo_total_min": 114.81,
+      "tiempo_total_horas": 1.91,
+      "tiempo_conduccion_min": 39.81,
+      "tiempo_visitas_min": 75.0,
+      "eficiencia_score_hora": 7.32,
+      "numero_paradas": 2,
+      "paradas_ordenadas": [
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita"
+      ],
+      "paradas_detalle": [
+        {
+          "nombre": "Tufia (Poblado y Playa)",
+          "coordenadas": {
+            "lat": 27.9602,
+            "lon": -15.3822
+          }
+        },
+        {
+          "nombre": "Bufadero de la Garita",
+          "coordenadas": {
+            "lat": 27.9926,
+            "lon": -15.3853
+          }
+        }
+      ],
+      "itinerario_completo": [
+        "Hotel Santa Catalina (Las Palmas)",
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita",
+        "Hotel Santa Catalina (Las Palmas)"
+      ],
+      "detalle_tramos": [
+        {
+          "tramo": 1,
+          "origen": "Hotel Santa Catalina (Las Palmas)",
+          "destino": "Tufia (Poblado y Playa)",
+          "tiempo_conduccion_min": 18.71,
+          "tiempo_estancia_min": 45.0,
+          "score_parada": 7.0,
+          "coordenadas_destino": {
+            "lat": 27.9602,
+            "lon": -15.3822
+          }
+        },
+        {
+          "tramo": 2,
+          "origen": "Tufia (Poblado y Playa)",
+          "destino": "Bufadero de la Garita",
+          "tiempo_conduccion_min": 6.51,
+          "tiempo_estancia_min": 30.0,
+          "score_parada": 7.0,
+          "coordenadas_destino": {
+            "lat": 27.9926,
+            "lon": -15.3853
+          }
+        },
+        {
+          "tramo": 3,
+          "origen": "Bufadero de la Garita",
+          "destino": "Hotel Santa Catalina (Las Palmas)",
+          "tiempo_conduccion_min": 14.59,
+          "tiempo_estancia_min": 0.0,
+          "score_parada": 0.0,
+          "coordenadas_destino": {
+            "lat": 28.12108,
+            "lon": -15.428184
+          }
+        }
+      ]
+    },
+    "equilibrada": {
+      "tipo_opcion": "Opción Equilibrada",
+      "puntuacion_total": 29.0,
+      "tiempo_total_min": 265.72,
+      "tiempo_total_horas": 4.43,
+      "tiempo_conduccion_min": 85.72,
+      "tiempo_visitas_min": 180.0,
+      "eficiencia_score_hora": 6.55,
+      "numero_paradas": 4,
+      "paradas_ordenadas": [
+        "Arucas (Iglesia)",
+        "Firgas (Paseo de Gran Canaria)",
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita"
+      ],
+      "paradas_detalle": [
+        {
+          "nombre": "Arucas (Iglesia)",
+          "coordenadas": {
+            "lat": 28.1186,
+            "lon": -15.5222
+          }
+        },
+        {
+          "nombre": "Firgas (Paseo de Gran Canaria)",
+          "coordenadas": {
+            "lat": 28.1086,
+            "lon": -15.5638
+          }
+        },
+        {
+          "nombre": "Tufia (Poblado y Playa)",
+          "coordenadas": {
+            "lat": 27.9602,
+            "lon": -15.3822
+          }
+        },
+        {
+          "nombre": "Bufadero de la Garita",
+          "coordenadas": {
+            "lat": 27.9926,
+            "lon": -15.3853
+          }
+        }
+      ],
+      "itinerario_completo": [
+        "Hotel Santa Catalina (Las Palmas)",
+        "Arucas (Iglesia)",
+        "Firgas (Paseo de Gran Canaria)",
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita",
+        "Hotel Santa Catalina (Las Palmas)"
+      ],
+      "detalle_tramos": [
+        {
+          "tramo": 1,
+          "origen": "Hotel Santa Catalina (Las Palmas)",
+          "destino": "Arucas (Iglesia)",
+          "tiempo_conduccion_min": 16.22,
+          "tiempo_estancia_min": 60.0,
+          "score_parada": 8.0,
+          "coordenadas_destino": {
+            "lat": 28.1186,
+            "lon": -15.5222
+          }
+        },
+        {
+          "tramo": 2,
+          "origen": "Arucas (Iglesia)",
+          "destino": "Firgas (Paseo de Gran Canaria)",
+          "tiempo_conduccion_min": 12.7,
+          "tiempo_estancia_min": 45.0,
+          "score_parada": 7.0,
+          "coordenadas_destino": {
+            "lat": 28.1086,
+            "lon": -15.5638
+          }
+        },
+        {
+          "tramo": 3,
+          "origen": "Firgas (Paseo de Gran Canaria)",
+          "destino": "Tufia (Poblado y Playa)",
+          "tiempo_conduccion_min": 35.7,
+          "tiempo_estancia_min": 45.0,
+          "score_parada": 7.0,
+          "coordenadas_destino": {
+            "lat": 27.9602,
+            "lon": -15.3822
+          }
+        },
+        {
+          "tramo": 4,
+          "origen": "Tufia (Poblado y Playa)",
+          "destino": "Bufadero de la Garita",
+          "tiempo_conduccion_min": 6.51,
+          "tiempo_estancia_min": 30.0,
+          "score_parada": 7.0,
+          "coordenadas_destino": {
+            "lat": 27.9926,
+            "lon": -15.3853
+          }
+        },
+        {
+          "tramo": 5,
+          "origen": "Bufadero de la Garita",
+          "destino": "Hotel Santa Catalina (Las Palmas)",
+          "tiempo_conduccion_min": 14.59,
+          "tiempo_estancia_min": 0.0,
+          "score_parada": 0.0,
+          "coordenadas_destino": {
+            "lat": 28.12108,
+            "lon": -15.428184
+          }
+        }
+      ]
+    },
+    "exhaustiva": {
+      "tipo_opcion": "Opción Exhaustiva",
+      "puntuacion_total": 52.0,
+      "tiempo_total_min": 474.43,
+      "tiempo_total_horas": 7.91,
+      "tiempo_conduccion_min": 129.43,
+      "tiempo_visitas_min": 345.0,
+      "eficiencia_score_hora": 6.58,
+      "numero_paradas": 7,
+      "paradas_ordenadas": [
+        "Cueva Pintada (Gáldar)",
+        "Cenobio de Valerón",
+        "Firgas (Paseo de Gran Canaria)",
+        "Jardín de la Marquesa (Arucas)",
+        "Arucas (Iglesia)",
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita"
+      ],
+      "paradas_detalle": [
+        {
+          "nombre": "Cueva Pintada (Gáldar)",
+          "coordenadas": {
+            "lat": 28.1451,
+            "lon": -15.654
+          }
+        },
+        {
+          "nombre": "Cenobio de Valerón",
+          "coordenadas": {
+            "lat": 28.1362,
+            "lon": -15.6033
+          }
+        },
+        {
+          "nombre": "Firgas (Paseo de Gran Canaria)",
+          "coordenadas": {
+            "lat": 28.1086,
+            "lon": -15.5638
+          }
+        },
+        {
+          "nombre": "Jardín de la Marquesa (Arucas)",
+          "coordenadas": {
+            "lat": 28.1205,
+            "lon": -15.5342
+          }
+        },
+        {
+          "nombre": "Arucas (Iglesia)",
+          "coordenadas": {
+            "lat": 28.1186,
+            "lon": -15.5222
+          }
+        },
+        {
+          "nombre": "Tufia (Poblado y Playa)",
+          "coordenadas": {
+            "lat": 27.9602,
+            "lon": -15.3822
+          }
+        },
+        {
+          "nombre": "Bufadero de la Garita",
+          "coordenadas": {
+            "lat": 27.9926,
+            "lon": -15.3853
+          }
+        }
+      ],
+      "itinerario_completo": [
+        "Hotel Santa Catalina (Las Palmas)",
+        "Cueva Pintada (Gáldar)",
+        "Cenobio de Valerón",
+        "Firgas (Paseo de Gran Canaria)",
+        "Jardín de la Marquesa (Arucas)",
+        "Arucas (Iglesia)",
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita",
+        "Hotel Santa Catalina (Las Palmas)"
+      ],
+      "detalle_tramos": [
+        {
+          "tramo": 1,
+          "origen": "Hotel Santa Catalina (Las Palmas)",
+          "destino": "Cueva Pintada (Gáldar)",
+          "tiempo_conduccion_min": 26.29,
+          "tiempo_estancia_min": 60.0,
+          "score_parada": 9.0,
+          "coordenadas_destino": {
+            "lat": 28.1451,
+            "lon": -15.654
+          }
+        },
+        {
+          "tramo": 2,
+          "origen": "Cueva Pintada (Gáldar)",
+          "destino": "Cenobio de Valerón",
+          "tiempo_conduccion_min": 10.63,
+          "tiempo_estancia_min": 45.0,
+          "score_parada": 7.0,
+          "coordenadas_destino": {
+            "lat": 28.1362,
+            "lon": -15.6033
+          }
+        },
+        {
+          "tramo": 3,
+          "origen": "Cenobio de Valerón",
+          "destino": "Firgas (Paseo de Gran Canaria)",
+          "tiempo_conduccion_min": 32.28,
+          "tiempo_estancia_min": 45.0,
+          "score_parada": 7.0,
+          "coordenadas_destino": {
+            "lat": 28.1086,
+            "lon": -15.5638
+          }
+        },
+        {
+          "tramo": 4,
+          "origen": "Firgas (Paseo de Gran Canaria)",
+          "destino": "Jardín de la Marquesa (Arucas)",
+          "tiempo_conduccion_min": 12.08,
+          "tiempo_estancia_min": 60.0,
+          "score_parada": 7.0,
+          "coordenadas_destino": {
+            "lat": 28.1205,
+            "lon": -15.5342
+          }
+        },
+        {
+          "tramo": 5,
+          "origen": "Jardín de la Marquesa (Arucas)",
+          "destino": "Arucas (Iglesia)",
+          "tiempo_conduccion_min": 2.46,
+          "tiempo_estancia_min": 60.0,
+          "score_parada": 8.0,
+          "coordenadas_destino": {
+            "lat": 28.1186,
+            "lon": -15.5222
+          }
+        },
+        {
+          "tramo": 6,
+          "origen": "Arucas (Iglesia)",
+          "destino": "Tufia (Poblado y Playa)",
+          "tiempo_conduccion_min": 24.59,
+          "tiempo_estancia_min": 45.0,
+          "score_parada": 7.0,
+          "coordenadas_destino": {
+            "lat": 27.9602,
+            "lon": -15.3822
+          }
+        },
+        {
+          "tramo": 7,
+          "origen": "Tufia (Poblado y Playa)",
+          "destino": "Bufadero de la Garita",
+          "tiempo_conduccion_min": 6.51,
+          "tiempo_estancia_min": 30.0,
+          "score_parada": 7.0,
+          "coordenadas_destino": {
+            "lat": 27.9926,
+            "lon": -15.3853
+          }
+        },
+        {
+          "tramo": 8,
+          "origen": "Bufadero de la Garita",
+          "destino": "Hotel Santa Catalina (Las Palmas)",
+          "tiempo_conduccion_min": 14.59,
+          "tiempo_estancia_min": 0.0,
+          "score_parada": 0.0,
+          "coordenadas_destino": {
+            "lat": 28.12108,
+            "lon": -15.428184
+          }
+        }
+      ]
+    }
+  },
+  "frente_pareto_completo": [
+    {
+      "score": 7.0,
+      "tiempo_total_min": 59.92,
+      "paradas": [
+        "Bufadero de la Garita"
+      ]
+    },
+    {
+      "score": 8.0,
+      "tiempo_total_min": 92.27,
+      "paradas": [
+        "Arucas (Iglesia)"
+      ]
+    },
+    {
+      "score": 9.0,
+      "tiempo_total_min": 112.01,
+      "paradas": [
+        "Cueva Pintada (Gáldar)"
+      ]
+    },
+    {
+      "score": 14.0,
+      "tiempo_total_min": 114.81,
+      "paradas": [
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita"
+      ]
+    },
+    {
+      "score": 15.0,
+      "tiempo_total_min": 141.68,
+      "paradas": [
+        "Caldera de Bandama",
+        "Bufadero de la Garita"
+      ]
+    },
+    {
+      "score": 16.0,
+      "tiempo_total_min": 167.04,
+      "paradas": [
+        "Cueva Pintada (Gáldar)",
+        "Bufadero de la Garita"
+      ]
+    },
+    {
+      "score": 17.0,
+      "tiempo_total_min": 182.5,
+      "paradas": [
+        "Cueva Pintada (Gáldar)",
+        "Arucas (Iglesia)"
+      ]
+    },
+    {
+      "score": 22.0,
+      "tiempo_total_min": 196.55,
+      "paradas": [
+        "Caldera de Bandama",
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita"
+      ]
+    },
+    {
+      "score": 23.0,
+      "tiempo_total_min": 220.49,
+      "paradas": [
+        "Arucas (Iglesia)",
+        "Caldera de Bandama",
+        "Bufadero de la Garita"
+      ]
+    },
+    {
+      "score": 24.0,
+      "tiempo_total_min": 232.26,
+      "paradas": [
+        "Cueva Pintada (Gáldar)",
+        "Arucas (Iglesia)",
+        "Bufadero de la Garita"
+      ]
+    },
+    {
+      "score": 29.0,
+      "tiempo_total_min": 265.72,
+      "paradas": [
+        "Arucas (Iglesia)",
+        "Firgas (Paseo de Gran Canaria)",
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita"
+      ]
+    },
+    {
+      "score": 30.0,
+      "tiempo_total_min": 275.36,
+      "paradas": [
+        "Arucas (Iglesia)",
+        "Caldera de Bandama",
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita"
+      ]
+    },
+    {
+      "score": 31.0,
+      "tiempo_total_min": 287.14,
+      "paradas": [
+        "Cueva Pintada (Gáldar)",
+        "Arucas (Iglesia)",
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita"
+      ]
+    },
+    {
+      "score": 32.0,
+      "tiempo_total_min": 310.72,
+      "paradas": [
+        "Cueva Pintada (Gáldar)",
+        "Arucas (Iglesia)",
+        "Caldera de Bandama",
+        "Bufadero de la Garita"
+      ]
+    },
+    {
+      "score": 36.0,
+      "tiempo_total_min": 327.97,
+      "paradas": [
+        "Arucas (Iglesia)",
+        "Jardín de la Marquesa (Arucas)",
+        "Firgas (Paseo de Gran Canaria)",
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita"
+      ]
+    },
+    {
+      "score": 37.0,
+      "tiempo_total_min": 339.61,
+      "paradas": [
+        "Arucas (Iglesia)",
+        "Jardín de la Marquesa (Arucas)",
+        "Caldera de Bandama",
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita"
+      ]
+    },
+    {
+      "score": 38.0,
+      "tiempo_total_min": 345.63,
+      "paradas": [
+        "Cueva Pintada (Gáldar)",
+        "Cenobio de Valerón",
+        "Arucas (Iglesia)",
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita"
+      ]
+    },
+    {
+      "score": 39.0,
+      "tiempo_total_min": 365.59,
+      "paradas": [
+        "Cueva Pintada (Gáldar)",
+        "Arucas (Iglesia)",
+        "Caldera de Bandama",
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita"
+      ]
+    },
+    {
+      "score": 40.0,
+      "tiempo_total_min": 398.61,
+      "paradas": [
+        "Cueva Pintada (Gáldar)",
+        "Mirador del Balcón",
+        "Arucas (Iglesia)",
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita"
+      ]
+    },
+    {
+      "score": 44.0,
+      "tiempo_total_min": 406.43,
+      "paradas": [
+        "Arucas (Iglesia)",
+        "Jardín de la Marquesa (Arucas)",
+        "Firgas (Paseo de Gran Canaria)",
+        "Caldera de Bandama",
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita"
+      ]
+    },
+    {
+      "score": 45.0,
+      "tiempo_total_min": 412.8,
+      "paradas": [
+        "Cueva Pintada (Gáldar)",
+        "Cenobio de Valerón",
+        "Firgas (Paseo de Gran Canaria)",
+        "Arucas (Iglesia)",
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita"
+      ]
+    },
+    {
+      "score": 46.0,
+      "tiempo_total_min": 424.08,
+      "paradas": [
+        "Cueva Pintada (Gáldar)",
+        "Cenobio de Valerón",
+        "Arucas (Iglesia)",
+        "Caldera de Bandama",
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita"
+      ]
+    },
+    {
+      "score": 47.0,
+      "tiempo_total_min": 457.92,
+      "paradas": [
+        "Cueva Pintada (Gáldar)",
+        "Arucas (Iglesia)",
+        "Jardín Botánico Viera y Clavijo",
+        "Caldera de Bandama",
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita"
+      ]
+    },
+    {
+      "score": 52.0,
+      "tiempo_total_min": 474.43,
+      "paradas": [
+        "Cueva Pintada (Gáldar)",
+        "Cenobio de Valerón",
+        "Firgas (Paseo de Gran Canaria)",
+        "Jardín de la Marquesa (Arucas)",
+        "Arucas (Iglesia)",
+        "Tufia (Poblado y Playa)",
+        "Bufadero de la Garita"
+      ]
+    }
+  ]
+}

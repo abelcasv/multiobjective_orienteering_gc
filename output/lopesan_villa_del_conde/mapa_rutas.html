@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_e2f6151be49de8012d3aab654513f618 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    <div style="position:fixed;bottom:24px;left:24px;z-index:9999;background:#fff;padding:8px 12px;border-radius:6px;box-shadow:0 1px 4px rgba(0,0,0,.3);font:12px sans-serif"><b>Hotel Lopesan Villa del Conde</b><br>Tiempo máximo: 8 h · Ruta cerrada (salida y vuelta al hotel)<br><i>Tramos en línea recta, no siguen la carretera.</i></div>
+    
+            <div class="folium-map" id="map_e2f6151be49de8012d3aab654513f618" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_e2f6151be49de8012d3aab654513f618 = L.map(
+                "map_e2f6151be49de8012d3aab654513f618",
+                {
+                    center: [27.742417, -15.606604],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 10,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_909d3a19f038e4d15f8ff6148390735b = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_909d3a19f038e4d15f8ff6148390735b.addTo(map_e2f6151be49de8012d3aab654513f618);
+        
+    
+            var marker_01ab2ec6057938b7880b066dda38e3ec = L.marker(
+                [27.742417, -15.606604],
+                {
+}
+            ).addTo(map_e2f6151be49de8012d3aab654513f618);
+        
+    
+            var icon_78d8ea784e6371cbeb48af86a95cdb96 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "black",
+  "iconColor": "white",
+  "icon": "home",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_33f7e20507d5382f8645ef7f06db1f32 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_afa50ba55a39604a36a0591b5e6db79e = $(`<div id="html_afa50ba55a39604a36a0591b5e6db79e" style="width: 100.0%; height: 100.0%;"><b>Hotel Lopesan Villa del Conde</b><br>Salida y llegada</div>`)[0];
+                popup_33f7e20507d5382f8645ef7f06db1f32.setContent(html_afa50ba55a39604a36a0591b5e6db79e);
+            
+        
+
+        marker_01ab2ec6057938b7880b066dda38e3ec.bindPopup(popup_33f7e20507d5382f8645ef7f06db1f32)
+        ;
+
+        
+    
+    
+            marker_01ab2ec6057938b7880b066dda38e3ec.bindTooltip(
+                `<div>
+                     Hotel Lopesan Villa del Conde
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_01ab2ec6057938b7880b066dda38e3ec.setIcon(icon_78d8ea784e6371cbeb48af86a95cdb96);
+            
+    
+            var feature_group_b4b9d9cbd1aae0e825b474e789fc0125 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var marker_f3191be3c07ec7e0bd33b08b5229c2b5 = L.marker(
+                [27.9602, -15.3822],
+                {
+}
+            ).addTo(feature_group_b4b9d9cbd1aae0e825b474e789fc0125);
+        
+    
+            var div_icon_5dc834308a5716fd9bf35e6c20aa0d51 = L.divIcon({
+  "html": "\u003cdiv style=\"background:#2a78d6;color:#fff;border:2px solid #fff;border-radius:50%;width:24px;height:24px;line-height:20px;text-align:center;font:bold 12px sans-serif;box-shadow:0 1px 3px rgba(0,0,0,.5)\"\u003e1\u003c/div\u003e",
+  "iconSize": [24, 24],
+  "iconAnchor": [12, 12],
+  "className": "empty",
+});
+        
+    
+        var popup_4ad745136e1d055723dc72ec75644aeb = L.popup({
+  "maxWidth": 280,
+});
+
+        
+            
+                var html_d5d80b1b4d7513861c90e4b94f9b0e2e = $(`<div id="html_d5d80b1b4d7513861c90e4b94f9b0e2e" style="width: 100.0%; height: 100.0%;"><b>1. Tufia (Poblado y Playa)</b><br>Puntuación: 7<br>Tiempo de visita: 45 min<br>Conducción desde la parada anterior: 29 min<br>Llegada: 0 h 29 min tras salir del hotel</div>`)[0];
+                popup_4ad745136e1d055723dc72ec75644aeb.setContent(html_d5d80b1b4d7513861c90e4b94f9b0e2e);
+            
+        
+
+        marker_f3191be3c07ec7e0bd33b08b5229c2b5.bindPopup(popup_4ad745136e1d055723dc72ec75644aeb)
+        ;
+
+        
+    
+    
+            marker_f3191be3c07ec7e0bd33b08b5229c2b5.bindTooltip(
+                `<div>
+                     Express · 1. Tufia (Poblado y Playa)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_f3191be3c07ec7e0bd33b08b5229c2b5.setIcon(div_icon_5dc834308a5716fd9bf35e6c20aa0d51);
+            
+    
+            var marker_04b5afae129f2084991c7460d9813490 = L.marker(
+                [27.9926, -15.3853],
+                {
+}
+            ).addTo(feature_group_b4b9d9cbd1aae0e825b474e789fc0125);
+        
+    
+            var div_icon_ac5eddb7d1b12551b86ba0ae104668a4 = L.divIcon({
+  "html": "\u003cdiv style=\"background:#2a78d6;color:#fff;border:2px solid #fff;border-radius:50%;width:24px;height:24px;line-height:20px;text-align:center;font:bold 12px sans-serif;box-shadow:0 1px 3px rgba(0,0,0,.5)\"\u003e2\u003c/div\u003e",
+  "iconSize": [24, 24],
+  "iconAnchor": [12, 12],
+  "className": "empty",
+});
+        
+    
+        var popup_bb275bc212751a3e340959f4c658b866 = L.popup({
+  "maxWidth": 280,
+});
+
+        
+            
+                var html_0fa24528677b1190a6951282d4ffaa40 = $(`<div id="html_0fa24528677b1190a6951282d4ffaa40" style="width: 100.0%; height: 100.0%;"><b>2. Bufadero de la Garita</b><br>Puntuación: 7<br>Tiempo de visita: 30 min<br>Conducción desde la parada anterior: 7 min<br>Llegada: 1 h 21 min tras salir del hotel</div>`)[0];
+                popup_bb275bc212751a3e340959f4c658b866.setContent(html_0fa24528677b1190a6951282d4ffaa40);
+            
+        
+
+        marker_04b5afae129f2084991c7460d9813490.bindPopup(popup_bb275bc212751a3e340959f4c658b866)
+        ;
+
+        
+    
+    
+            marker_04b5afae129f2084991c7460d9813490.bindTooltip(
+                `<div>
+                     Express · 2. Bufadero de la Garita
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_04b5afae129f2084991c7460d9813490.setIcon(div_icon_ac5eddb7d1b12551b86ba0ae104668a4);
+            
+    
+            var marker_bd218ac3626bf7935628440c27538725 = L.marker(
+                [27.860383, -15.568587],
+                {
+}
+            ).addTo(feature_group_b4b9d9cbd1aae0e825b474e789fc0125);
+        
+    
+            var div_icon_068c8b4ed5f9fa31c312e2eabe134261 = L.divIcon({
+  "html": "\u003cdiv style=\"background:#2a78d6;color:#fff;border:2px solid #fff;border-radius:50%;width:24px;height:24px;line-height:20px;text-align:center;font:bold 12px sans-serif;box-shadow:0 1px 3px rgba(0,0,0,.5)\"\u003e3\u003c/div\u003e",
+  "iconSize": [24, 24],
+  "iconAnchor": [12, 12],
+  "className": "empty",
+});
+        
+    
+        var popup_70924e568be46d0edda24099ef719370 = L.popup({
+  "maxWidth": 280,
+});
+
+        
+            
+                var html_30665a112ba8431beb40c2c6d92ca8cc = $(`<div id="html_30665a112ba8431beb40c2c6d92ca8cc" style="width: 100.0%; height: 100.0%;"><b>3. Barranco de Fataga</b><br>Puntuación: 8<br>Tiempo de visita: 45 min<br>Conducción desde la parada anterior: 38 min<br>Llegada: 2 h 29 min tras salir del hotel</div>`)[0];
+                popup_70924e568be46d0edda24099ef719370.setContent(html_30665a112ba8431beb40c2c6d92ca8cc);
+            
+        
+
+        marker_bd218ac3626bf7935628440c27538725.bindPopup(popup_70924e568be46d0edda24099ef719370)
+        ;
+
+        
+    
+    
+            marker_bd218ac3626bf7935628440c27538725.bindTooltip(
+                `<div>
+                     Express · 3. Barranco de Fataga
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_bd218ac3626bf7935628440c27538725.setIcon(div_icon_068c8b4ed5f9fa31c312e2eabe134261);
+            
+    
+            var poly_line_cac65fcc5c6fdb903c8c2623e8179551 = L.polyline(
+                [[27.742417, -15.606604], [27.9602, -15.3822], [27.9926, -15.3853], [27.860383, -15.568587], [27.742417, -15.606604]],
+                {"bubblingMouseEvents": true, "color": "#2a78d6", "dashArray": "8 6", "dashOffset": null, "fill": false, "fillColor": "#2a78d6", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(feature_group_b4b9d9cbd1aae0e825b474e789fc0125);
+        
+    
+            feature_group_b4b9d9cbd1aae0e825b474e789fc0125.addTo(map_e2f6151be49de8012d3aab654513f618);
+        
+    
+            var feature_group_7c1cb28cee2c6e4331c88e2ba66706df = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var marker_c34447ebc2b729639161f63061de6c80 = L.marker(
+                [27.9602, -15.3822],
+                {
+}
+            ).addTo(feature_group_7c1cb28cee2c6e4331c88e2ba66706df);
+        
+    
+            var div_icon_4cfbfe39c03dc049938510d22c8e394e = L.divIcon({
+  "html": "\u003cdiv style=\"background:#eb6834;color:#fff;border:2px solid #fff;border-radius:50%;width:24px;height:24px;line-height:20px;text-align:center;font:bold 12px sans-serif;box-shadow:0 1px 3px rgba(0,0,0,.5)\"\u003e1\u003c/div\u003e",
+  "iconSize": [24, 24],
+  "iconAnchor": [12, 12],
+  "className": "empty",
+});
+        
+    
+        var popup_cdd2742c622bebb31462c04045ad7452 = L.popup({
+  "maxWidth": 280,
+});
+
+        
+            
+                var html_092e0dae64bd32f76854bd7d5a58aabd = $(`<div id="html_092e0dae64bd32f76854bd7d5a58aabd" style="width: 100.0%; height: 100.0%;"><b>1. Tufia (Poblado y Playa)</b><br>Puntuación: 7<br>Tiempo de visita: 45 min<br>Conducción desde la parada anterior: 29 min<br>Llegada: 0 h 29 min tras salir del hotel</div>`)[0];
+                popup_cdd2742c622bebb31462c04045ad7452.setContent(html_092e0dae64bd32f76854bd7d5a58aabd);
+            
+        
+
+        marker_c34447ebc2b729639161f63061de6c80.bindPopup(popup_cdd2742c622bebb31462c04045ad7452)
+        ;
+
+        
+    
+    
+            marker_c34447ebc2b729639161f63061de6c80.bindTooltip(
+                `<div>
+                     Equilibrada · 1. Tufia (Poblado y Playa)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_c34447ebc2b729639161f63061de6c80.setIcon(div_icon_4cfbfe39c03dc049938510d22c8e394e);
+            
+    
+            var marker_26eeb67ce78515b37cdac4f752cf67b5 = L.marker(
+                [27.9926, -15.3853],
+                {
+}
+            ).addTo(feature_group_7c1cb28cee2c6e4331c88e2ba66706df);
+        
+    
+            var div_icon_4307976960c2db02dab038e28c4f7d73 = L.divIcon({
+  "html": "\u003cdiv style=\"background:#eb6834;color:#fff;border:2px solid #fff;border-radius:50%;width:24px;height:24px;line-height:20px;text-align:center;font:bold 12px sans-serif;box-shadow:0 1px 3px rgba(0,0,0,.5)\"\u003e2\u003c/div\u003e",
+  "iconSize": [24, 24],
+  "iconAnchor": [12, 12],
+  "className": "empty",
+});
+        
+    
+        var popup_bddd9e80f593c8f7ad1999afca474108 = L.popup({
+  "maxWidth": 280,
+});
+
+        
+            
+                var html_78d6bfa7920da94a7db700b408bd9ba1 = $(`<div id="html_78d6bfa7920da94a7db700b408bd9ba1" style="width: 100.0%; height: 100.0%;"><b>2. Bufadero de la Garita</b><br>Puntuación: 7<br>Tiempo de visita: 30 min<br>Conducción desde la parada anterior: 7 min<br>Llegada: 1 h 21 min tras salir del hotel</div>`)[0];
+                popup_bddd9e80f593c8f7ad1999afca474108.setContent(html_78d6bfa7920da94a7db700b408bd9ba1);
+            
+        
+
+        marker_26eeb67ce78515b37cdac4f752cf67b5.bindPopup(popup_bddd9e80f593c8f7ad1999afca474108)
+        ;
+
+        
+    
+    
+            marker_26eeb67ce78515b37cdac4f752cf67b5.bindTooltip(
+                `<div>
+                     Equilibrada · 2. Bufadero de la Garita
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_26eeb67ce78515b37cdac4f752cf67b5.setIcon(div_icon_4307976960c2db02dab038e28c4f7d73);
+            
+    
+            var marker_177281354121cc4bd1dc922bda7eb286 = L.marker(
+                [27.860383, -15.568587],
+                {
+}
+            ).addTo(feature_group_7c1cb28cee2c6e4331c88e2ba66706df);
+        
+    
+            var div_icon_4653c7b64c76b639ad698e6071c74246 = L.divIcon({
+  "html": "\u003cdiv style=\"background:#eb6834;color:#fff;border:2px solid #fff;border-radius:50%;width:24px;height:24px;line-height:20px;text-align:center;font:bold 12px sans-serif;box-shadow:0 1px 3px rgba(0,0,0,.5)\"\u003e3\u003c/div\u003e",
+  "iconSize": [24, 24],
+  "iconAnchor": [12, 12],
+  "className": "empty",
+});
+        
+    
+        var popup_ffed4b9d6bc9f137b401624e5b278d88 = L.popup({
+  "maxWidth": 280,
+});
+
+        
+            
+                var html_71263031b7aef12be46dc72d54843604 = $(`<div id="html_71263031b7aef12be46dc72d54843604" style="width: 100.0%; height: 100.0%;"><b>3. Barranco de Fataga</b><br>Puntuación: 8<br>Tiempo de visita: 45 min<br>Conducción desde la parada anterior: 38 min<br>Llegada: 2 h 29 min tras salir del hotel</div>`)[0];
+                popup_ffed4b9d6bc9f137b401624e5b278d88.setContent(html_71263031b7aef12be46dc72d54843604);
+            
+        
+
+        marker_177281354121cc4bd1dc922bda7eb286.bindPopup(popup_ffed4b9d6bc9f137b401624e5b278d88)
+        ;
+
+        
+    
+    
+            marker_177281354121cc4bd1dc922bda7eb286.bindTooltip(
+                `<div>
+                     Equilibrada · 3. Barranco de Fataga
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_177281354121cc4bd1dc922bda7eb286.setIcon(div_icon_4653c7b64c76b639ad698e6071c74246);
+            
+    
+            var poly_line_6e39c6d69c39013ef77a5fba414bb44d = L.polyline(
+                [[27.742417, -15.606604], [27.9602, -15.3822], [27.9926, -15.3853], [27.860383, -15.568587], [27.742417, -15.606604]],
+                {"bubblingMouseEvents": true, "color": "#eb6834", "dashArray": "8 6", "dashOffset": null, "fill": false, "fillColor": "#eb6834", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(feature_group_7c1cb28cee2c6e4331c88e2ba66706df);
+        
+    
+            feature_group_7c1cb28cee2c6e4331c88e2ba66706df.addTo(map_e2f6151be49de8012d3aab654513f618);
+        
+    
+            var feature_group_118947bef4e6a912a902148a6c053ca9 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var marker_d2f7b8e5a3f97da10952ea1f9be1d543 = L.marker(
+                [27.9602, -15.3822],
+                {
+}
+            ).addTo(feature_group_118947bef4e6a912a902148a6c053ca9);
+        
+    
+            var div_icon_605cc8f52394e230f17060854c937c5d = L.divIcon({
+  "html": "\u003cdiv style=\"background:#1baf7a;color:#fff;border:2px solid #fff;border-radius:50%;width:24px;height:24px;line-height:20px;text-align:center;font:bold 12px sans-serif;box-shadow:0 1px 3px rgba(0,0,0,.5)\"\u003e1\u003c/div\u003e",
+  "iconSize": [24, 24],
+  "iconAnchor": [12, 12],
+  "className": "empty",
+});
+        
+    
+        var popup_ffe06741c2acc1ad20c74e538b2f9f84 = L.popup({
+  "maxWidth": 280,
+});
+
+        
+            
+                var html_7bdaddad889ad3566c43f61c7e3f6e74 = $(`<div id="html_7bdaddad889ad3566c43f61c7e3f6e74" style="width: 100.0%; height: 100.0%;"><b>1. Tufia (Poblado y Playa)</b><br>Puntuación: 7<br>Tiempo de visita: 45 min<br>Conducción desde la parada anterior: 29 min<br>Llegada: 0 h 29 min tras salir del hotel</div>`)[0];
+                popup_ffe06741c2acc1ad20c74e538b2f9f84.setContent(html_7bdaddad889ad3566c43f61c7e3f6e74);
+            
+        
+
+        marker_d2f7b8e5a3f97da10952ea1f9be1d543.bindPopup(popup_ffe06741c2acc1ad20c74e538b2f9f84)
+        ;
+
+        
+    
+    
+            marker_d2f7b8e5a3f97da10952ea1f9be1d543.bindTooltip(
+                `<div>
+                     Exhaustiva · 1. Tufia (Poblado y Playa)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_d2f7b8e5a3f97da10952ea1f9be1d543.setIcon(div_icon_605cc8f52394e230f17060854c937c5d);
+            
+    
+            var marker_18a05635d3a73b4448172a6627d22607 = L.marker(
+                [27.9926, -15.3853],
+                {
+}
+            ).addTo(feature_group_118947bef4e6a912a902148a6c053ca9);
+        
+    
+            var div_icon_94d6b4192168bb807e58fa938c2a0dc7 = L.divIcon({
+  "html": "\u003cdiv style=\"background:#1baf7a;color:#fff;border:2px solid #fff;border-radius:50%;width:24px;height:24px;line-height:20px;text-align:center;font:bold 12px sans-serif;box-shadow:0 1px 3px rgba(0,0,0,.5)\"\u003e2\u003c/div\u003e",
+  "iconSize": [24, 24],
+  "iconAnchor": [12, 12],
+  "className": "empty",
+});
+        
+    
+        var popup_2aac69a57122b4f8c98c6db22d8bf14c = L.popup({
+  "maxWidth": 280,
+});
+
+        
+            
+                var html_c7ce4b0c8ecb09d6f0e1cecc71eaaa02 = $(`<div id="html_c7ce4b0c8ecb09d6f0e1cecc71eaaa02" style="width: 100.0%; height: 100.0%;"><b>2. Bufadero de la Garita</b><br>Puntuación: 7<br>Tiempo de visita: 30 min<br>Conducción desde la parada anterior: 7 min<br>Llegada: 1 h 21 min tras salir del hotel</div>`)[0];
+                popup_2aac69a57122b4f8c98c6db22d8bf14c.setContent(html_c7ce4b0c8ecb09d6f0e1cecc71eaaa02);
+            
+        
+
+        marker_18a05635d3a73b4448172a6627d22607.bindPopup(popup_2aac69a57122b4f8c98c6db22d8bf14c)
+        ;
+
+        
+    
+    
+            marker_18a05635d3a73b4448172a6627d22607.bindTooltip(
+                `<div>
+                     Exhaustiva · 2. Bufadero de la Garita
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_18a05635d3a73b4448172a6627d22607.setIcon(div_icon_94d6b4192168bb807e58fa938c2a0dc7);
+            
+    
+            var marker_63a106489f21aaeea62e31cd7f81b72e = L.marker(
+                [28.1451, -15.654],
+                {
+}
+            ).addTo(feature_group_118947bef4e6a912a902148a6c053ca9);
+        
+    
+            var div_icon_e9bbee6b7bf96f40f272aab9bb811bd9 = L.divIcon({
+  "html": "\u003cdiv style=\"background:#1baf7a;color:#fff;border:2px solid #fff;border-radius:50%;width:24px;height:24px;line-height:20px;text-align:center;font:bold 12px sans-serif;box-shadow:0 1px 3px rgba(0,0,0,.5)\"\u003e3\u003c/div\u003e",
+  "iconSize": [24, 24],
+  "iconAnchor": [12, 12],
+  "className": "empty",
+});
+        
+    
+        var popup_8f99542896cc638ab27fb2c746aeb610 = L.popup({
+  "maxWidth": 280,
+});
+
+        
+            
+                var html_449a03cfe736c12ef7301f6c30ba0cd9 = $(`<div id="html_449a03cfe736c12ef7301f6c30ba0cd9" style="width: 100.0%; height: 100.0%;"><b>3. Cueva Pintada (Gáldar)</b><br>Puntuación: 9<br>Tiempo de visita: 60 min<br>Conducción desde la parada anterior: 37 min<br>Llegada: 2 h 27 min tras salir del hotel</div>`)[0];
+                popup_8f99542896cc638ab27fb2c746aeb610.setContent(html_449a03cfe736c12ef7301f6c30ba0cd9);
+            
+        
+
+        marker_63a106489f21aaeea62e31cd7f81b72e.bindPopup(popup_8f99542896cc638ab27fb2c746aeb610)
+        ;
+
+        
+    
+    
+            marker_63a106489f21aaeea62e31cd7f81b72e.bindTooltip(
+                `<div>
+                     Exhaustiva · 3. Cueva Pintada (Gáldar)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_63a106489f21aaeea62e31cd7f81b72e.setIcon(div_icon_e9bbee6b7bf96f40f272aab9bb811bd9);
+            
+    
+            var marker_14bb9768650c46aea9199bab9896e826 = L.marker(
+                [28.1086, -15.5638],
+                {
+}
+            ).addTo(feature_group_118947bef4e6a912a902148a6c053ca9);
+        
+    
+            var div_icon_11dcdb1c9f286dc27875a4b80c6af9f4 = L.divIcon({
+  "html": "\u003cdiv style=\"background:#1baf7a;color:#fff;border:2px solid #fff;border-radius:50%;width:24px;height:24px;line-height:20px;text-align:center;font:bold 12px sans-serif;box-shadow:0 1px 3px rgba(0,0,0,.5)\"\u003e4\u003c/div\u003e",
+  "iconSize": [24, 24],
+  "iconAnchor": [12, 12],
+  "className": "empty",
+});
+        
+    
+        var popup_ce511b90e3ee2426ab8440975c8adda0 = L.popup({
+  "maxWidth": 280,
+});
+
+        
+            
+                var html_42176c28f842944d246cf1680bc8380a = $(`<div id="html_42176c28f842944d246cf1680bc8380a" style="width: 100.0%; height: 100.0%;"><b>4. Firgas (Paseo de Gran Canaria)</b><br>Puntuación: 7<br>Tiempo de visita: 45 min<br>Conducción desde la parada anterior: 29 min<br>Llegada: 3 h 57 min tras salir del hotel</div>`)[0];
+                popup_ce511b90e3ee2426ab8440975c8adda0.setContent(html_42176c28f842944d246cf1680bc8380a);
+            
+        
+
+        marker_14bb9768650c46aea9199bab9896e826.bindPopup(popup_ce511b90e3ee2426ab8440975c8adda0)
+        ;
+
+        
+    
+    
+            marker_14bb9768650c46aea9199bab9896e826.bindTooltip(
+                `<div>
+                     Exhaustiva · 4. Firgas (Paseo de Gran Canaria)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_14bb9768650c46aea9199bab9896e826.setIcon(div_icon_11dcdb1c9f286dc27875a4b80c6af9f4);
+            
+    
+            var marker_5aea8315151deeae28793d40aabbf0a4 = L.marker(
+                [28.1186, -15.5222],
+                {
+}
+            ).addTo(feature_group_118947bef4e6a912a902148a6c053ca9);
+        
+    
+            var div_icon_da1501d27eed93bc30bcc535b4d708ef = L.divIcon({
+  "html": "\u003cdiv style=\"background:#1baf7a;color:#fff;border:2px solid #fff;border-radius:50%;width:24px;height:24px;line-height:20px;text-align:center;font:bold 12px sans-serif;box-shadow:0 1px 3px rgba(0,0,0,.5)\"\u003e5\u003c/div\u003e",
+  "iconSize": [24, 24],
+  "iconAnchor": [12, 12],
+  "className": "empty",
+});
+        
+    
+        var popup_e3cc6165ea2eb7177ca8b6e9857348a2 = L.popup({
+  "maxWidth": 280,
+});
+
+        
+            
+                var html_e5e8767215aa9669ff16998a1778809c = $(`<div id="html_e5e8767215aa9669ff16998a1778809c" style="width: 100.0%; height: 100.0%;"><b>5. Arucas (Iglesia)</b><br>Puntuación: 8<br>Tiempo de visita: 60 min<br>Conducción desde la parada anterior: 13 min<br>Llegada: 4 h 55 min tras salir del hotel</div>`)[0];
+                popup_e3cc6165ea2eb7177ca8b6e9857348a2.setContent(html_e5e8767215aa9669ff16998a1778809c);
+            
+        
+
+        marker_5aea8315151deeae28793d40aabbf0a4.bindPopup(popup_e3cc6165ea2eb7177ca8b6e9857348a2)
+        ;
+
+        
+    
+    
+            marker_5aea8315151deeae28793d40aabbf0a4.bindTooltip(
+                `<div>
+                     Exhaustiva · 5. Arucas (Iglesia)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_5aea8315151deeae28793d40aabbf0a4.setIcon(div_icon_da1501d27eed93bc30bcc535b4d708ef);
+            
+    
+            var marker_9e434d487b622dee7db1573cc767c027 = L.marker(
+                [27.860383, -15.568587],
+                {
+}
+            ).addTo(feature_group_118947bef4e6a912a902148a6c053ca9);
+        
+    
+            var div_icon_4217850136566eb4efaab17e6ae7c775 = L.divIcon({
+  "html": "\u003cdiv style=\"background:#1baf7a;color:#fff;border:2px solid #fff;border-radius:50%;width:24px;height:24px;line-height:20px;text-align:center;font:bold 12px sans-serif;box-shadow:0 1px 3px rgba(0,0,0,.5)\"\u003e6\u003c/div\u003e",
+  "iconSize": [24, 24],
+  "iconAnchor": [12, 12],
+  "className": "empty",
+});
+        
+    
+        var popup_71c5e4dbef6445a60c93fe3b42508a2f = L.popup({
+  "maxWidth": 280,
+});
+
+        
+            
+                var html_8432a432cde2684271650b6cfbe2ad78 = $(`<div id="html_8432a432cde2684271650b6cfbe2ad78" style="width: 100.0%; height: 100.0%;"><b>6. Barranco de Fataga</b><br>Puntuación: 8<br>Tiempo de visita: 45 min<br>Conducción desde la parada anterior: 56 min<br>Llegada: 6 h 50 min tras salir del hotel</div>`)[0];
+                popup_71c5e4dbef6445a60c93fe3b42508a2f.setContent(html_8432a432cde2684271650b6cfbe2ad78);
+            
+        
+
+        marker_9e434d487b622dee7db1573cc767c027.bindPopup(popup_71c5e4dbef6445a60c93fe3b42508a2f)
+        ;
+
+        
+    
+    
+            marker_9e434d487b622dee7db1573cc767c027.bindTooltip(
+                `<div>
+                     Exhaustiva · 6. Barranco de Fataga
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_9e434d487b622dee7db1573cc767c027.setIcon(div_icon_4217850136566eb4efaab17e6ae7c775);
+            
+    
+            var poly_line_d0a31f8423f2608cee0a02efb9703cd1 = L.polyline(
+                [[27.742417, -15.606604], [27.9602, -15.3822], [27.9926, -15.3853], [28.1451, -15.654], [28.1086, -15.5638], [28.1186, -15.5222], [27.860383, -15.568587], [27.742417, -15.606604]],
+                {"bubblingMouseEvents": true, "color": "#1baf7a", "dashArray": "8 6", "dashOffset": null, "fill": false, "fillColor": "#1baf7a", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(feature_group_118947bef4e6a912a902148a6c053ca9);
+        
+    
+            feature_group_118947bef4e6a912a902148a6c053ca9.addTo(map_e2f6151be49de8012d3aab654513f618);
+        
+    
+            var layer_control_19b73f830d1a33b616f95502120b3b5a_layers = {
+                base_layers : {
+                    "openstreetmap" : tile_layer_909d3a19f038e4d15f8ff6148390735b,
+                },
+                overlays :  {
+                    "\u003cspan style=\"color:#2a78d6\"\u003e\u0026#9632;\u003c/span\u003e Express: 22 pts, 3.6 h, 3 paradas" : feature_group_b4b9d9cbd1aae0e825b474e789fc0125,
+                    "\u003cspan style=\"color:#eb6834\"\u003e\u0026#9632;\u003c/span\u003e Equilibrada: 22 pts, 3.6 h, 3 paradas" : feature_group_7c1cb28cee2c6e4331c88e2ba66706df,
+                    "\u003cspan style=\"color:#1baf7a\"\u003e\u0026#9632;\u003c/span\u003e Exhaustiva: 46 pts, 8.0 h, 6 paradas" : feature_group_118947bef4e6a912a902148a6c053ca9,
+                },
+            };
+            let layer_control_19b73f830d1a33b616f95502120b3b5a = L.control.layers(
+                layer_control_19b73f830d1a33b616f95502120b3b5a_layers.base_layers,
+                layer_control_19b73f830d1a33b616f95502120b3b5a_layers.overlays,
+                {
+  "position": "topright",
+  "collapsed": false,
+  "autoZIndex": true,
+}
+            ).addTo(map_e2f6151be49de8012d3aab654513f618);
+
+        
+</script>
+</html>
