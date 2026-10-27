@@ -1,0 +1,151 @@
+variante,poi,puntuacion,tiempo_visita_min,pct_semillas,pct_soluciones
+base,Roque Nublo,10.0,90.0,0.0,0.0
+base,Dunas de Maspalomas,10.0,120.0,0.0,0.0
+base,Puerto de Mogán,9.0,90.0,0.0,0.0
+base,Vegueta (Las Palmas),9.0,150.0,0.0,0.0
+base,Pico de las Nieves,9.0,45.0,0.0,0.0
+base,Teror (Basílica),8.0,60.0,13.3,0.5
+base,Arucas (Iglesia),8.0,60.0,100.0,75.6
+base,Barranco de Guayadeque,7.0,90.0,0.0,0.0
+base,Cenobio de Valerón,7.0,45.0,93.3,19.0
+base,Puerto de las Nieves (Agaete),8.0,90.0,0.0,0.0
+base,Playa de las Canteras,10.0,120.0,53.3,4.1
+base,Jardín Botánico Viera y Clavijo,8.0,90.0,20.0,0.8
+base,Cueva Pintada (Gáldar),9.0,60.0,100.0,52.8
+base,Mirador de Unamuno,7.0,30.0,0.0,0.0
+base,Tejeda (Pueblo),9.0,60.0,0.0,0.0
+base,Bufadero de la Garita,7.0,30.0,100.0,87.8
+base,Presa de las Niñas,7.0,60.0,0.0,0.0
+base,Playa del Inglés,8.0,120.0,0.0,0.0
+base,Caldera de Bandama,8.0,60.0,100.0,40.1
+base,Los Azulejos de Veneguera,7.0,30.0,0.0,0.0
+base,Cueva del Rey,8.0,60.0,0.0,0.0
+base,Firgas (Paseo de Gran Canaria),7.0,45.0,100.0,13.3
+base,Mirador del Balcón,9.0,30.0,66.7,5.1
+base,Barranco de los Cernícalos,8.0,120.0,0.0,0.0
+base,Charco de San Lorenzo,7.0,60.0,13.3,0.5
+base,Tufia (Poblado y Playa),7.0,45.0,100.0,63.4
+base,Jardín de la Marquesa (Arucas),7.0,60.0,100.0,25.2
+base,Mundo Aborigen,7.0,90.0,0.0,0.0
+base,Barranco de Fataga,8.0,45.0,0.0,0.0
+base,Playa de Amadores,8.0,120.0,0.0,0.0
+visitas_x075,Roque Nublo,10.0,90.0,0.0,0.0
+visitas_x075,Dunas de Maspalomas,10.0,120.0,0.0,0.0
+visitas_x075,Puerto de Mogán,9.0,90.0,0.0,0.0
+visitas_x075,Vegueta (Las Palmas),9.0,150.0,0.0,0.0
+visitas_x075,Pico de las Nieves,9.0,45.0,0.0,0.0
+visitas_x075,Teror (Basílica),8.0,60.0,20.0,0.9
+visitas_x075,Arucas (Iglesia),8.0,60.0,100.0,76.8
+visitas_x075,Barranco de Guayadeque,7.0,90.0,0.0,0.0
+visitas_x075,Cenobio de Valerón,7.0,45.0,93.3,35.5
+visitas_x075,Puerto de las Nieves (Agaete),8.0,90.0,0.0,0.0
+visitas_x075,Playa de las Canteras,10.0,120.0,100.0,26.9
+visitas_x075,Jardín Botánico Viera y Clavijo,8.0,90.0,66.7,4.2
+visitas_x075,Cueva Pintada (Gáldar),9.0,60.0,100.0,45.5
+visitas_x075,Mirador de Unamuno,7.0,30.0,0.0,0.0
+visitas_x075,Tejeda (Pueblo),9.0,60.0,0.0,0.0
+visitas_x075,Bufadero de la Garita,7.0,30.0,100.0,94.3
+visitas_x075,Presa de las Niñas,7.0,60.0,0.0,0.0
+visitas_x075,Playa del Inglés,8.0,120.0,0.0,0.0
+visitas_x075,Caldera de Bandama,8.0,60.0,100.0,47.7
+visitas_x075,Los Azulejos de Veneguera,7.0,30.0,0.0,0.0
+visitas_x075,Cueva del Rey,8.0,60.0,0.0,0.0
+visitas_x075,Firgas (Paseo de Gran Canaria),7.0,45.0,100.0,17.0
+visitas_x075,Mirador del Balcón,9.0,30.0,0.0,0.0
+visitas_x075,Barranco de los Cernícalos,8.0,120.0,0.0,0.0
+visitas_x075,Charco de San Lorenzo,7.0,60.0,40.0,3.1
+visitas_x075,Tufia (Poblado y Playa),7.0,45.0,100.0,80.1
+visitas_x075,Jardín de la Marquesa (Arucas),7.0,60.0,100.0,39.5
+visitas_x075,Mundo Aborigen,7.0,90.0,0.0,0.0
+visitas_x075,Barranco de Fataga,8.0,45.0,0.0,0.0
+visitas_x075,Playa de Amadores,8.0,120.0,0.0,0.0
+visitas_x050,Roque Nublo,10.0,90.0,0.0,0.0
+visitas_x050,Dunas de Maspalomas,10.0,120.0,0.0,0.0
+visitas_x050,Puerto de Mogán,9.0,90.0,0.0,0.0
+visitas_x050,Vegueta (Las Palmas),9.0,150.0,0.0,0.0
+visitas_x050,Pico de las Nieves,9.0,45.0,0.0,0.0
+visitas_x050,Teror (Basílica),8.0,60.0,13.3,0.3
+visitas_x050,Arucas (Iglesia),8.0,60.0,100.0,86.3
+visitas_x050,Barranco de Guayadeque,7.0,90.0,0.0,0.0
+visitas_x050,Cenobio de Valerón,7.0,45.0,100.0,28.3
+visitas_x050,Puerto de las Nieves (Agaete),8.0,90.0,40.0,1.8
+visitas_x050,Playa de las Canteras,10.0,120.0,100.0,48.4
+visitas_x050,Jardín Botánico Viera y Clavijo,8.0,90.0,100.0,21.5
+visitas_x050,Cueva Pintada (Gáldar),9.0,60.0,100.0,50.5
+visitas_x050,Mirador de Unamuno,7.0,30.0,0.0,0.0
+visitas_x050,Tejeda (Pueblo),9.0,60.0,0.0,0.0
+visitas_x050,Bufadero de la Garita,7.0,30.0,100.0,88.6
+visitas_x050,Presa de las Niñas,7.0,60.0,0.0,0.0
+visitas_x050,Playa del Inglés,8.0,120.0,0.0,0.0
+visitas_x050,Caldera de Bandama,8.0,60.0,100.0,52.2
+visitas_x050,Los Azulejos de Veneguera,7.0,30.0,0.0,0.0
+visitas_x050,Cueva del Rey,8.0,60.0,0.0,0.0
+visitas_x050,Firgas (Paseo de Gran Canaria),7.0,45.0,100.0,25.3
+visitas_x050,Mirador del Balcón,9.0,30.0,0.0,0.0
+visitas_x050,Barranco de los Cernícalos,8.0,120.0,0.0,0.0
+visitas_x050,Charco de San Lorenzo,7.0,60.0,80.0,19.3
+visitas_x050,Tufia (Poblado y Playa),7.0,45.0,100.0,83.7
+visitas_x050,Jardín de la Marquesa (Arucas),7.0,60.0,100.0,70.6
+visitas_x050,Mundo Aborigen,7.0,90.0,0.0,0.0
+visitas_x050,Barranco de Fataga,8.0,45.0,0.0,0.0
+visitas_x050,Playa de Amadores,8.0,120.0,0.0,0.0
+puntuacion_uniforme,Roque Nublo,10.0,90.0,0.0,0.0
+puntuacion_uniforme,Dunas de Maspalomas,10.0,120.0,0.0,0.0
+puntuacion_uniforme,Puerto de Mogán,9.0,90.0,0.0,0.0
+puntuacion_uniforme,Vegueta (Las Palmas),9.0,150.0,0.0,0.0
+puntuacion_uniforme,Pico de las Nieves,9.0,45.0,0.0,0.0
+puntuacion_uniforme,Teror (Basílica),8.0,60.0,0.0,0.0
+puntuacion_uniforme,Arucas (Iglesia),8.0,60.0,100.0,55.3
+puntuacion_uniforme,Barranco de Guayadeque,7.0,90.0,0.0,0.0
+puntuacion_uniforme,Cenobio de Valerón,7.0,45.0,33.3,6.4
+puntuacion_uniforme,Puerto de las Nieves (Agaete),8.0,90.0,0.0,0.0
+puntuacion_uniforme,Playa de las Canteras,10.0,120.0,0.0,0.0
+puntuacion_uniforme,Jardín Botánico Viera y Clavijo,8.0,90.0,0.0,0.0
+puntuacion_uniforme,Cueva Pintada (Gáldar),9.0,60.0,13.3,2.1
+puntuacion_uniforme,Mirador de Unamuno,7.0,30.0,0.0,0.0
+puntuacion_uniforme,Tejeda (Pueblo),9.0,60.0,0.0,0.0
+puntuacion_uniforme,Bufadero de la Garita,7.0,30.0,100.0,100.0
+puntuacion_uniforme,Presa de las Niñas,7.0,60.0,0.0,0.0
+puntuacion_uniforme,Playa del Inglés,8.0,120.0,0.0,0.0
+puntuacion_uniforme,Caldera de Bandama,8.0,60.0,80.0,22.3
+puntuacion_uniforme,Los Azulejos de Veneguera,7.0,30.0,0.0,0.0
+puntuacion_uniforme,Cueva del Rey,8.0,60.0,0.0,0.0
+puntuacion_uniforme,Firgas (Paseo de Gran Canaria),7.0,45.0,100.0,37.2
+puntuacion_uniforme,Mirador del Balcón,9.0,30.0,0.0,0.0
+puntuacion_uniforme,Barranco de los Cernícalos,8.0,120.0,0.0,0.0
+puntuacion_uniforme,Charco de San Lorenzo,7.0,60.0,33.3,8.5
+puntuacion_uniforme,Tufia (Poblado y Playa),7.0,45.0,100.0,84.0
+puntuacion_uniforme,Jardín de la Marquesa (Arucas),7.0,60.0,93.3,48.9
+puntuacion_uniforme,Mundo Aborigen,7.0,90.0,0.0,0.0
+puntuacion_uniforme,Barranco de Fataga,8.0,45.0,0.0,0.0
+puntuacion_uniforme,Playa de Amadores,8.0,120.0,0.0,0.0
+puntuacion_cuadratica,Roque Nublo,10.0,90.0,0.0,0.0
+puntuacion_cuadratica,Dunas de Maspalomas,10.0,120.0,0.0,0.0
+puntuacion_cuadratica,Puerto de Mogán,9.0,90.0,0.0,0.0
+puntuacion_cuadratica,Vegueta (Las Palmas),9.0,150.0,0.0,0.0
+puntuacion_cuadratica,Pico de las Nieves,9.0,45.0,0.0,0.0
+puntuacion_cuadratica,Teror (Basílica),8.0,60.0,0.0,0.0
+puntuacion_cuadratica,Arucas (Iglesia),8.0,60.0,100.0,75.6
+puntuacion_cuadratica,Barranco de Guayadeque,7.0,90.0,0.0,0.0
+puntuacion_cuadratica,Cenobio de Valerón,7.0,45.0,100.0,18.8
+puntuacion_cuadratica,Puerto de las Nieves (Agaete),8.0,90.0,0.0,0.0
+puntuacion_cuadratica,Playa de las Canteras,10.0,120.0,100.0,47.0
+puntuacion_cuadratica,Jardín Botánico Viera y Clavijo,8.0,90.0,20.0,0.4
+puntuacion_cuadratica,Cueva Pintada (Gáldar),9.0,60.0,100.0,54.0
+puntuacion_cuadratica,Mirador de Unamuno,7.0,30.0,0.0,0.0
+puntuacion_cuadratica,Tejeda (Pueblo),9.0,60.0,0.0,0.0
+puntuacion_cuadratica,Bufadero de la Garita,7.0,30.0,100.0,88.8
+puntuacion_cuadratica,Presa de las Niñas,7.0,60.0,0.0,0.0
+puntuacion_cuadratica,Playa del Inglés,8.0,120.0,0.0,0.0
+puntuacion_cuadratica,Caldera de Bandama,8.0,60.0,100.0,33.3
+puntuacion_cuadratica,Los Azulejos de Veneguera,7.0,30.0,0.0,0.0
+puntuacion_cuadratica,Cueva del Rey,8.0,60.0,0.0,0.0
+puntuacion_cuadratica,Firgas (Paseo de Gran Canaria),7.0,45.0,80.0,2.6
+puntuacion_cuadratica,Mirador del Balcón,9.0,30.0,86.7,4.5
+puntuacion_cuadratica,Barranco de los Cernícalos,8.0,120.0,0.0,0.0
+puntuacion_cuadratica,Charco de San Lorenzo,7.0,60.0,0.0,0.0
+puntuacion_cuadratica,Tufia (Poblado y Playa),7.0,45.0,100.0,62.6
+puntuacion_cuadratica,Jardín de la Marquesa (Arucas),7.0,60.0,93.3,14.6
+puntuacion_cuadratica,Mundo Aborigen,7.0,90.0,0.0,0.0
+puntuacion_cuadratica,Barranco de Fataga,8.0,45.0,0.0,0.0
+puntuacion_cuadratica,Playa de Amadores,8.0,120.0,0.0,0.0
