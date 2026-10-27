@@ -20,7 +20,7 @@ El caso de estudio tiene **30 puntos de interés (POIs)** de Gran Canaria y **2 
 
 **Sobre la ODbL.** La matriz de tiempos se deriva de la base de datos de OpenStreetMap. Si se publica, debe atribuirse ("© colaboradores de OpenStreetMap") y distribuirse con la misma licencia ODbL. Los mapas interactivos usan las teselas de OpenStreetMap, que ya muestran esa atribución.
 
-**Limitación de las puntuaciones.** Las puntuaciones y los tiempos de visita no proceden de una fuente medible, como el número de reseñas o encuestas. Reflejan un criterio razonable pero subjetivo, y otro criterio cambiaría el frente de Pareto y las rutas recomendadas. El modelo favorece los lugares con mucha puntuación por minuto de visita. Por ejemplo, Tufia (7 puntos en 45 min) aparece en casi todas las rutas y las Dunas de Maspalomas (10 puntos en 120 min) en ninguna, aunque estén a minutos del hotel Lopesan.
+**Limitación de las puntuaciones.** Las puntuaciones y los tiempos de visita no proceden de una fuente medible, como el número de reseñas o encuestas. Reflejan un criterio razonable pero subjetivo, y otro criterio cambiaría el frente de Pareto y las rutas recomendadas. El modelo favorece los lugares con mucha puntuación por minuto de visita. Por ejemplo, Tufia (7 puntos en 45 min) aparece en todas las rutas recomendadas y las Dunas de Maspalomas (10 puntos en 120 min) en ninguna, aunque estén a minutos del hotel Lopesan. Desde ese hotel las Dunas sí forman parte del frente de Pareto (6 de sus 26 soluciones), pero solo en rutas de hasta 5,7 h y 32 puntos, que no tienen la mejor puntuación por hora ni son el punto rodilla. El análisis de sensibilidad ([`analisis_sensibilidad.md`](analisis_sensibilidad.md)) muestra cuándo entran en las rutas recomendadas.
 
 ---
 
