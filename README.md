@@ -30,16 +30,24 @@ multiobjective_orienteering_gc/
 │   │   ├── convergencia_nsga2.png             # Curvas de Hipervolumen y Score factible
 │   │   ├── boxplot_hipervolumen.png           # Boxplots estadísticos de los 4 algoritmos
 │   │   ├── resultados_estadisticos_semillas.csv  # Registro detallado de las 15 semillas
-│   │   └── resumen_estadistico.json           # Métricas agregadas y p-valores de Wilcoxon
+│   │   ├── resumen_estadistico.json           # Métricas agregadas y p-valores de Wilcoxon
+│   │   ├── hiperparametros.csv                # Hipervolumen por combinación de hiperparámetros
+│   │   ├── sensibilidad.csv                   # Frente por variante de visitas y puntuaciones
+│   │   └── sensibilidad_pois.csv              # Frecuencia de cada POI en el frente por variante
 │   ├── figuras/                               # Figuras para la memoria (scripts/make_figures.py)
 │   └── validacion_zdt1.png                    # Validación analítica de NSGA-II en ZDT1
 ├── docs/
-│   └── memoria_datos_y_modelo.md              # Secciones de la memoria: datos, matriz, calibración, modelo e IA
+│   ├── memoria_datos_y_modelo.md              # Secciones de la memoria: datos, matriz, calibración, modelo e IA
+│   ├── memoria_algoritmos_y_experimentacion.md  # Secciones de la memoria: NSGA-II, baselines, estadística, ZDT1 e IA
+│   ├── estudio_hiperparametros.md             # Estudio de población, generaciones, cruce y mutación
+│   └── analisis_sensibilidad.md               # Sensibilidad a tiempos de visita y puntuaciones
 ├── scripts/
 │   ├── build_time_matrix.ipynb                # Construcción y calibración de la matriz (OSMnx + Google Maps)
 │   ├── build_road_paths.py                    # Caminos por carretera de las rutas (OSMnx)
 │   ├── make_maps.py                           # Mapas Folium a partir de rutas_pareto.json
-│   └── make_figures.py                        # Mapa de POIs, calibración y frentes de Pareto
+│   ├── make_figures.py                        # Mapa de POIs, calibración y frentes de Pareto
+│   ├── hyperparameter_study.py                # Estudio de hiperparámetros de NSGA-II (15 semillas)
+│   └── sensitivity_analysis.py                # Análisis de sensibilidad a visitas y puntuaciones
 ├── src/                                       # Código fuente modular
 │   ├── core/                                  # Modelos y métricas compartidas
 │   │   ├── problem.py                         # OrienteeringProblem, Individual, GAConfig
@@ -131,4 +139,9 @@ python -m src.benchmarks.zdt
 
 # 5. Batería estadística completa con 15 semillas y Wilcoxon (~4 min, admite --escenario)
 python -m src.benchmarks.statistical_suite
+
+# 6. Estudio de hiperparámetros (~15 min) y análisis de sensibilidad (~5 min), con 8 procesos
+#    en paralelo (admiten --escenario y --jobs)
+python scripts/hyperparameter_study.py
+python scripts/sensitivity_analysis.py
 ```
