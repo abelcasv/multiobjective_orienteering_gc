@@ -51,7 +51,7 @@ De este modo, las soluciones infactibles actúan como peldaños intermedios haci
 
 ### 1.4. Parámetros Elegidos y Justificación
 
-Los hiperparámetros del algoritmo genético se fijaron de forma **empírica**, sin realizar un barrido exhaustivo en rejilla:
+Los hiperparámetros del algoritmo genético se fijaron de forma **empírica** y después se contrastaron con un estudio de hiperparámetros con el mismo presupuesto de 20.100 evaluaciones y las mismas 15 semillas ([`estudio_hiperparametros.md`](estudio_hiperparametros.md)). Ninguna de las 11 alternativas probadas mejora la configuración actual de forma significativa en los dos hoteles. Una mutación baja ($p_m = 0{,}15$) sí empeora el hipervolumen.
 
 | Parámetro | Valor | Justificación empírica |
 |---|:---:|---|
