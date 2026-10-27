@@ -139,4 +139,9 @@ python -m src.benchmarks.zdt
 
 # 5. Batería estadística completa con 15 semillas y Wilcoxon (~4 min, admite --escenario)
 python -m src.benchmarks.statistical_suite
+
+# 6. Estudio de hiperparámetros (~15 min) y análisis de sensibilidad (~5 min), con 8 procesos
+#    en paralelo (admiten --escenario y --jobs)
+python scripts/hyperparameter_study.py
+python scripts/sensitivity_analysis.py
 ```
