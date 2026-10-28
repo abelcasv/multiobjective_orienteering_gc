@@ -10,7 +10,9 @@ Cada escenario (hotel base) tiene su carpeta con 31 nodos: el hotel (depósito, 
 Ficheros de cada carpeta:
 
 - `matriz_tiempos.csv`: tiempos de conducción en minutos entre todos los nodos (31x31, asimétrica, sin `inf`/NaN).
-- `puntos_interes.csv`: nombre, latitud, longitud, puntuación y tiempo de visita (min).
+- `puntos_interes.csv`: nombre, latitud, longitud, puntuación, tiempo de visita (min), `Categoria` y `Categoria_2`.
+  La categoría principal es una de *Playa y costa*, *Montaña y naturaleza*, *Cultura e historia* o *Pueblos y ciudad* (el hotel lleva `Hotel`).
+  `Categoria_2` es una segunda categoría opcional para los sitios mixtos (p. ej. Guayadeque: naturaleza y cultura). La asignación es criterio del equipo.
 - `coordenadas.csv`: nombre, latitud, longitud (usado para exportar las rutas con coordenadas).
 
 `auxiliar/` contiene la matriz completa de 32x32 con ambos hoteles y la matriz sin factor global de calibración (útil para el análisis de sensibilidad).
