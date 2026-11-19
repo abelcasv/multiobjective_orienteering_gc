@@ -13,11 +13,17 @@ def _insert_random_node(genes: List[int], candidates: List[int]) -> List[int]:
     return copy_genes
 
 
-def _remove_random_node(genes: List[int]) -> List[int]:
+def _remove_random_node(genes: List[int], mandatory_node: Optional[int] = None) -> List[int]:
     if len(genes) <= 1:
         return genes
+    removable = [
+        i for i, gene in enumerate(genes)
+        if mandatory_node is None or gene != mandatory_node
+    ]
+    if not removable:
+        return genes
     copy_genes = list(genes)
-    copy_genes.pop(random.randint(0, len(copy_genes) - 1))
+    copy_genes.pop(random.choice(removable))
     return copy_genes
 
 
@@ -39,7 +45,28 @@ def _invert_random_segment(genes: List[int]) -> List[int]:
     return copy_genes
 
 
-def mutate(ind: Individual, candidates: List[int]) -> Individual:
+def _repair_chromosome(genes: List[int], problem: OrienteeringProblem) -> List[int]:
+    forbidden = set(problem.forbidden_nodes or [])
+    repaired: List[int] = []
+    seen = set()
+    for gene in genes:
+        if gene not in forbidden and gene not in seen:
+            repaired.append(gene)
+            seen.add(gene)
+
+    if problem.mandatory_node is not None and problem.mandatory_node not in seen:
+        if problem.mandatory_node not in forbidden:
+            idx = random.randint(0, len(repaired))
+            repaired.insert(idx, problem.mandatory_node)
+
+    return repaired
+
+
+def mutate(
+    ind: Individual,
+    candidates: List[int],
+    problem: OrienteeringProblem,
+) -> Individual:
     operators = [
         _insert_random_node,
         _remove_random_node,
@@ -50,9 +77,12 @@ def mutate(ind: Individual, candidates: List[int]) -> Individual:
     chosen_op = random.choices(operators, weights=weights, k=1)[0]
     if chosen_op == _insert_random_node:
         new_genes = _insert_random_node(ind.genes, candidates)
+    elif chosen_op == _remove_random_node:
+        new_genes = _remove_random_node(ind.genes, problem.mandatory_node)
     else:
         new_genes = chosen_op(ind.genes)
-    return Individual(new_genes)
+    repaired_genes = _repair_chromosome(new_genes, problem)
+    return Individual(repaired_genes)
 
 
 def _build_child_genes(base: List[int], donor: List[int], max_len: int) -> List[int]:
@@ -143,8 +173,11 @@ class NSGA2Orienteering:
         self.history_hypervolume: List[float] = []
 
     def _create_random_individual(self) -> Individual:
-        size = random.randint(self.config.min_init_nodes, self.config.max_init_nodes)
-        return Individual(random.sample(self.candidates, size))
+        max_size = min(len(self.candidates), self.config.max_init_nodes)
+        min_size = min(self.config.min_init_nodes, max_size)
+        size = random.randint(min_size, max_size) if max_size > 0 else 0
+        genes = random.sample(self.candidates, size)
+        return Individual(_repair_chromosome(genes, self.problem))
 
     def _evaluate_all(self, individuals: List[Individual]) -> None:
         for ind in individuals:
@@ -157,14 +190,17 @@ class NSGA2Orienteering:
             p2 = binary_tournament(random.choice(population), random.choice(population))
 
             if random.random() < self.config.crossover_rate:
-                c1, c2 = crossover(p1, p2)
+                raw_c1, raw_c2 = crossover(p1, p2)
+                c1 = Individual(_repair_chromosome(raw_c1.genes, self.problem))
+                c2 = Individual(_repair_chromosome(raw_c2.genes, self.problem))
             else:
-                c1, c2 = Individual(list(p1.genes)), Individual(list(p2.genes))
+                c1 = Individual(_repair_chromosome(list(p1.genes), self.problem))
+                c2 = Individual(_repair_chromosome(list(p2.genes), self.problem))
 
             if random.random() < self.config.mutation_rate:
-                c1 = mutate(c1, self.candidates)
+                c1 = mutate(c1, self.candidates, self.problem)
             if random.random() < self.config.mutation_rate:
-                c2 = mutate(c2, self.candidates)
+                c2 = mutate(c2, self.candidates, self.problem)
 
             self._evaluate_all([c1, c2])
             offspring.extend([c1, c2])

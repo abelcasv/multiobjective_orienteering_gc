@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List
+from typing import List, Optional
 import numpy as np
 
 
@@ -10,13 +10,19 @@ class OrienteeringProblem:
     visit_times: np.ndarray
     depot_idx: int
     t_max: float
+    mandatory_node: Optional[int] = None
+    forbidden_nodes: Optional[List[int]] = None
 
     @property
     def node_count(self) -> int:
         return self.time_matrix.shape[0]
 
     def available_nodes(self) -> List[int]:
-        return [i for i in range(self.node_count) if i != self.depot_idx]
+        forbidden = set(self.forbidden_nodes or [])
+        return [
+            i for i in range(self.node_count)
+            if i != self.depot_idx and i not in forbidden
+        ]
 
     def driving_time(self, origin: int, destination: int) -> float:
         return float(self.time_matrix[origin, destination])
