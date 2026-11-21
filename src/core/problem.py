@@ -13,6 +13,19 @@ class OrienteeringProblem:
     mandatory_node: Optional[int] = None
     forbidden_nodes: Optional[List[int]] = None
 
+    def __post_init__(self) -> None:
+        if self.mandatory_node is not None:
+            if self.mandatory_node == self.depot_idx:
+                raise ValueError("mandatory_node cannot be the depot node.")
+            if not (0 <= self.mandatory_node < self.node_count):
+                raise ValueError(
+                    f"mandatory_node {self.mandatory_node} is out of bounds [0, {self.node_count})."
+                )
+            if self.forbidden_nodes and self.mandatory_node in self.forbidden_nodes:
+                raise ValueError(
+                    f"mandatory_node {self.mandatory_node} cannot also be in forbidden_nodes."
+                )
+
     @property
     def node_count(self) -> int:
         return self.time_matrix.shape[0]

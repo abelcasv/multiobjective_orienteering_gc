@@ -55,9 +55,8 @@ def _repair_chromosome(genes: List[int], problem: OrienteeringProblem) -> List[i
             seen.add(gene)
 
     if problem.mandatory_node is not None and problem.mandatory_node not in seen:
-        if problem.mandatory_node not in forbidden:
-            idx = random.randint(0, len(repaired))
-            repaired.insert(idx, problem.mandatory_node)
+        idx = random.randint(0, len(repaired))
+        repaired.insert(idx, problem.mandatory_node)
 
     return repaired
 
