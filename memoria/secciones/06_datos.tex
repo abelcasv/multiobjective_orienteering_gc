@@ -21,7 +21,7 @@ El caso de estudio tiene 30 POIs de Gran Canaria y 2 hoteles que sirven de salid
 \toprule
 Dato & Fuente & Licencia y uso \\
 \midrule
-Red de carreteras & OpenStreetMap, descargada con OSMnx \citep{boeing2017} & © colaboradores de OpenStreetMap, licencia ODbL 1.0 \\
+Red de carreteras & OpenStreetMap, descargada con OSMnx \citep{boeing2017} & \textcopyright{} colaboradores de OpenStreetMap, licencia ODbL 1.0 \\
 Coordenadas de los hoteles & Google Maps, consulta manual & Solo coordenadas puntuales \\
 Coordenadas de los POIs & Recopiladas por el equipo y comprobadas dentro de la isla & Datos propios \\
 Tiempos de referencia & Google Maps, consulta manual: 12 pares para calibrar y 4 para validar & Muestra pequeña para ajustar y comprobar; no se redistribuye \\
@@ -42,9 +42,9 @@ La matriz se genera en cinco pasos con un cuaderno ejecutable en Google Colab, \
   \item \textbf{Velocidades.} Cada tramo recibe su velocidad máxima o, si falta, la media de su tipo de vía; con su longitud se obtiene el tiempo de recorrido.
   \item \textbf{Penalización por curvas.} A la velocidad legal, las carreteras de montaña salen demasiado rápidas. Para cada tramo se mide la curvatura $c$ (grados girados por kilómetro) y se reduce la velocidad:
   \begin{equation}
-    v_{\mathrm{efectiva}} = \frac{v_{\mathrm{límite}}}{1 + c/K},
+    v_{\text{efectiva}} = \frac{v_{\text{límite}}}{1 + c/K},
   \end{equation}
-  con un mínimo de 15 km/h. $K$ se elige entre varios candidatos comparando con Google Maps, y solo se aplica si reduce el error medio al menos 0,5 min. El valor elegido fue $K = 3000$ grados/km: un tramo con 300 °/km circula un 9 \% más lento y el más sinuoso, la mitad de rápido.
+  con un mínimo de 15 km/h. $K$ se elige entre varios candidatos comparando con Google Maps, y solo se aplica si reduce el error medio al menos 0,5 min. El valor elegido fue $K = 3000$ grados/km: un tramo con 300\,\textdegree/km circula un 9 \% más lento y el más sinuoso, la mitad de rápido.
   \item \textbf{Asociación a la red.} Cada POI y cada hotel se asocia al nodo de carretera más cercano.
   \item \textbf{Caminos mínimos.} Se ejecuta el algoritmo de \citet{dijkstra1959} desde cada uno de los 32 nodos y se obtiene una matriz $32 \times 32$ en minutos, sin valores infinitos.
 \end{enumerate}

@@ -107,7 +107,7 @@ penalizando las rutas que superan la cota con $-10^5 - 100\,(T(R) - \varepsilon_
 
 \paragraph{Presupuesto de los métodos de escalarización.} Los dos usan el mismo algoritmo genético de un solo objetivo, con los operadores y la reparación de NSGA-II, una población de 30 individuos y 66 generaciones por subproblema. Con 10 subproblemas suman $10 \times (30 + 30 \cdot 66) = 20.100$ evaluaciones. Su coste es $O\bigl(K\,G_{\mathrm{sub}}\,(N_{\mathrm{sub}}\,k_{\max} + N_{\mathrm{sub}} \log N_{\mathrm{sub}})\bigr)$, porque en cada generación se ordena por una aptitud escalar en lugar de por no dominancia. El Algoritmo~\ref{alg:baselines} resume los esquemas de todas las líneas base.
 
-\begin{algorithm}[H]
+\begin{algorithm}[tbp]
 \caption{Líneas base: heurística voraz, búsqueda aleatoria y escalarización GA}
 \label{alg:baselines}
 \small
@@ -116,7 +116,7 @@ penalizando las rutas que superan la cota con $-10^5 - 100\,(T(R) - \varepsilon_
 \For{cada presupuesto $B$}
   \State $u \gets h$;\; $t_{\mathrm{acum}} \gets 0$;\; $R \gets ()$;\; $\mathrm{disp} \gets P \setminus F$
   \While{$\exists\, j \in \mathrm{disp} : t_{\mathrm{acum}} + t_{uj} + v_j + t_{jh} \le B$}
-    \State $j^* \gets \arg\max_{j} s_j / \max(1,\ t_{uj} + v_j)$;\; añadir $j^*$ a $R$;\; $u \gets j^*$;\; actualizar $t_{\mathrm{acum}}$
+    \State $j^* \gets \arg\max_{j \text{ que quepa}} s_j / \max(1,\ t_{uj} + v_j)$;\; añadir $j^*$ a $R$;\; $u \gets j^*$;\; actualizar $t_{\mathrm{acum}}$
   \EndWhile
 \EndFor
 \State \Return rutas no dominadas entre las generadas
@@ -126,12 +126,12 @@ penalizando las rutas que superan la cota con $-10^5 - 100\,(T(R) - \varepsilon_
 \medskip
 \Statex \textbf{C) Suma ponderada y $\varepsilon$-restricción} ($K = 10$ parámetros $\theta$, $N_{\mathrm{sub}} = 30$, $G_{\mathrm{sub}} = 66$)
 \For{cada $\theta \in \{w_1,\dots,w_{10}\}$ o $\{\varepsilon_1,\dots,\varepsilon_{10}\}$}
-  \State $P \gets$ $N_{\mathrm{sub}}$ secuencias reparadas y evaluadas según~\eqref{eq:secuencia}
+  \State $\mathit{Pob} \gets$ $N_{\mathrm{sub}}$ secuencias reparadas y evaluadas según~\eqref{eq:secuencia}
   \For{$g = 1$ \textbf{to} $G_{\mathrm{sub}}$}
     \State $Q \gets$ hijos generados por torneo según aptitud($\theta$), cruce, reparación y mutación
-    \State $P \gets$ $N_{\mathrm{sub}}$ mejores individuos de $P \cup Q$ ordenados por aptitud($\theta$)
+    \State $\mathit{Pob} \gets$ $N_{\mathrm{sub}}$ mejores individuos de $\mathit{Pob} \cup Q$ ordenados por aptitud($\theta$)
   \EndFor
-  \State guardar la mejor solución factible de $P$
+  \State guardar la mejor solución factible de $\mathit{Pob}$
 \EndFor
 \State \Return soluciones no dominadas del conjunto recogido
 \end{algorithmic}

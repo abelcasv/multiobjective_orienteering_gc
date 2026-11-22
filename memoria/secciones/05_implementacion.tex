@@ -34,7 +34,7 @@ Ruta & Contenido \\
   \item \textbf{Un escenario por hotel.} Cada hotel define una instancia de 31 nodos en \code{data/<hotel>/}. No es un problema con varios depósitos: los dos se resuelven por separado y se comparan.
   \item \textbf{Restricciones sin penalizar.} La restricción de tiempo se trata con las reglas de Deb y las preferencias con reparación, de modo que no hay coeficientes de penalización que ajustar en NSGA-II.
   \item \textbf{Validación temprana.} Una especificación contradictoria (visita obligatoria que coincide con el hotel o que está prohibida) lanza un error al construir el problema en lugar de ignorarse.
-  \item \textbf{Comparación justa.} El número de evaluaciones se cuenta durante la ejecución y es exactamente 20.100 en todos los métodos estocásticos.
+  \item \textbf{Comparación justa.} Todos los métodos estocásticos realizan exactamente 20.100 evaluaciones: en NSGA-II, la búsqueda aleatoria y la suma ponderada lo garantiza la estructura del bucle ($N + N \cdot G$, $E$ iteraciones y $10 \times (30 + 30 \cdot 66)$), y en la $\varepsilon$-restricción se cuentan además durante la ejecución.
   \item \textbf{Reproducibilidad.} Las semillas se fijan antes de cada ejecución, las versiones de las librerías están fijadas y los scripts regeneran todas las tablas y figuras (anexo~\ref{sec:reproducibilidad}). Se ha comprobado que repetir la batería con las mismas semillas da exactamente los mismos hipervolúmenes.
   \item \textbf{Caminos precalculados.} Para dibujar las rutas por carretera sin descargar la red, se precalcula el camino entre todos los pares de nodos de cada hotel (930 pares), simplificado a unos 5 m y comprimido (1,3 MB por hotel).
 \end{itemize}
