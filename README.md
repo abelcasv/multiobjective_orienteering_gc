@@ -29,17 +29,19 @@ multiobjective_orienteering_gc/
 │   │   ├── mapa_rutas.html                    # Mapa Folium de las 3 rutas recomendadas
 │   │   ├── comparativa_pareto_vs_greedy.png   # Frente de Pareto vs Línea base Greedy
 │   │   ├── convergencia_nsga2.png             # Curvas de Hipervolumen y Score factible
-│   │   ├── boxplot_hipervolumen.png           # Boxplots estadísticos de los 4 algoritmos
+│   │   ├── boxplot_hipervolumen.png           # Boxplots estadísticos de los 5 algoritmos
 │   │   ├── resultados_estadisticos_semillas.csv  # Registro detallado de las 15 semillas
 │   │   ├── resumen_estadistico.json           # Métricas agregadas y p-valores de Wilcoxon
 │   │   ├── hiperparametros.csv                # Hipervolumen por combinación de hiperparámetros
 │   │   ├── sensibilidad.csv                   # Frente por variante de visitas y puntuaciones
 │   │   └── sensibilidad_pois.csv              # Frecuencia de cada POI en el frente por variante
 │   ├── figuras/                               # Figuras para la memoria (scripts/make_figures.py)
-│   └── validacion_zdt1.png                    # Validación analítica de NSGA-II en ZDT1
+│   ├── validacion_zdt1.png                    # Validación analítica de NSGA-II en ZDT1
+│   └── validacion_zdt_familia.png             # Comparativa en familia ZDT (ZDT1, ZDT2 y ZDT3)
 ├── docs/
+│   ├── estado_del_arte.md                     # Estado del arte del OP, TTDP y rutas turísticas
 │   ├── memoria_datos_y_modelo.md              # Secciones de la memoria: datos, matriz, calibración, modelo e IA
-│   ├── memoria_algoritmos_y_experimentacion.md  # Secciones de la memoria: NSGA-II, baselines, estadística, ZDT1 e IA
+│   ├── memoria_algoritmos_y_experimentacion.md  # Formulación x_ij, NSGA-II, baselines, estadística, ZDT e IA
 │   ├── estudio_hiperparametros.md             # Estudio de población, generaciones, cruce y mutación
 │   └── analisis_sensibilidad.md               # Sensibilidad a tiempos de visita y puntuaciones
 ├── scripts/
@@ -58,9 +60,10 @@ multiobjective_orienteering_gc/
 │   │   ├── genetic_algorithm.py               # NSGA-II con dominancia de Deb (2002)
 │   │   ├── greedy_algorithm.py                # Heurística Voraz (Baseline)
 │   │   ├── random_search.py                   # Búsqueda Aleatoria (Baseline)
-│   │   └── weighted_sum.py                    # Suma Ponderada / Escalarización (Baseline)
+│   │   ├── weighted_sum.py                    # Suma Ponderada / Escalarización (Baseline)
+│   │   └── epsilon_constraint.py              # Método ε-restricción (Baseline)
 │   ├── benchmarks/                            # Suite experimental exigida por rúbrica C5
-│   │   ├── zdt.py                             # Validación matemática en benchmark ZDT1
+│   │   ├── zdt.py                             # Validación matemática en benchmarks ZDT1, ZDT2 y ZDT3
 │   │   └── statistical_suite.py               # Batería con 15 semillas + Test de Wilcoxon
 │   ├── pipeline.py                            # Orquestación del caso de Gran Canaria (por escenario)
 │   ├── planificador.py                        # optimizar_ruta: categorías, descartes y visita obligatoria
@@ -84,9 +87,9 @@ multiobjective_orienteering_gc/
 - Visualización interactiva con **Folium** (`scripts/make_maps.py`) y figuras de la memoria (`scripts/make_figures.py`).
 
 ### Miembro 2: Optimization / AI Engineer
-- **Algoritmo propio NSGA-II:** Cromosomas de longitud variable, selección por torneo de Deb con manejo de restricciones, operadores genéticos específicos y ordenamiento no dominado rápido.
-- **Líneas base de comparación:** Heurística voraz (Greedy), búsqueda aleatoria (Random Search) y escalarización lineal (Weighted Sum GA).
-- **Validación matemática:** Demostración de convergencia en benchmark continuo ZDT1 ($IGD = 0.0210$).
+- **Algoritmo propio NSGA-II:** Cromosomas de longitud variable, selección por torneo de Deb con manejo de restricciones, operadores genéticos específicos, reparación para restricciones duras y ordenamiento no dominado rápido ($O(M N^2)$).
+- **Líneas base de comparación:** Heurística voraz (Greedy), búsqueda aleatoria (Random Search), suma ponderada (Weighted Sum GA) y $\varepsilon$-restricción ($\varepsilon$-Constraint GA).
+- **Validación matemática:** Demostración de convergencia en benchmarks continuos ZDT1 ($IGD = 0.0210$), ZDT2 ($IGD = 0.0547$) y ZDT3 ($IGD = 0.0127$).
 - **Experimentación rigurosa:** Batería con 15 semillas independientes y test de Wilcoxon ($p < 0.001$).
 
 ---
@@ -95,7 +98,7 @@ multiobjective_orienteering_gc/
 
 ### 1. Batería Estadística (15 Semillas Independientes)
 
-Todos los métodos estocásticos se comparan con el mismo presupuesto de **20.100 evaluaciones** de la función objetivo por corrida (NSGA-II: 100 + 200×100; Random Search: 20.100; Weighted Sum: 10 pesos × 30 × (1 + 66)). Greedy es determinista. La comparación usa el test pareado de rangos con signo de Wilcoxon (`scipy.stats.wilcoxon`, bilateral) sobre el hipervolumen ($T_{\max} = 480$ min).
+Todos los métodos estocásticos se comparan con el mismo presupuesto de **20.100 evaluaciones** de la función objetivo por corrida (NSGA-II: 100 + 200×100; Random Search: 20.100; Weighted Sum y $\varepsilon$-Constraint: 10 subproblemas × 30 × (1 + 66)). Greedy es determinista. La comparación usa el test pareado de rangos con signo de Wilcoxon (`scipy.stats.wilcoxon`, bilateral) sobre el hipervolumen ($T_{\max} = 480$ min).
 
 **Hotel Santa Catalina (Las Palmas)**
 
@@ -104,6 +107,7 @@ Todos los métodos estocásticos se comparan con el mismo presupuesto de **20.10
 | **NSGA-II (Propio)** | **11.594,3 ± 24,5** | 0,428 | — | — |
 | Greedy | 10.188,9 ± 0,0 | 0,275 | $6{,}4 \times 10^{-4}$ | +13,8 % |
 | Random Search | 10.050,3 ± 99,9 | 0,447 | $6{,}1 \times 10^{-5}$ | +15,4 % |
+| Epsilon-Constraint GA | 9.711,9 ± 254,0 | 0,307 | $6{,}1 \times 10^{-5}$ | +19,4 % |
 | Weighted Sum GA | 6.839,8 ± 490,3 | 1,076 | $6{,}1 \times 10^{-5}$ | +69,5 % |
 
 **Hotel Lopesan Villa del Conde**
@@ -113,14 +117,15 @@ Todos los métodos estocásticos se comparan con el mismo presupuesto de **20.10
 | **NSGA-II (Propio)** | **10.013,1 ± 64,4** | 0,597 | — | — |
 | Greedy | 9.095,0 ± 0,0 | 0,346 | $6{,}1 \times 10^{-5}$ | +10,1 % |
 | Random Search | 8.694,5 ± 90,4 | 0,632 | $6{,}1 \times 10^{-5}$ | +15,2 % |
+| Epsilon-Constraint GA | 8.389,8 ± 286,4 | 0,332 | $6{,}1 \times 10^{-5}$ | +19,3 % |
 | Weighted Sum GA | 5.411,4 ± 726,3 | 1,091 | $6{,}1 \times 10^{-5}$ | +85,0 % |
 
-> **Conclusión estadística:** en ambos escenarios NSGA-II obtiene un hipervolumen mayor que los tres baselines con diferencias significativas ($p < 0{,}001$). $6{,}1 \times 10^{-5}$ es el p-valor mínimo posible del test exacto con 15 pares: NSGA-II gana en las 15 semillas. La suma ponderada solo encuentra un punto por peso y no cubre el frente.
+> **Conclusión estadística:** en ambos escenarios NSGA-II obtiene un hipervolumen mayor que los cuatro baselines con diferencias significativas ($p < 0{,}001$), ganando en las 15 semillas evaluadas. $\varepsilon$-Constraint supera ampliamente a la suma ponderada (+42 % y +55 %) al poder cubrir cotas temporales en zonas no convexas, pero queda limitado a un máximo de 10 puntos discretos frente al frente continuo generado por NSGA-II.
 
-### 2. Validación Analítica en Benchmark ZDT1
-* Implementación de NSGA-II validada formalmente sobre el benchmark analítico canónico continuo ZDT1 de Deb et al. (2002).
-* Incorpora el operador de comparación por aglomeración (*Crowded Tournament Selection*) y operadores continuos SBX y mutación polinomial con semilla reproducible (seed=42).
-* **Inverted Generational Distance (IGD):** **0.0210**, demostrando convergencia visual y numérica exacta a lo largo de todo el Frente de Pareto teórico ($f_1 \in [0, 1]$, $f_2 = 1 - \sqrt{f_1}$).
+### 2. Validación Analítica en Benchmarks ZDT1, ZDT2 y ZDT3
+* Implementación de NSGA-II validada formalmente sobre tres benchmarks canónicos continuos de la familia ZDT (Zitzler, Deb & Thiele, 2000): **ZDT1** (frente convexo), **ZDT2** (frente cóncavo) y **ZDT3** (frente discontinuo en 5 tramos).
+* Incorpora *Crowded Tournament Selection*, SBX y mutación polinomial con semilla reproducible (`seed=42`).
+* **Inverted Generational Distance (IGD):** **0.0210** (ZDT1), **0.0547** (ZDT2) y **0.0127** (ZDT3), demostrando convergencia visual y numérica exacta a lo largo de las tres geometrías de frente (`output/validacion_zdt_familia.png`).
 
 ---
 

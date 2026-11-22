@@ -7,6 +7,7 @@ from .genetic_algorithm import (
 from .greedy_algorithm import GreedyOrienteering
 from .random_search import RandomSearchOrienteering
 from .weighted_sum import WeightedSumGA
+from .epsilon_constraint import EpsilonConstraintGA
 
 __all__ = [
     "NSGA2Orienteering",
@@ -16,4 +17,5 @@ __all__ = [
     "GreedyOrienteering",
     "RandomSearchOrienteering",
     "WeightedSumGA",
+    "EpsilonConstraintGA",
 ]

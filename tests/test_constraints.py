@@ -9,6 +9,7 @@ from src.algorithms.genetic_algorithm import (
     NSGA2Orienteering,
 )
 from src.algorithms.weighted_sum import WeightedSumGA
+from src.algorithms.epsilon_constraint import EpsilonConstraintGA
 
 
 def _build_synthetic_problem(
@@ -127,9 +128,42 @@ class TestHardConstraints(unittest.TestCase):
         solutions = ws.run()
         self.assertGreater(len(solutions), 0)
         for ind in solutions:
+            self.assertIn(4, ind.genes)
             self.assertNotIn(1, ind.genes)
             self.assertNotIn(6, ind.genes)
             self.assertEqual(ind.violation, 0.0)
+
+    def test_epsilon_constraint_respects_constraints_and_pareto(self) -> None:
+        problem = _build_synthetic_problem(
+            mandatory_node=4,
+            forbidden_nodes=[1, 6],
+            t_max=220.0,
+        )
+        ec = EpsilonConstraintGA(problem, pop_size=20, generations=25)
+        solutions = ec.run()
+        self.assertGreater(len(solutions), 0)
+        self.assertEqual(ec.evaluations, len(ec.epsilons) * 20 * (1 + 25))
+        for ind in solutions:
+            self.assertIn(4, ind.genes)
+            self.assertNotIn(1, ind.genes)
+            self.assertNotIn(6, ind.genes)
+            self.assertEqual(ind.violation, 0.0)
+            self.assertLessEqual(ind.total_time, problem.t_max)
+
+        # Ninguna solución devuelta debe estar dominada por otra
+        for i, ind in enumerate(solutions):
+            for j, other in enumerate(solutions):
+                if i != j:
+                    self.assertFalse(other.dominates(ind))
+
+    def test_epsilon_constraint_default_budget_is_20100(self) -> None:
+        problem = _build_synthetic_problem(t_max=480.0)
+        ec = EpsilonConstraintGA(problem)
+        self.assertEqual(len(ec.epsilons), 10)
+        self.assertEqual(ec.epsilons[0], 60.0)
+        self.assertEqual(ec.epsilons[-1], 480.0)
+        ec.run()
+        self.assertEqual(ec.evaluations, 20100)
 
 
 if __name__ == "__main__":

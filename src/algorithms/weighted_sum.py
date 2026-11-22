@@ -2,7 +2,7 @@ from typing import List, Tuple, Optional
 import random
 import numpy as np
 from ..core.problem import OrienteeringProblem, Individual
-from .genetic_algorithm import crossover, mutate
+from .genetic_algorithm import crossover, mutate, _repair_chromosome
 
 
 class WeightedSumGA:
@@ -32,7 +32,9 @@ class WeightedSumGA:
         while len(offspring) < self.pop_size:
             p1 = self._tournament(population, weight)
             p2 = self._tournament(population, weight)
-            c1, c2 = crossover(p1, p2)
+            raw_c1, raw_c2 = crossover(p1, p2)
+            c1 = Individual(_repair_chromosome(raw_c1.genes, self.problem))
+            c2 = Individual(_repair_chromosome(raw_c2.genes, self.problem))
             c1 = mutate(c1, self.candidates, self.problem)
             c2 = mutate(c2, self.candidates, self.problem)
             c1.evaluate(self.problem)
@@ -41,8 +43,15 @@ class WeightedSumGA:
         return offspring
 
     def _solve_for_weight(self, weight_score: float) -> Optional[Individual]:
+        max_k = min(7, len(self.candidates))
+        min_k = min(2, max_k)
         population = [
-            Individual(random.sample(self.candidates, random.randint(2, 7)))
+            Individual(
+                _repair_chromosome(
+                    random.sample(self.candidates, random.randint(min_k, max_k) if max_k > 0 else 0),
+                    self.problem,
+                )
+            )
             for _ in range(self.pop_size)
         ]
         for ind in population:

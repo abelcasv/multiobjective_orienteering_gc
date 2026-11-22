@@ -20,6 +20,7 @@ try:
     from ..algorithms.greedy_algorithm import GreedyOrienteering
     from ..algorithms.random_search import RandomSearchOrienteering
     from ..algorithms.weighted_sum import WeightedSumGA
+    from ..algorithms.epsilon_constraint import EpsilonConstraintGA
     from ..pipeline import ESCENARIOS, load_distance_matrix, create_problem_instance, scenario_output_dir
 except (ImportError, ValueError):
     import sys
@@ -35,6 +36,7 @@ except (ImportError, ValueError):
     from src.algorithms.greedy_algorithm import GreedyOrienteering
     from src.algorithms.random_search import RandomSearchOrienteering
     from src.algorithms.weighted_sum import WeightedSumGA
+    from src.algorithms.epsilon_constraint import EpsilonConstraintGA
     from src.pipeline import ESCENARIOS, load_distance_matrix, create_problem_instance, scenario_output_dir
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -55,9 +57,12 @@ def _evaluate_algorithm_run(
     elif algo_name == "Random Search":
         front_rs = RandomSearchOrienteering(problem, total_evaluations=20100).run()
         pts = [(ind.total_time, ind.score) for ind in front_rs]
-    else:
+    elif algo_name == "Weighted Sum":
         front_ws = WeightedSumGA(problem, pop_size=30, generations=66).run()
         pts = [(ind.total_time, ind.score) for ind in front_ws]
+    else:
+        front_ec = EpsilonConstraintGA(problem, pop_size=30, generations=66).run()
+        pts = [(ind.total_time, ind.score) for ind in front_ec]
     return pts, time.time() - t0
 
 
@@ -82,7 +87,7 @@ def run_statistical_benchmark(
     problem: OrienteeringProblem,
     output_dir: Path,
 ) -> Dict[str, Any]:
-    algorithms = ["NSGA-II", "Greedy", "Random Search", "Weighted Sum"]
+    algorithms = ["NSGA-II", "Greedy", "Random Search", "Weighted Sum", "Epsilon-Constraint"]
     results: Dict[str, Dict[str, List[float]]] = {
         algo: {"hipervolumen": [], "spread": [], "tiempo_segundos": []} for algo in algorithms
     }
@@ -113,12 +118,12 @@ def run_statistical_benchmark(
 
 
 def _plot_boxplots(results: Dict[str, Dict[str, List[float]]], output_path: Path) -> None:
-    plt.figure(figsize=(9, 5))
+    plt.figure(figsize=(10, 5))
     algos = list(results.keys())
     data = [results[a]["hipervolumen"] for a in algos]
 
     bp = plt.boxplot(data, tick_labels=algos, patch_artist=True)
-    colors = ["#2980b9", "#8e44ad", "#e67e22", "#27ae60"]
+    colors = ["#2980b9", "#8e44ad", "#e67e22", "#27ae60", "#c0392b"]
     for patch, color in zip(bp["boxes"], colors):
         patch.set_facecolor(color)
         patch.set_alpha(0.7)
