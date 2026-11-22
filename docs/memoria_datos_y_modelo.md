@@ -6,7 +6,7 @@ Secciones de la memoria correspondientes a la parte de datos y visualización. T
 
 ## 1. Origen de los datos y licencia
 
-El caso de estudio tiene **30 puntos de interés (POIs)** de Gran Canaria y **2 hoteles** que sirven de base de salida y regreso. Cada POI tiene nombre, coordenadas, una puntuación turística (0–10) y un tiempo de visita en minutos.
+El caso de estudio tiene **30 puntos de interés (POIs)** de Gran Canaria y **2 hoteles** que sirven de base de salida y regreso. Cada POI tiene nombre, coordenadas, una puntuación turística (0–10), un tiempo de visita en minutos y una categoría principal, con una secundaria opcional, entre cuatro: Cultura e historia, Montaña y naturaleza, Playa y costa, y Pueblos y ciudad.
 
 ![Mapa de POIs y hoteles](../output/figuras/mapa_pois_hoteles.png)
 
@@ -102,6 +102,37 @@ $$\text{s.a.}\quad T(R) \le T_{\max} = 480 \text{ min}, \qquad r_j \ne r_l \;\; 
 
 Los hoteles representan dos perfiles de turista: **Santa Catalina** en Las Palmas (norte) y **Lopesan Villa del Conde** en Meloneras (sur). No es un problema con varios depósitos: cada hotel define una instancia independiente de 31 nodos (`data/santa_catalina/` y `data/lopesan_villa_del_conde/`), y `main.py` los resuelve por separado (`--escenario` elige uno). Al compartir POIs, puntuaciones y calibración, las diferencias entre escenarios solo se deben a la posición del hotel.
 
+### Preferencias del turista
+
+Sea $\mathcal{C}$ el conjunto de las cuatro categorías (Cultura e historia, Montaña y naturaleza, Playa y costa, y Pueblos y ciudad) y $C(i) \subseteq \mathcal{C}$ las categorías del POI $i \in P$, principal y secundaria ($|C(i)| \in \{1, 2\}$). Hay 15 POIs de Montaña y naturaleza, 10 de Playa y costa, 9 de Pueblos y ciudad y 9 de Cultura e historia; 13 de los 30 tienen dos categorías. El turista fija:
+
+- $C^* \subseteq \mathcal{C}$, las categorías marcadas;
+- $E \subseteq P$, los POIs descartados;
+- opcionalmente, una visita obligatoria $m \in P$, con $m \notin E$.
+
+El conjunto de POIs prohibidos es
+
+$$F = \bigl(\{\, i \in P : C(i) \cap C^* = \emptyset \,\} \cup E\bigr) \setminus \{m\},$$
+
+de modo que la visita obligatoria se admite aunque ninguna de sus categorías esté marcada. A la formulación anterior se añaden las restricciones
+
+$$r_j \notin F \quad \forall j = 1, \dots, k, \qquad m \in \{r_1, \dots, r_k\}.$$
+
+En el código, $F$ es `forbidden_nodes` y $m$ es `mandatory_node` de `OrienteeringProblem`; `optimizar_ruta` (`src/planificador.py`) los construye a partir de $(C^*, E, m)$. NSGA-II conserva estas restricciones en todos los individuos mediante la reparación del cromosoma descrita en la parte de algoritmos.
+
+**Factibilidad.** Como $t$ procede de caminos mínimos en la red, cumple la desigualdad triangular $t_{ij} \le t_{il} + t_{lj}$. En la matriz guardada, por el redondeo, solo se cumple con una tolerancia de 0,01 min por tramo. Por tanto, toda ruta de $k$ paradas que visita el POI $i$ dura al menos $t_{hi} + v_i + t_{ih} - 0{,}01\,(k-1)$ min, y la condición necesaria se cumple con esa misma tolerancia:
+
+- Con visita obligatoria, el conjunto factible es no vacío si y solo si $t_{hm} + v_m + t_{mh} \le T_{\max}$, salvo esa tolerancia. La condición es necesaria por la desigualdad triangular y suficiente porque la ruta $R = (m)$ la cumple.
+- Sin visita obligatoria, el conjunto factible es vacío si y solo si ningún $i \in P \setminus F$ cumple $t_{hi} + v_i + t_{ih} \le T_{\max}$. En particular, si $C^* = \emptyset$, entonces $F = P$ y no hay ninguna ruta.
+
+Por ejemplo, para el Roque Nublo desde Santa Catalina $t_{hm} + v_m + t_{mh} = 69{,}2 + 90 + 70{,}8 = 230$ min, así que con $T_{\max} < 230$ min ninguna ruta puede incluirlo.
+
+**Caso sin preferencias.** Con $C^* = \mathcal{C}$, $E = \emptyset$ y sin visita obligatoria, $F = \emptyset$ y el problema coincide con el original. Se ha comprobado que en ese caso `optimizar_ruta` devuelve el mismo frente y las mismas rutas que `main.py` (semilla 42).
+
+**Ejemplo.** Desde Lopesan con el Roque Nublo obligatorio ($t_{hm} + v_m + t_{mh} = 201{,}8$ min) y $T_{\max} = 480$ min, el frente tiene 12 rutas. La Equilibrada sube a la cumbre por el Pico de las Nieves y vuelve por el Barranco de Fataga (27 puntos, 5,5 h). La Express y la Exhaustiva coinciden y añaden Tejeda y el Bufadero de la Garita (43 puntos, 7,7 h).
+
+`tests/test_planificador.py` verifica estas propiedades con los datos reales de los dos hoteles.
+
 ### Resultados
 
 De cada frente de Pareto se extraen tres rutas recomendadas: **Express** (máxima puntuación por hora), **Equilibrada** (punto rodilla, el más cercano al ideal normalizado) y **Exhaustiva** (máxima puntuación dentro de las 8 h).
@@ -120,6 +151,8 @@ De cada frente de Pareto se extraen tres rutas recomendadas: **Express** (máxim
 - **En Lopesan, Express y Equilibrada coinciden**: la ruta con mejor puntuación por hora es también el punto rodilla.
 - **Las rutas se ven en mapas interactivos** (`output/<hotel>/mapa_rutas.html`, generados con `scripts/make_maps.py`). Cada ruta es una capa con las paradas numeradas y un popup con la puntuación, el tiempo de visita y la hora de llegada. Cada tramo sigue el **recorrido por carretera**: `scripts/build_road_paths.py` recalcula el camino mínimo en la red de OSMnx con la misma penalización por curvas que la matriz y lo guarda en `output/<hotel>/caminos_rutas.json`. Su tiempo coincide con el de la matriz en todos los tramos (diferencia máxima de 0,02 min), así que el mapa muestra exactamente el camino con el que se calculó cada ruta.
 
+Para ayudar al decisor a elegir entre las soluciones del frente, `dashboard.py` (`streamlit run dashboard.py`) permite resolver el modelo con estas preferencias de forma interactiva; las cifras de esta memoria no proceden de él.
+
 ---
 
 ## 5. Uso de inteligencia artificial
@@ -130,6 +163,7 @@ Se han usado asistentes de IA en las siguientes tareas, siempre con revisión de
 2. **Integración y revisión del código** (Claude Code, Anthropic). Se usó para revisar los cambios del repositorio y fusionar la rama de datos de los hoteles con la de los algoritmos. Detectó dos errores que se corrigieron: un `import` que impedía ejecutar la batería estadística y un presupuesto de 20.000 evaluaciones en Weighted Sum en lugar de 20.100. Cada cambio se comprobó ejecutando el código: el número de evaluaciones se contó durante la ejecución y la reproducibilidad se verificó repitiendo la ejecución con la misma semilla.
 3. **Visualización** (Claude Code). Generó los scripts `scripts/make_maps.py` (mapas Folium), `scripts/build_road_paths.py` (recorrido por carretera de las rutas) y `scripts/make_figures.py` (figuras de esta memoria). El recorrido se validó comprobando que su tiempo coincide con el de la matriz. Las figuras se revisaron visualmente y las cifras se contrastaron con los CSV y JSON de resultados.
 4. **Redacción** (Claude Code). Redactó el borrador de estas secciones y de la documentación de los datos (`data/README.md`) a partir de los resultados del repositorio. El equipo revisó el contenido.
+5. **Planificador, tests y dashboard** (Claude Code). Generó `src/planificador.py`, que traduce las preferencias del turista a las restricciones del núcleo, los tests de `tests/test_planificador.py`, `scripts/build_all_road_paths.py` y `dashboard.py`. Las restricciones `mandatory_node` y `forbidden_nodes` y la reparación del cromosoma son parte del trabajo de algoritmos y no se modificaron. Se comprobó que sin preferencias el resultado es idéntico al de `main.py`, que los tests pasan y que los caminos precalculados coinciden con los de los mapas; el equipo probó el dashboard en el navegador.
 
 La IA **no** se usó para obtener los tiempos de conducción. Estos proceden de OpenStreetMap y de las mediciones manuales en Google Maps descritas en las secciones 2 y 3.
 
