@@ -25,6 +25,7 @@ multiobjective_orienteering_gc/
 │   ├── <escenario>/                           # Un directorio por hotel
 │   │   ├── rutas_pareto.json                  # Rutas óptimas con coordenadas y desglose de tramos
 │   │   ├── caminos_rutas.json                 # Recorrido por carretera de cada tramo (OSMnx)
+│   │   ├── caminos_todos_pares.json.gz        # Recorrido por carretera entre todos los pares de nodos (dashboard)
 │   │   ├── mapa_rutas.html                    # Mapa Folium de las 3 rutas recomendadas
 │   │   ├── comparativa_pareto_vs_greedy.png   # Frente de Pareto vs Línea base Greedy
 │   │   ├── convergencia_nsga2.png             # Curvas de Hipervolumen y Score factible
@@ -44,6 +45,7 @@ multiobjective_orienteering_gc/
 ├── scripts/
 │   ├── build_time_matrix.ipynb                # Construcción y calibración de la matriz (OSMnx + Google Maps)
 │   ├── build_road_paths.py                    # Caminos por carretera de las rutas (OSMnx)
+│   ├── build_all_road_paths.py                # Caminos por carretera entre todos los pares de nodos
 │   ├── make_maps.py                           # Mapas Folium a partir de rutas_pareto.json
 │   ├── make_figures.py                        # Mapa de POIs, calibración y frentes de Pareto
 │   ├── hyperparameter_study.py                # Estudio de hiperparámetros de NSGA-II (15 semillas)
@@ -61,8 +63,13 @@ multiobjective_orienteering_gc/
 │   │   ├── zdt.py                             # Validación matemática en benchmark ZDT1
 │   │   └── statistical_suite.py               # Batería con 15 semillas + Test de Wilcoxon
 │   ├── pipeline.py                            # Orquestación del caso de Gran Canaria (por escenario)
+│   ├── planificador.py                        # optimizar_ruta: categorías, descartes y visita obligatoria
 │   └── __init__.py
+├── tests/                                     # Tests unitarios (unittest)
+│   ├── test_constraints.py                    # Visita obligatoria y nodos prohibidos en el núcleo
+│   └── test_planificador.py                   # optimizar_ruta con los datos reales
 ├── main.py                                    # Punto de entrada principal
+├── dashboard.py                               # Dashboard de demostración (Streamlit)
 ├── requirements.txt                           # Dependencias del proyecto (versiones fijadas)
 └── README.md
 ```
@@ -144,4 +151,13 @@ python -m src.benchmarks.statistical_suite
 #    en paralelo (admiten --escenario y --jobs)
 python scripts/hyperparameter_study.py
 python scripts/sensitivity_analysis.py
+
+# 7. Tests unitarios (~10 s)
+python -m unittest discover -s tests -v
+
+# 8. Dashboard de demostración (http://localhost:8501). Usa los caminos precalculados de
+#    output/<escenario>/caminos_todos_pares.json.gz, que ya están en el repositorio; solo hace
+#    falta regenerarlos (~1 min, requiere el grafo de build_road_paths.py) si cambian los datos.
+python scripts/build_all_road_paths.py
+streamlit run dashboard.py
 ```
