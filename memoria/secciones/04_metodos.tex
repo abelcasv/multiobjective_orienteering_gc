@@ -10,7 +10,7 @@ Se ha implementado NSGA-II \citep{deb2002} desde cero, adaptado a secuencias de 
 
 \paragraph{Cruce.} Se elige un punto de corte en el primer progenitor y se copia su prefijo. Después se añaden, en su orden, los genes del segundo progenitor que no estén ya en el prefijo, y el resultado se recorta a 12 genes. El segundo hijo se construye intercambiando los progenitores. El operador conserva subrutas de ambos padres sin repetir POIs. Tiende a producir hijos más largos que los padres; el crecimiento lo frenan el recorte, la mutación de eliminación y, sobre todo, la presión de la restricción de tiempo.
 
-\paragraph{Mutación.} Se aplica uno de cuatro operadores, elegido con estas probabilidades: inserción de un POI permitido no visitado en una posición aleatoria (40 \%), eliminación de una parada (30 \%), intercambio de dos paradas (20 \%) e inversión de un segmento (10 \%), un movimiento de tipo 2-opt. Los dos últimos solo cambian el orden, lo que importa porque la matriz es asimétrica.
+\paragraph{Mutación.} Se aplica uno de cuatro operadores, elegido con estas probabilidades: inserción de un POI permitido no visitado en una posición aleatoria (40 \%), eliminación de una parada si la ruta tiene más de una (30 \%), intercambio de dos paradas (20 \%) e inversión de un segmento (10 \%), un movimiento de tipo 2-opt. Los dos últimos solo cambian el orden, lo que importa porque la matriz es asimétrica.
 
 \paragraph{Restricción de tiempo: reglas de Deb.} Sea $\mathrm{viol}(R) = \max(0, T(R) - \Tmax)$. Según \citet{deb2000}, una solución factible domina a cualquier no factible; entre dos no factibles domina la de menor violación; y entre dos factibles se aplica la dominancia de Pareto:
 \begin{equation}
@@ -87,7 +87,7 @@ Para saber si NSGA-II aporta algo, se compara con cuatro métodos. Los estocást
 
 \paragraph{Heurística voraz.} Para un presupuesto $B$, parte del hotel y añade en cada paso el POI no visitado $j$ con mayor cociente $s_j / \max(1,\ t_{uj} + v_j)$, siendo $u$ la última parada, siempre que el tiempo acumulado más la vuelta al hotel no supere $B$. Se repite para 29 presupuestos, de 60 a 480 min cada 15 min, y se devuelven las rutas no dominadas. Es determinista y cuesta $O(K_B |P|^2)$ con $K_B = 29$.
 
-\paragraph{Búsqueda aleatoria.} Genera 20.100 rutas de 2 a 10 POIs elegidos al azar, descarta las que superan $\Tmax$ y devuelve las no dominadas.
+\paragraph{Búsqueda aleatoria.} Genera $E = 20.100$ rutas de 2 a 10 POIs elegidos al azar, descarta las que superan $\Tmax$ y devuelve las no dominadas. Su coste asintótico es $O(E\,k_{\mathrm{rs}} + F_{\mathrm{rs}}^2)$, siendo $k_{\mathrm{rs}} \le 10$ el tamaño de muestra y $F_{\mathrm{rs}}$ las soluciones factibles acumuladas antes del filtrado de Pareto.
 
 \paragraph{Suma ponderada.} Para cada peso $w \in \{0{,}1;\ 0{,}2;\ \dots;\ 0{,}9;\ 0{,}95\}$ maximiza, con un algoritmo genético de un solo objetivo,
 \begin{equation}
@@ -105,7 +105,37 @@ donde $S_{\max} = \sum_{i \in P} s_i$, y se queda con la mejor ruta factible de 
 \end{equation}
 penalizando las rutas que superan la cota con $-10^5 - 100\,(T(R) - \varepsilon_k)$. El pequeño término en $T$ desempata a favor de la ruta más corta entre las de igual puntuación, para evitar soluciones débilmente eficientes \citep{mavrotas2009}.
 
-\paragraph{Presupuesto de los métodos de escalarización.} Los dos usan el mismo algoritmo genético de un solo objetivo, con los operadores y la reparación de NSGA-II, una población de 30 individuos y 66 generaciones por subproblema. Con 10 subproblemas suman $10 \times (30 + 30 \cdot 66) = 20.100$ evaluaciones. Su coste es $O\bigl(K\,G_{\mathrm{sub}}\,(N_{\mathrm{sub}}\,k_{\max} + N_{\mathrm{sub}} \log N_{\mathrm{sub}})\bigr)$, porque en cada generación se ordena por una aptitud escalar en lugar de por no dominancia.
+\paragraph{Presupuesto de los métodos de escalarización.} Los dos usan el mismo algoritmo genético de un solo objetivo, con los operadores y la reparación de NSGA-II, una población de 30 individuos y 66 generaciones por subproblema. Con 10 subproblemas suman $10 \times (30 + 30 \cdot 66) = 20.100$ evaluaciones. Su coste es $O\bigl(K\,G_{\mathrm{sub}}\,(N_{\mathrm{sub}}\,k_{\max} + N_{\mathrm{sub}} \log N_{\mathrm{sub}})\bigr)$, porque en cada generación se ordena por una aptitud escalar en lugar de por no dominancia. El Algoritmo~\ref{alg:baselines} resume los esquemas de todas las líneas base.
+
+\begin{algorithm}[H]
+\caption{Líneas base: heurística voraz, búsqueda aleatoria y escalarización GA}
+\label{alg:baselines}
+\small
+\begin{algorithmic}[1]
+\Statex \textbf{A) Heurística voraz multiobjetivo} ($B \in \{60, 75, \dots, 480\}$, paso 15 min)
+\For{cada presupuesto $B$}
+  \State $u \gets h$;\; $t_{\mathrm{acum}} \gets 0$;\; $R \gets ()$;\; $\mathrm{disp} \gets P \setminus F$
+  \While{$\exists\, j \in \mathrm{disp} : t_{\mathrm{acum}} + t_{uj} + v_j + t_{jh} \le B$}
+    \State $j^* \gets \arg\max_{j} s_j / \max(1,\ t_{uj} + v_j)$;\; añadir $j^*$ a $R$;\; $u \gets j^*$;\; actualizar $t_{\mathrm{acum}}$
+  \EndWhile
+\EndFor
+\State \Return rutas no dominadas entre las generadas
+\medskip
+\Statex \textbf{B) Búsqueda aleatoria} ($E = 20.100$ evaluaciones)
+\State Muestrear $E$ secuencias de 2 a 10 POIs de $P \setminus F$; conservar las factibles ($T \le \Tmax$) y devolver las no dominadas
+\medskip
+\Statex \textbf{C) Suma ponderada y $\varepsilon$-restricción} ($K = 10$ parámetros $\theta$, $N_{\mathrm{sub}} = 30$, $G_{\mathrm{sub}} = 66$)
+\For{cada $\theta \in \{w_1,\dots,w_{10}\}$ o $\{\varepsilon_1,\dots,\varepsilon_{10}\}$}
+  \State $P \gets$ $N_{\mathrm{sub}}$ secuencias reparadas y evaluadas según~\eqref{eq:secuencia}
+  \For{$g = 1$ \textbf{to} $G_{\mathrm{sub}}$}
+    \State $Q \gets$ hijos generados por torneo según aptitud($\theta$), cruce, reparación y mutación
+    \State $P \gets$ $N_{\mathrm{sub}}$ mejores individuos de $P \cup Q$ ordenados por aptitud($\theta$)
+  \EndFor
+  \State guardar la mejor solución factible de $P$
+\EndFor
+\State \Return soluciones no dominadas del conjunto recogido
+\end{algorithmic}
+\end{algorithm}
 
 \subsection{Rutas recomendadas}
 \label{sec:recomendadas}
