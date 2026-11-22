@@ -1,0 +1,19 @@
+\section{Reproducibilidad}
+\label{sec:reproducibilidad}
+
+El código, los datos y los resultados están en el repositorio del proyecto. Las versiones de las librerías están fijadas en \code{requirements.txt} y todas las ejecuciones usan semillas fijas. Los comandos siguientes regeneran las tablas y figuras de esta memoria:
+
+\begin{small}
+\begin{verbatim}
+pip install -r requirements.txt
+python main.py                              # frentes y rutas (semilla 42)
+python -m src.benchmarks.zdt                # validación ZDT1, ZDT2 y ZDT3
+python -m src.benchmarks.statistical_suite  # batería de 15 semillas y Wilcoxon
+python scripts/hyperparameter_study.py      # estudio de hiperparámetros
+python scripts/sensitivity_analysis.py      # análisis de sensibilidad
+python scripts/make_figures.py              # figuras de la memoria
+python -m unittest discover -s tests -v     # 20 pruebas unitarias
+\end{verbatim}
+\end{small}
+
+La matriz de tiempos se construye con \code{scripts/build\_time\_matrix.ipynb}, que descarga la red de OpenStreetMap. Los mapas de las rutas por carretera se generan con \code{scripts/build\_road\_paths.py} y \code{scripts/make\_maps.py}. La herramienta interactiva de apoyo a la decisión se lanza con \code{streamlit run dashboard.py}; las cifras de esta memoria no proceden de ella.

@@ -1,0 +1,21 @@
+\section{Introducción y motivación}
+\label{sec:introduccion}
+
+Gran Canaria concentra en poco espacio lugares muy distintos: playas y dunas en el sur, cascos históricos y museos en el norte, y una cumbre volcánica en el centro a la que se llega por carreteras de montaña. Un turista que dispone de un solo día y de un coche de alquiler tiene que decidir qué visitar y en qué orden. La decisión no es trivial. La isla es pequeña, pero los trayectos por la cumbre son lentos, cada lugar exige un tiempo de visita distinto y la ruta debe terminar en el hotel.
+
+Además, no existe una única ruta óptima. Una ruta corta deja tiempo libre pero visita pocos lugares. Una ruta larga visita más, pero ocupa toda la jornada. Lo que el turista necesita es conocer el compromiso entre ambos objetivos: cuánto valor turístico puede obtener con cada cantidad de tiempo. Ese compromiso es el frente de Pareto de un problema biobjetivo, y el objeto de este trabajo es calcularlo.
+
+\paragraph{Problema.} Dados 30 puntos de interés (POIs) con una puntuación y un tiempo de visita, un hotel de salida y regreso y una matriz de tiempos de conducción, se buscan rutas cerradas que maximicen la puntuación total y minimicen el tiempo total, sin superar 8 horas. Es una variante biobjetivo del problema de orientación (\emph{orienteering problem}), que generaliza el problema del viajante y es NP-difícil (sección~\ref{sec:formulacion}).
+
+\paragraph{Objetivos.} El trabajo se encuadra en la modalidad C5 (optimización multiobjetivo) y persigue:
+\begin{enumerate}
+  \item Construir un caso de estudio con datos reales: una matriz de tiempos de conducción obtenida de la red viaria de OpenStreetMap y calibrada con Google Maps, para dos hoteles situados en el norte y en el sur de la isla.
+  \item Formular el problema matemáticamente y clasificarlo.
+  \item Implementar NSGA-II adaptado a rutas de longitud variable y validarlo en problemas de prueba con frente conocido (ZDT1, ZDT2 y ZDT3).
+  \item Compararlo, con el mismo presupuesto de evaluaciones y varias semillas, con una heurística voraz, una búsqueda aleatoria y los métodos de suma ponderada y $\varepsilon$-restricción, con contraste estadístico.
+  \item Analizar el frente para ayudar a decidir: extraer rutas recomendadas, admitir preferencias del turista y estudiar la sensibilidad de las soluciones a los datos.
+\end{enumerate}
+
+\paragraph{Contribuciones.} Más allá de aplicar un algoritmo conocido, el trabajo aporta: una matriz de tiempos de Gran Canaria con penalización por curvas y validación fuera de muestra; una formulación que integra las preferencias del turista como restricciones, con una condición de factibilidad demostrada; un operador de reparación que garantiza esas restricciones dentro de NSGA-II; una comparación experimental con las dos técnicas de escalarización clásicas; y estudios de hiperparámetros y de sensibilidad que explican qué lugares entran en las rutas y por qué.
+
+\paragraph{Estructura.} La sección~\ref{sec:estado_arte} revisa la literatura. La sección~\ref{sec:formulacion} formula y clasifica el problema. La sección~\ref{sec:metodos} describe NSGA-II y las líneas base. Las secciones~\ref{sec:implementacion} y~\ref{sec:datos} describen la implementación y los datos. La sección~\ref{sec:experimentacion} presenta los experimentos y la~\ref{sec:discusion} los discute. La sección~\ref{sec:conclusiones} resume las conclusiones. Los anexos recogen el uso de la inteligencia artificial y las instrucciones de reproducción.

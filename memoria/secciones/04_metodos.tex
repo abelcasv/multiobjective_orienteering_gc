@@ -1,0 +1,118 @@
+\section{Métodos}
+\label{sec:metodos}
+
+\subsection{NSGA-II adaptado a rutas}
+\label{sec:nsga2}
+
+Se ha implementado NSGA-II \citep{deb2002} desde cero, adaptado a secuencias de longitud variable (\code{src/algorithms/genetic\_algorithm.py}). Se eligió porque aproxima todo el frente en una sola ejecución, trata las restricciones sin penalizaciones y es la referencia habitual con la que comparar en optimización multiobjetivo.
+
+\paragraph{Representación.} Un individuo es una secuencia $R = (g_1,\dots,g_k)$ de POIs permitidos ($g_j \in P \setminus F$) sin repeticiones. El hotel no forma parte del cromosoma: se añade al principio y al final al evaluar~\eqref{eq:secuencia}. La longitud varía durante la evolución. En los frentes finales sin preferencias las rutas tienen entre 1 y 7 paradas en Santa Catalina y entre 1 y 6 en Lopesan.
+
+\paragraph{Cruce.} Se elige un punto de corte en el primer progenitor y se copia su prefijo. Después se añaden, en su orden, los genes del segundo progenitor que no estén ya en el prefijo, y el resultado se recorta a 12 genes. El segundo hijo se construye intercambiando los progenitores. El operador conserva subrutas de ambos padres sin repetir POIs. Tiende a producir hijos más largos que los padres; el crecimiento lo frenan el recorte, la mutación de eliminación y, sobre todo, la presión de la restricción de tiempo.
+
+\paragraph{Mutación.} Se aplica uno de cuatro operadores, elegido con estas probabilidades: inserción de un POI permitido no visitado en una posición aleatoria (40 \%), eliminación de una parada (30 \%), intercambio de dos paradas (20 \%) e inversión de un segmento (10 \%), un movimiento de tipo 2-opt. Los dos últimos solo cambian el orden, lo que importa porque la matriz es asimétrica.
+
+\paragraph{Restricción de tiempo: reglas de Deb.} Sea $\mathrm{viol}(R) = \max(0, T(R) - \Tmax)$. Según \citet{deb2000}, una solución factible domina a cualquier no factible; entre dos no factibles domina la de menor violación; y entre dos factibles se aplica la dominancia de Pareto:
+\begin{equation}
+  R_A \succ R_B \iff \bigl(S_A \ge S_B \wedge T_A \le T_B\bigr) \wedge \bigl(S_A > S_B \vee T_A < T_B\bigr).
+\end{equation}
+Así no hace falta penalizar los objetivos. Aunque el 77 \% de las rutas iniciales supera las 8 horas en Santa Catalina, la población es completamente factible en unas cinco generaciones.
+
+\paragraph{Reparación para las preferencias.} Las restricciones~\eqref{eq:preferencias} se garantizan con la función \code{\_repair\_chromosome}, que en $O(k)$:
+\begin{enumerate}
+  \item recorre la secuencia y conserva cada gen solo si no está prohibido ni repetido, manteniendo el orden relativo;
+  \item si falta la visita obligatoria $m$, la inserta en una posición aleatoria.
+\end{enumerate}
+Se aplica a los individuos iniciales, tras el cruce y tras la mutación, de modo que todo individuo evaluado cumple $R \subseteq P \setminus F$, no tiene repeticiones y contiene $m$. Por inducción sobre las generaciones, todas las soluciones devueltas cumplen las preferencias. La mutación de eliminación nunca elige $m$, para no destruir su posición optimizada. Además, el problema rechaza al construirse una especificación contradictoria ($m = h$ o $m \in F$). Si la visita obligatoria no cabe en $\Tmax$, todos los individuos son no factibles y el frente devuelto es vacío, de acuerdo con la condición de factibilidad de la sección~\ref{sec:preferencias}.
+
+\paragraph{Pseudocódigo.} El Algoritmo~\ref{alg:nsga2} resume el método.
+
+\begin{algorithm}[H]
+\caption{NSGA-II para el problema de orientación biobjetivo}
+\label{alg:nsga2}
+\small
+\begin{algorithmic}[1]
+\Require instancia $(V, s, v, t, \Tmax, F, m)$, población $N$, generaciones $G$, probabilidades $p_c$, $p_m$
+\Ensure soluciones factibles no dominadas
+\State $P_0 \gets$ $N$ secuencias de 3 a 7 POIs permitidos elegidos al azar, reparadas y evaluadas
+\For{$g = 1$ \textbf{to} $G$}
+  \State $Q_g \gets \emptyset$
+  \While{$|Q_g| < N$}
+    \State $p_1, p_2 \gets$ torneos binarios en $P_{g-1}$ (menor rango; a igual rango, mayor aglomeración)
+    \State $c_1, c_2 \gets$ cruce$(p_1, p_2)$ con probabilidad $p_c$; si no, copias de $p_1, p_2$
+    \State reparar $c_1, c_2$; mutar cada uno con probabilidad $p_m$ (la mutación repara)
+    \State evaluar $c_1, c_2$ según~\eqref{eq:secuencia}; $Q_g \gets Q_g \cup \{c_1, c_2\}$
+  \EndWhile
+  \State $R_g \gets P_{g-1} \cup Q_g$ \Comment{$2N$ individuos}
+  \State $\mathcal{F}_1, \mathcal{F}_2, \dots \gets$ ordenación no dominada de $R_g$ con las reglas de Deb
+  \State $P_g \gets$ frentes completos mientras quepan en $N$; el último, por aglomeración descendente
+\EndFor
+\State \Return soluciones factibles y distintas de $\mathcal{F}_1$ en $P_G$
+\end{algorithmic}
+\end{algorithm}
+
+\paragraph{Complejidad.} Con $M = 2$ objetivos, población $N$ y longitud de cromosoma acotada por $k_{\max} = 12$, en cada generación:
+\begin{itemize}
+  \item crear, reparar y evaluar $N$ hijos cuesta $O(N\,k_{\max})$, porque cada operación recorre como mucho $k_{\max}$ genes;
+  \item la ordenación no dominada compara todos los pares de la población combinada de $2N$ individuos: $O(M N^2)$;
+  \item la distancia de aglomeración ordena cada frente por cada objetivo: $O(M N \log N)$.
+\end{itemize}
+El coste por generación es, por tanto, $O(MN^2 + MN\log N + N k_{\max}) = O(MN^2)$, y el de una ejecución completa $O(G M N^2)$. Con los valores usados, una ejecución tarda unos pocos segundos.
+
+\paragraph{Parámetros.} La tabla~\ref{tab:parametros} recoge la configuración. Se fijó de forma empírica y se comprobó después con un estudio de hiperparámetros (sección~\ref{sec:hiperparametros}).
+
+\begin{table}[H]
+\centering
+\small
+\caption{Parámetros de NSGA-II.}
+\label{tab:parametros}
+\begin{tabularx}{\textwidth}{@{}l c X@{}}
+\toprule
+Parámetro & Valor & Justificación \\
+\midrule
+Población $N$ & 100 & Diversidad suficiente para cubrir el frente con un coste $O(MN^2)$ bajo. \\
+Generaciones $G$ & 200 & Con la semilla 42 en Santa Catalina, el hipervolumen alcanza el 99 \% de su valor final en la generación 139 y sigue mejorando despacio hasta la 200. \\
+Probabilidad de cruce $p_c$ & 0,85 & Valor alto habitual para recombinar subrutas de los padres. \\
+Probabilidad de mutación $p_m$ & 0,35 & Alta para explorar un espacio discreto y evitar el estancamiento. \\
+Inicialización & 3 a 7 POIs & Rutas aleatorias de tamaño variado; las reglas de Deb corrigen las no factibles. \\
+Presupuesto & 20.100 & $N + N \cdot G = 100 + 100 \cdot 200$ evaluaciones. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Líneas base}
+\label{sec:lineas_base}
+
+Para saber si NSGA-II aporta algo, se compara con cuatro métodos. Los estocásticos consumen exactamente el mismo presupuesto de 20.100 evaluaciones.
+
+\paragraph{Heurística voraz.} Para un presupuesto $B$, parte del hotel y añade en cada paso el POI no visitado $j$ con mayor cociente $s_j / \max(1,\ t_{uj} + v_j)$, siendo $u$ la última parada, siempre que el tiempo acumulado más la vuelta al hotel no supere $B$. Se repite para 29 presupuestos, de 60 a 480 min cada 15 min, y se devuelven las rutas no dominadas. Es determinista y cuesta $O(K_B |P|^2)$ con $K_B = 29$.
+
+\paragraph{Búsqueda aleatoria.} Genera 20.100 rutas de 2 a 10 POIs elegidos al azar, descarta las que superan $\Tmax$ y devuelve las no dominadas.
+
+\paragraph{Suma ponderada.} Para cada peso $w \in \{0{,}1;\ 0{,}2;\ \dots;\ 0{,}9;\ 0{,}95\}$ maximiza, con un algoritmo genético de un solo objetivo,
+\begin{equation}
+  F_{w}(R) =
+  \begin{cases}
+    w\, \dfrac{S(R)}{S_{\max}} - (1-w)\, \dfrac{T(R)}{\Tmax} & \text{si } T(R) \le \Tmax,\\[6pt]
+    -10^5 - 100\,\bigl(T(R) - \Tmax\bigr) & \text{en otro caso,}
+  \end{cases}
+\end{equation}
+donde $S_{\max} = \sum_{i \in P} s_i$, y se queda con la mejor ruta factible de cada peso.
+
+\paragraph{$\varepsilon$-restricción.} Para 10 cotas equiespaciadas $\varepsilon_k \in [60, 480]$ min resuelve
+\begin{equation}
+  \max\; S(R) - 10^{-4}\, \frac{T(R)}{\Tmax} \quad \text{sujeto a} \quad T(R) \le \varepsilon_k,
+\end{equation}
+penalizando las rutas que superan la cota con $-10^5 - 100\,(T(R) - \varepsilon_k)$. El pequeño término en $T$ desempata a favor de la ruta más corta entre las de igual puntuación, para evitar soluciones débilmente eficientes \citep{mavrotas2009}.
+
+\paragraph{Presupuesto de los métodos de escalarización.} Los dos usan el mismo algoritmo genético de un solo objetivo, con los operadores y la reparación de NSGA-II, una población de 30 individuos y 66 generaciones por subproblema. Con 10 subproblemas suman $10 \times (30 + 30 \cdot 66) = 20.100$ evaluaciones. Su coste es $O\bigl(K\,G_{\mathrm{sub}}\,(N_{\mathrm{sub}}\,k_{\max} + N_{\mathrm{sub}} \log N_{\mathrm{sub}})\bigr)$, porque en cada generación se ordena por una aptitud escalar en lugar de por no dominancia.
+
+\subsection{Rutas recomendadas}
+\label{sec:recomendadas}
+
+Un frente con unas 25 rutas no es fácil de leer para un turista. Para ayudar a decidir, de cada frente se extraen tres rutas:
+\begin{itemize}
+  \item \textbf{Express}: la de mayor puntuación por hora, $S(R)/T(R)$.
+  \item \textbf{Equilibrada}: el punto rodilla, es decir, la ruta más cercana al punto ideal (tiempo mínimo y puntuación máxima del frente) tras normalizar ambos objetivos al rango $[0,1]$.
+  \item \textbf{Exhaustiva}: la de mayor puntuación dentro de $\Tmax$.
+\end{itemize}

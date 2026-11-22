@@ -1,0 +1,51 @@
+\section{Implementación}
+\label{sec:implementacion}
+
+\subsection{Organización del código}
+
+El proyecto está escrito en Python y se distribuye como un repositorio Git con un \code{README} y un \code{requirements.txt} con las versiones fijadas. Todos los métodos de optimización son implementación propia; las librerías se usan para los datos (OSMnx, NetworkX, pandas), el cálculo numérico (NumPy), la estadística (SciPy) y la visualización (Matplotlib, Folium, Streamlit). La tabla~\ref{tab:modulos} resume los módulos.
+
+\begin{table}[H]
+\centering
+\small
+\caption{Organización del repositorio.}
+\label{tab:modulos}
+\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+Ruta & Contenido \\
+\midrule
+\code{src/core/problem.py} & \code{OrienteeringProblem} (instancia, validación de preferencias, nodos disponibles), \code{Individual} (evaluación y dominancia de Deb) y \code{GAConfig}. \\
+\code{src/core/metrics.py} & Hipervolumen, \emph{spread} y test de Wilcoxon. \\
+\code{src/algorithms/} & NSGA-II con reparación, voraz, búsqueda aleatoria, suma ponderada y $\varepsilon$-restricción. \\
+\code{src/benchmarks/} & Validación en ZDT1--ZDT3 y batería estadística con 15 semillas. \\
+\code{src/pipeline.py} & Carga de datos por hotel, ejecución y exportación de rutas y figuras. \\
+\code{src/planificador.py} & \code{optimizar\_ruta}: traduce las preferencias $(C^*, E, m)$ a $F$ y $m$. \\
+\code{scripts/} & Construcción y calibración de la matriz (cuaderno), caminos por carretera, mapas, figuras, estudio de hiperparámetros y análisis de sensibilidad. \\
+\code{tests/} & 20 pruebas unitarias de las restricciones y del planificador. \\
+\code{main.py}, \code{dashboard.py} & Ejecución principal por hotel y herramienta interactiva de apoyo a la decisión. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Decisiones de diseño}
+
+\begin{itemize}
+  \item \textbf{Secuencias en lugar de variables de arco.} Como se vio en la sección~\ref{sec:secuencias}, la representación por secuencias cumple por construcción la estructura de ruta y deja como única restricción dinámica la de tiempo.
+  \item \textbf{Un escenario por hotel.} Cada hotel define una instancia de 31 nodos en \code{data/<hotel>/}. No es un problema con varios depósitos: los dos se resuelven por separado y se comparan.
+  \item \textbf{Restricciones sin penalizar.} La restricción de tiempo se trata con las reglas de Deb y las preferencias con reparación, de modo que no hay coeficientes de penalización que ajustar en NSGA-II.
+  \item \textbf{Validación temprana.} Una especificación contradictoria (visita obligatoria que coincide con el hotel o que está prohibida) lanza un error al construir el problema en lugar de ignorarse.
+  \item \textbf{Comparación justa.} El número de evaluaciones se cuenta durante la ejecución y es exactamente 20.100 en todos los métodos estocásticos.
+  \item \textbf{Reproducibilidad.} Las semillas se fijan antes de cada ejecución, las versiones de las librerías están fijadas y los scripts regeneran todas las tablas y figuras (anexo~\ref{sec:reproducibilidad}). Se ha comprobado que repetir la batería con las mismas semillas da exactamente los mismos hipervolúmenes.
+  \item \textbf{Caminos precalculados.} Para dibujar las rutas por carretera sin descargar la red, se precalcula el camino entre todos los pares de nodos de cada hotel (930 pares), simplificado a unos 5 m y comprimido (1,3 MB por hotel).
+\end{itemize}
+
+\subsection{Dificultades encontradas}
+
+\begin{itemize}
+  \item \textbf{Tiempos infinitos.} En la primera versión de la matriz, un POI (el Faro de Maspalomas) quedaba asociado a un nodo sin salida y su fila tenía tiempos infinitos. Se resolvió quedándose con la mayor componente fuertemente conexa de la red. Además, el Faro estaba a medio minuto de las Dunas, así que se sustituyó por Firgas para cubrir otra zona de la isla.
+  \item \textbf{POIs lejos de la carretera.} Doce POIs quedaban a más de 300 m de la red. Seis tenían coordenadas imprecisas y se corrigieron con Google Maps. En el resto el aviso se mantiene porque el lugar está apartado de la carretera, y el tiempo de conducción llega solo hasta el punto de la red más cercano. El caso extremo es el Barranco de Fataga, cuyo punto queda a 1,15 km del nodo de carretera más cercano.
+  \item \textbf{Tiempos optimistas.} A la velocidad legal de cada vía, los tiempos salían hasta 20 min más cortos que en Google Maps en la montaña. Se añadieron la penalización por curvas y el factor global de calibración (sección~\ref{sec:datos}).
+  \item \textbf{Errores en la validación ZDT.} En una primera versión, el torneo binario de la validación ZDT1 comparaba solo el rango e ignoraba la aglomeración, y las soluciones se acumulaban en una parte del frente (IGD de 0,1020). Corregido el desempate, el IGD bajó a 0,0210.
+  \item \textbf{Comparación desigual.} Versiones iniciales de la suma ponderada usaban 11.070 o 20.000 evaluaciones frente a las 20.100 de NSGA-II, y el test estadístico era el de suma de rangos para muestras independientes en lugar del test pareado de Wilcoxon. Ambos fallos se corrigieron.
+  \item \textbf{Conflicto entre preferencias.} La primera versión de la reparación ignoraba en silencio una visita obligatoria que también estaba prohibida; ahora se rechaza con un error y se comprueba en las pruebas unitarias.
+\end{itemize}

@@ -1,0 +1,29 @@
+\section{Discusión}
+\label{sec:discusion}
+
+\subsection{Qué método funciona mejor y por qué}
+
+\paragraph{NSGA-II.} Es el mejor método en los dos hoteles y en todas las semillas. Su ventaja procede de aproximar todo el frente a la vez: la población reparte el presupuesto entre todas las zonas de compromiso, la aglomeración mantiene soluciones repartidas y el elitismo conserva las mejores rutas encontradas. Los métodos de escalarización, en cambio, dividen el presupuesto en diez búsquedas aisladas de 2.010 evaluaciones cada una.
+
+\paragraph{Suma ponderada frente a $\varepsilon$-restricción.} La comparación confirma la teoría de la escalarización. La $\varepsilon$-restricción obtiene un 42 \% más de hipervolumen que la suma ponderada en Santa Catalina y un 55 \% más en Lopesan, y reduce el \emph{spread} de 1,08 a 0,31--0,33. La suma ponderada solo puede encontrar puntos de la envoltura convexa del frente; además, sus diez pesos convergen a menudo a las mismas rutas, de modo que aporta solo entre 3 y 5 soluciones distintas. Las cotas equiespaciadas de la $\varepsilon$-restricción, en cambio, reparten las soluciones a lo largo del eje del tiempo y alcanzan también las zonas no convexas.
+
+\paragraph{La $\varepsilon$-restricción, por debajo de las heurísticas simples.} Aun así, la $\varepsilon$-restricción queda por debajo de la heurística voraz y de la búsqueda aleatoria en los dos hoteles (9.712 frente a 10.189 y 10.050 en Santa Catalina; 8.390 frente a 9.095 y 8.695 en Lopesan). La causa es estructural: con 10 cotas, su frente tiene como mucho 10 puntos, mientras que la voraz prueba 29 presupuestos y la búsqueda aleatoria conserva todas las rutas no dominadas de sus 20.100 muestras. Como el hipervolumen de un frente escalonado crece con el número de escalones, un método con pocos puntos queda penalizado aunque cada punto sea bueno. Una rejilla más fina mejoraría su cobertura, pero repartiría aún más el presupuesto. Esto muestra que, con un presupuesto fijo, la forma de repartirlo importa tanto como la calidad de cada subproblema.
+
+\paragraph{La heurística voraz.} Es la mejor línea base, aunque no está sujeta al mismo presupuesto: es determinista y construye cada ruta en una sola pasada, sin evaluar soluciones completas. Su buen resultado indica que la regla de puntuación por minuto captura bien la estructura del problema, lo que coincide con el análisis de sensibilidad. NSGA-II la supera entre un 10 \% y un 14 \% porque puede reordenar las paradas y combinar lugares que la regla voraz descarta en los primeros pasos.
+
+\paragraph{Validación ZDT.} En ZDT1 y ZDT3 el frente obtenido queda muy cerca del teórico. En ZDT2 la cobertura es completa pero la convergencia no, lo que indica que en problemas continuos no convexos harían falta más generaciones. No afecta al caso real, en el que la convergencia se ha comprobado directamente.
+
+\subsection{Influencia de los datos}
+
+Las rutas dependen sobre todo de la puntuación por minuto de cada lugar, no de su puntuación. Por eso el núcleo de las rutas lo forman visitas cortas y cercanas a la autopista (Bufadero de la Garita, Tufia, Arucas), y los iconos de la isla (las Dunas, el Roque Nublo) solo aparecen si se acortan las visitas o se premian los lugares de máxima puntuación. La ubicación del hotel también pesa: desde el sur el frente pierde un 13,6 \% de hipervolumen porque la mayoría de los POIs están en el norte. Si se quiere que las rutas incluyan los iconos, la decisión depende del perfil de turista: cambiar la escala de puntuación o marcarlos como visita obligatoria, que el modelo ya admite.
+
+\subsection{Limitaciones}
+\label{sec:limitaciones}
+
+\begin{itemize}
+  \item \textbf{Tiempos aproximados.} La matriz es optimista: el error de validación es de 8,2 min y en la montaña llega a 20 min. No se modela el tráfico, el aparcamiento ni la variación horaria. Un único factor global no basta para las carreteras de la cumbre; factores por tipo de trayecto o una fuente de tiempos con tráfico mejorarían la precisión.
+  \item \textbf{Puntuaciones subjetivas.} Las puntuaciones y los tiempos de visita son ilustrativos. Concuerdan moderadamente con Google Maps, pero otro criterio cambiaría las rutas, como muestra el análisis de sensibilidad.
+  \item \textbf{Modelo simplificado.} No se consideran horarios de apertura, ventanas de tiempo, el tiempo de comida ni rutas de varios días. Algunos POIs quedan lejos de la carretera y su tiempo de conducción llega solo al nodo de red más cercano. La red refleja los cortes de carretera en el momento de la descarga.
+  \item \textbf{Frente aproximado.} No se ha calculado el frente exacto del caso real, por lo que no puede medirse cuánto le falta a NSGA-II para alcanzarlo; solo se sabe que supera a las líneas base. El modelo entero de la sección~\ref{sec:formulacion} permitiría calcularlo con un resolvedor.
+  \item \textbf{Elección de parámetros.} Los hiperparámetros se evaluaron con las mismas 15 semillas de la comparación, así que pequeñas mejoras, como la de subir la mutación, deben confirmarse con semillas nuevas.
+\end{itemize}

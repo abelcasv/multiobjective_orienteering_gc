@@ -1,0 +1,14 @@
+\section{Conclusiones y trabajo futuro}
+\label{sec:conclusiones}
+
+Se ha planteado la planificación de una ruta turística de un día en Gran Canaria como un problema de orientación biobjetivo y se ha resuelto con una implementación propia de NSGA-II sobre datos reales. Las principales conclusiones son:
+
+\begin{itemize}
+  \item Es posible construir una matriz de tiempos realista con OpenStreetMap: con una penalización por curvas y un factor calibrado, el error frente a Google Maps es de 2,9 min en los pares de calibración, aunque sube a 8,2 min fuera de muestra y la montaña sigue siendo el caso más difícil.
+  \item El problema admite una formulación entera clara y una representación por secuencias equivalente, en la que solo la restricción de tiempo debe tratarse durante la búsqueda. Las preferencias del turista se integran como restricciones con una condición de factibilidad sencilla y se garantizan con un operador de reparación.
+  \item NSGA-II supera a la heurística voraz, a la búsqueda aleatoria, a la suma ponderada y a la $\varepsilon$-restricción en los dos hoteles y en todas las semillas, con el mismo presupuesto y diferencias significativas. La $\varepsilon$-restricción mejora claramente a la suma ponderada, como predice la teoría, pero dividir el presupuesto en pocos subproblemas la deja por debajo de las heurísticas simples.
+  \item La configuración de NSGA-II es razonable; la mutación es el parámetro que más influye.
+  \item Las rutas óptimas dependen sobre todo de la puntuación por minuto de cada lugar y de la posición del hotel. Los lugares de visita larga o alejados solo entran si cambia la valoración, lo que hay que tener en cuenta al usar el modelo con turistas reales.
+\end{itemize}
+
+\paragraph{Trabajo futuro.} Las extensiones más naturales son: calcular el frente exacto con el modelo entero para medir la calidad de NSGA-II; usar tiempos con tráfico o factores de calibración por tipo de vía; añadir horarios de apertura (OP con ventanas de tiempo) y rutas de varios días (Team OP); obtener las puntuaciones de fuentes medibles, como reseñas o encuestas; considerar varias visitas obligatorias; y comparar con otros algoritmos evolutivos multiobjetivo.

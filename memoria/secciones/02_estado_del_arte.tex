@@ -1,0 +1,32 @@
+\section{Descripción del problema y estado del arte}
+\label{sec:estado_arte}
+
+\subsection{El problema de orientación}
+
+El problema de orientación (\emph{orienteering problem}, OP) es un problema de optimización combinatoria presentado y resuelto heurísticamente por primera vez por \citet{tsiligirides1984}. El nombre lo introdujeron \citet{golden1987}, que propusieron una heurística de centro de gravedad que superaba a las anteriores. En su forma clásica es un problema de rutas: hay que decidir qué subconjunto de nodos visitar, y en qué orden, para maximizar la puntuación total recogida sin superar un presupuesto de tiempo \citep{gunawan2016}. Contiene el problema del viajante (TSP) como caso particular, por lo que es NP-difícil, y eso justifica el uso de metaheurísticas en instancias realistas.
+
+\citet{vansteenwegen2011} describen formalmente el OP, presentan sus principales variantes y comparan los métodos exactos y (meta)heurísticos publicados hasta entonces. \citet{gunawan2016} amplían esa revisión con variantes como el Team OP, el OP con ventanas temporales y el OP dependiente del tiempo, y con otras más recientes como el OP estocástico, el generalizado o el clusterizado; también recogen aplicaciones como el \emph{Tourist Trip Design Problem}. Una revisión más reciente \citep{shen2025} sistematiza la investigación sobre el OP entre 2017 y 2025, con especial atención a las matheurísticas y a los métodos basados en aprendizaje por refuerzo y redes neuronales.
+
+\subsection{El OP como problema biobjetivo}
+
+El OP pertenece a la familia de los problemas del viajante con beneficios (\emph{TSPs with profits}), que generalizan el TSP: no es necesario visitar todos los vértices y cada uno tiene un beneficio asociado. \citet{feillet2005} señalan que estos problemas pueden verse como TSP bicriterio con dos objetivos opuestos. Ese es el planteamiento de este trabajo: maximizar la puntuación y minimizar el tiempo total, en lugar de fijar el tiempo como límite y maximizar solo la puntuación. Para esta versión biobjetivo, \citet{berube2009} proponen un método $\varepsilon$-restricción exacto, que resuelve una serie de subproblemas de un solo objetivo en los que el otro objetivo se convierte en restricción, y obtienen por primera vez el frente de Pareto exacto en instancias de hasta 150 vértices.
+
+\subsection{Aplicación al turismo}
+
+El \emph{Tourist Trip Design Problem} (TTDP) es un problema de planificación de rutas para turistas que quieren visitar varios puntos de interés; \citet{gavalas2014} revisan los modelos y los métodos propuestos para resolverlo. El trabajo más cercano al nuestro es el de \citet{schilde2009}, que desarrollan métodos para el OP multiobjetivo motivados por la planificación de rutas turísticas en una ciudad. Allí cada punto de interés aporta beneficios distintos según la categoría (cultura, compras…) y cada turista tiene preferencias diferentes por cada una. Para obtener el frente de Pareto usan una optimización por colonias de hormigas de Pareto y una búsqueda de vecindad variable multiobjetivo, ambas hibridadas con \emph{path relinking}.
+
+\subsection{Métodos de resolución multiobjetivo}
+
+\paragraph{Escalarización.} Los métodos clásicos transforman el problema multiobjetivo en una serie de subproblemas de un solo objetivo \citep{miettinen1999,ehrgott2005}:
+\begin{itemize}
+  \item \textbf{Suma ponderada.} Combina linealmente los objetivos con un vector de pesos no negativos. Toda solución que obtiene es óptima para algún hiperplano soporte, por lo que solo puede encontrar puntos de la envoltura convexa del frente; además, pesos uniformes no producen puntos uniformemente repartidos \citep{dasdennis1997}. En problemas combinatorios, con frentes discretos y escalonados, muchas soluciones de compromiso quedan inalcanzables.
+  \item \textbf{$\varepsilon$-restricción.} Introducido por \citet{haimes1971}, optimiza un solo objetivo y acota los demás con umbrales $\varepsilon$; \citet{mavrotas2009} propone una versión aumentada que evita soluciones débilmente eficientes. No exige convexidad del frente, pero requiere resolver un subproblema por cada punto que se quiera obtener y depende de cómo se elija la rejilla de umbrales.
+\end{itemize}
+
+\paragraph{Algoritmos evolutivos multiobjetivo.} Trabajan con una población de soluciones y aproximan el frente completo en una sola ejecución \citep{coello2007}. NSGA-II \citep{deb2002} es la referencia más usada. Combina tres mecanismos: una ordenación rápida por niveles de no dominancia, una distancia de aglomeración (\emph{crowding distance}) que estima la densidad de soluciones y favorece la diversidad, y una selección elitista sobre la unión de padres e hijos. Las restricciones se tratan sin penalizaciones con las reglas de dominancia de \citet{deb2000}.
+
+\paragraph{Evaluación.} La calidad de un frente aproximado se mide con indicadores de convergencia y diversidad \citep{audet2021}. El hipervolumen \citep{zitzler1999} es el volumen del espacio de objetivos dominado por el frente respecto a un punto de referencia y recoge a la vez convergencia y extensión. El \emph{spread} $\Delta$ \citep{deb2002} mide la uniformidad del reparto de soluciones. La distancia generacional invertida (IGD) mide la distancia media del frente teórico al obtenido y solo puede usarse cuando el frente es conocido, como en la familia ZDT \citep{zitzler2000}, diseñada con frentes convexos (ZDT1), no convexos (ZDT2) y discontinuos (ZDT3). Para comparar algoritmos estocásticos ejecutados con las mismas semillas se usa el test pareado de rangos con signo de \citet{wilcoxon1945}.
+
+\subsection{Posición de este trabajo}
+
+A diferencia de \citet{schilde2009}, nuestros dos objetivos son la puntuación turística y el tiempo total, como en la versión biobjetivo del TSP con beneficios, y las preferencias por categorías no se tratan como objetivos sino como restricciones sobre los lugares visitables. El problema se resuelve con una implementación propia de NSGA-II y se compara con la suma ponderada y la $\varepsilon$-restricción sobre la red viaria real de Gran Canaria, con dos hoteles como depósito.

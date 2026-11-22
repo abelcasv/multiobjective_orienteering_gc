@@ -1,0 +1,73 @@
+% Memoria del proyecto: Optimización multiobjetivo de rutas turísticas en Gran Canaria
+% Compilar desde esta carpeta:  pdflatex main.tex  (dos veces, para referencias cruzadas)
+% Las figuras se leen de ../output/ (generadas por el código del repositorio).
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[spanish,es-tabla,es-noshorthands]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage[round,authoryear]{natbib}
+\usepackage[hidelinks]{hyperref}
+
+\graphicspath{{../output/}{../output/figuras/}}
+\setlist{itemsep=2pt,topsep=4pt}
+\setlength{\emergencystretch}{2.5em}
+\captionsetup{font=small,labelfont=bf}
+\renewcommand{\algorithmicrequire}{\textbf{Entrada:}}
+\renewcommand{\algorithmicensure}{\textbf{Salida:}}
+\floatname{algorithm}{Algoritmo}
+\renewcommand{\listalgorithmname}{Lista de algoritmos}
+
+% Notación
+\newcommand{\Tmax}{T_{\max}}
+\newcommand{\code}[1]{\texttt{#1}}
+
+\title{\textbf{Optimización multiobjetivo de rutas turísticas en Gran Canaria}\\[4pt]
+\large Problema de orientación biobjetivo resuelto con NSGA-II\\[2pt]
+\normalsize Optimización y Heurística · Modalidad C5: optimización multiobjetivo}
+\author{Hugo González Fernández \and Abel Castro Villar\\[4pt]
+\small Grado en Ciencia e Ingeniería de Datos · Escuela de Ingeniería Informática\\
+\small Universidad de Las Palmas de Gran Canaria · Curso 2026--2027}
+\date{}
+
+\begin{document}
+\maketitle
+
+\input{secciones/00_resumen}
+
+\tableofcontents
+\newpage
+
+\input{secciones/01_introduccion}
+\input{secciones/02_estado_del_arte}
+\input{secciones/03_formulacion}
+\input{secciones/04_metodos}
+\input{secciones/05_implementacion}
+\input{secciones/06_datos}
+\input{secciones/07_experimentacion}
+\input{secciones/08_discusion}
+\input{secciones/09_conclusiones}
+
+\input{secciones/10_referencias}
+
+\appendix
+\input{secciones/A_uso_ia}
+\input{secciones/B_reproducibilidad}
+
+\end{document}

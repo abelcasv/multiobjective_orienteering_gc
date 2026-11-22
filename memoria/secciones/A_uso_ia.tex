@@ -1,0 +1,60 @@
+\section{Uso de la inteligencia artificial}
+\label{sec:ia}
+
+\subsection{Herramientas y tareas}
+
+Se han usado asistentes de IA como herramienta de trabajo, siempre con revisión del equipo: Claude (Anthropic), en su versión conversacional y como asistente de programación (Claude Code), y Antigravity (Google DeepMind). Todos los resultados numéricos de esta memoria proceden de ejecuciones reales del código, y todas las referencias se han comprobado. La IA \emph{no} se usó para obtener los tiempos de conducción, que proceden de OpenStreetMap y de mediciones manuales en Google Maps.
+
+\begin{table}[H]
+\centering
+\small
+\caption{Tareas en las que se usó la IA.}
+\label{tab:ia_tareas}
+\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+Área & Uso \\
+\midrule
+Datos & Corrección y mejora del cuaderno de la matriz de tiempos: componente fuertemente conexa, comprobación de coordenadas, penalización por curvas, calibración con Google Maps e incorporación de los hoteles. Propuesta inicial de puntuaciones y tiempos de visita, revisada por el equipo. \\
+Algoritmos & Refactorización modular del código, reparación del cromosoma para las preferencias, línea base de $\varepsilon$-restricción, validación ZDT y pruebas unitarias. \\
+Revisión & Auditoría del código y de la memoria frente a las ejecuciones: presupuestos de evaluación, test estadístico, reproducibilidad y coherencia de cada cifra. \\
+Visualización & Scripts de mapas, figuras, caminos por carretera y la herramienta interactiva de apoyo a la decisión. \\
+Investigación y redacción & Búsqueda y verificación de referencias para el estado del arte, contraste de las pautas de la asignatura y borradores de la memoria. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Ejemplos de peticiones}
+
+\begin{enumerate}
+  \item \emph{``Necesito implementar el código para calcular los tiempos entre localizaciones. Te paso lo que tengo y necesito que me ayudes a corregirlo y que me lo mejores.''} Dio lugar al cuaderno de la matriz de tiempos.
+  \item \emph{``Los tiempos son muy optimistas, en muchas ocasiones recorta como 20 minutos.''} y \emph{``¿Cómo podríamos penalizar las vías sinuosas?''} Llevaron a la calibración con Google Maps y a la penalización por curvas.
+  \item \emph{``¿Crees que en nuestro proyecto nos ceñimos a lo que pone en este PDF con las pautas?''} Permitió detectar requisitos pendientes, como la $\varepsilon$-restricción y la igualdad de presupuestos.
+  \item \emph{``En la validación continua de ZDT1 las soluciones convergen al frente pero se quedan cortas en los extremos (IGD = 0,1020). Compara paso a paso nuestra implementación de selección, SBX y reemplazo con Deb et al. (2002) e identifica la causa.''}
+  \item \emph{``Añade soporte para mandatory\_node y forbidden\_nodes mediante una función pura \_repair\_chromosome que elimine prohibidos y duplicados manteniendo el orden, inserte el obligatorio si falta y proteja el operador de eliminación. Incluye tests unitarios.''}
+  \item \emph{``Implementa la línea base de $\varepsilon$-restricción maximizando la puntuación con cota $T(R) \le \varepsilon_k$ para 10 umbrales entre 60 y 480 min, consumiendo exactamente 20.100 evaluaciones.''}
+\end{enumerate}
+
+\subsection{Valoración crítica y errores detectados}
+
+La IA aceleró mucho el trabajo: permitió abordar una matriz de tiempos calibrada, cuatro líneas base, estudios de hiperparámetros y de sensibilidad y una herramienta interactiva en el tiempo del proyecto. Pero no fue fiable sin verificación. Los errores más relevantes que detectó el equipo fueron:
+
+\begin{table}[H]
+\centering
+\small
+\caption{Errores de la IA detectados y su corrección.}
+\label{tab:ia_errores}
+\begin{tabularx}{\textwidth}{@{}l X X@{}}
+\toprule
+Episodio & Error & Detección y corrección \\
+\midrule
+Tiempo en la montaña & El asistente calificó de anómalo el tiempo de 108 min entre la Presa de las Niñas y el Roque Nublo, juzgando por la distancia en línea recta. & El equipo lo comprobó en Google Maps (2 h 10 min): la carretera de montaña es lenta y el tiempo de la matriz era razonable. \\
+Torneo en ZDT1 & La selección ignoraba el desempate por aglomeración y las soluciones se acumulaban en una zona (IGD 0,1020). & Comparando el gráfico con el frente teórico y el código con \citet{deb2002}; IGD final 0,0210. \\
+Presupuestos & Versiones de la suma ponderada con 11.070 o 20.000 evaluaciones frente a 20.100. & Contando las evaluaciones durante la ejecución; ajuste a $10 \times 30 \times (1+66)$. \\
+Test estadístico & Se usaba el test de suma de rangos para muestras independientes. & Cambio al test pareado de Wilcoxon, adecuado para semillas compartidas. \\
+Afirmaciones de la memoria & Un borrador describía longitudes de ruta, inicialización y probabilidades distintas de las del código. & Auditoría frase a frase contra el código y ejecuciones de comprobación. \\
+Preferencias en conflicto & La reparación ignoraba en silencio una visita obligatoria prohibida. & Validación con error al construir el problema y prueba unitaria. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+En conjunto, la IA fue más útil para programar, revisar y explorar alternativas que para dar datos o conclusiones: cada cifra y cada afirmación tuvo que comprobarse contra el código y las ejecuciones, y en varios casos fue el equipo quien detectó el error.

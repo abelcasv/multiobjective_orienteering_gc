@@ -1,0 +1,102 @@
+\section{Formulación matemática}
+\label{sec:formulacion}
+
+Se resuelve una instancia independiente por cada hotel. Las dos comparten POIs, puntuaciones y calibración, así que sus diferencias solo se deben a la posición del hotel.
+
+\subsection{Conjuntos y parámetros}
+
+\begin{itemize}
+  \item $h$: hotel (depósito), con puntuación y tiempo de visita nulos.
+  \item $P = \{1,\dots,n\}$: puntos de interés, con $n = 30$. $V = \{h\} \cup P$, con $|V| = 31$.
+  \item $s_i > 0$: puntuación turística del POI $i$ (escala 0--10); $v_i > 0$: tiempo de visita en minutos.
+  \item $t_{ij} \ge 0$: tiempo de conducción en minutos de $i$ a $j$, con $t_{ii} = 0$. La matriz es asimétrica (sección~\ref{sec:datos}).
+  \item $\Tmax = 480$ min: duración máxima de la jornada, incluida la vuelta al hotel.
+\end{itemize}
+
+\subsection{Modelo de programación entera}
+
+Variables de decisión:
+\begin{itemize}
+  \item $x_{ij} \in \{0,1\}$, $i,j \in V$, $i \ne j$: vale 1 si la ruta recorre directamente el arco $(i,j)$.
+  \item $y_i \in \{0,1\}$, $i \in V$: vale 1 si se visita el nodo $i$ (con $y_h = 1$).
+  \item $u_i \in \mathbb{R}$, $i \in P$: posición relativa del POI $i$ en la ruta, para eliminar subciclos.
+\end{itemize}
+
+Objetivos:
+\begin{align}
+  \max\;& f_1(x,y) = \sum_{i \in P} s_i\, y_i && \text{(puntuación total)} \label{eq:f1}\\
+  \min\;& f_2(x,y) = \sum_{i \in V} \sum_{j \in V,\, j \ne i} t_{ij}\, x_{ij} + \sum_{i \in P} v_i\, y_i && \text{(tiempo total: conducción y visitas)} \label{eq:f2}
+\end{align}
+sujeto a
+\begin{align}
+  & \sum_{j \in P} x_{hj} = 1, \qquad \sum_{i \in P} x_{ih} = 1 \label{eq:hotel}\\
+  & \sum_{i \in V,\, i \ne k} x_{ik} = y_k, \qquad \sum_{j \in V,\, j \ne k} x_{kj} = y_k && \forall k \in P \label{eq:flujo}\\
+  & \sum_{i \in V} \sum_{j \in V,\, j \ne i} t_{ij}\, x_{ij} + \sum_{i \in P} v_i\, y_i \le \Tmax \label{eq:tiempo}\\
+  & u_i - u_j + |P|\, x_{ij} \le |P| - 1, \quad 1 \le u_i \le |P| && \forall i,j \in P,\ i \ne j \label{eq:mtz}\\
+  & x_{ij} \in \{0,1\}, \quad y_i \in \{0,1\}, \quad y_h = 1. \label{eq:dominio}
+\end{align}
+
+La restricción~\eqref{eq:hotel} obliga a salir del hotel y volver a él una vez. Las restricciones~\eqref{eq:flujo} conservan el flujo y ligan los arcos a las visitas: un POI visitado tiene exactamente un arco de entrada y uno de salida, y uno no visitado ninguno. La restricción~\eqref{eq:tiempo} limita la jornada. Las restricciones de Miller--Tucker--Zemlin~\eqref{eq:mtz} \citep{mtz1960} impiden ciclos que no pasen por el hotel: si $x_{ij} = 1$ entre dos POIs, entonces $u_j \ge u_i + 1$, lo que es imposible a lo largo de un ciclo cerrado. Para un POI no visitado la restricción queda inactiva dentro de las cotas de $u$.
+
+\subsection{Representación por secuencias}
+\label{sec:secuencias}
+
+Los algoritmos no trabajan con las variables $x_{ij}$ sino con secuencias. Una solución es una lista ordenada de POIs distintos $R = (r_1,\dots,r_k)$, $k \ge 1$, que representa la ruta cerrada $h \to r_1 \to \dots \to r_k \to h$. Sus objetivos son
+\begin{equation}
+  S(R) = \sum_{j=1}^{k} s_{r_j}, \qquad
+  T(R) = t_{h r_1} + \sum_{j=1}^{k-1} t_{r_j r_{j+1}} + t_{r_k h} + \sum_{j=1}^{k} v_{r_j},
+  \label{eq:secuencia}
+\end{equation}
+con la restricción $T(R) \le \Tmax$.
+
+Las dos representaciones son equivalentes. Toda secuencia sin repeticiones define una solución del modelo: $y_{r_j} = 1$, $x_{h r_1} = x_{r_j r_{j+1}} = x_{r_k h} = 1$, $u_{r_j} = j$, $u_i = 1$ en los POIs no visitados y el resto de variables a cero, con $S(R) = f_1$ y $T(R) = f_2$. Recíprocamente, toda solución que cumple~\eqref{eq:hotel}, \eqref{eq:flujo} y~\eqref{eq:mtz} describe un único ciclo simple que sale de $h$ y vuelve a $h$, del que se lee la secuencia. Trabajar con secuencias tiene una ventaja decisiva: las restricciones~\eqref{eq:hotel}, \eqref{eq:flujo} y~\eqref{eq:mtz} se cumplen por construcción, de modo que el algoritmo solo tiene que gestionar la restricción de tiempo~\eqref{eq:tiempo}. En cambio, la mayoría de las matrices binarias $x \in \{0,1\}^{31\times30}$ violan el flujo o contienen subciclos.
+
+\subsection{Preferencias del turista}
+\label{sec:preferencias}
+
+El modelo admite tres preferencias que reducen los lugares visitables. Sea $\mathcal{C}$ el conjunto de las cuatro categorías (Cultura e historia, Montaña y naturaleza, Playa y costa, y Pueblos y ciudad) y $C(i) \subseteq \mathcal{C}$ las categorías del POI $i$, principal y secundaria ($|C(i)| \in \{1,2\}$). Hay 15 POIs de Montaña y naturaleza, 10 de Playa y costa, 9 de Pueblos y ciudad y 9 de Cultura e historia; 13 de los 30 tienen dos categorías. El turista fija:
+\begin{itemize}
+  \item $C^* \subseteq \mathcal{C}$, las categorías que le interesan;
+  \item $E \subseteq P$, los POIs que descarta;
+  \item opcionalmente, una visita obligatoria $m \in P$, con $m \notin E$.
+\end{itemize}
+El conjunto de POIs prohibidos es
+\begin{equation}
+  F = \bigl(\{\, i \in P : C(i) \cap C^* = \emptyset \,\} \cup E\bigr) \setminus \{m\},
+\end{equation}
+de modo que la visita obligatoria se admite aunque ninguna de sus categorías esté marcada. Al modelo se añaden las restricciones
+\begin{equation}
+  y_i = 0 \quad \forall i \in F, \qquad y_m = 1,
+  \label{eq:preferencias}
+\end{equation}
+que en la representación por secuencias son $r_j \notin F$ para todo $j$ y $m \in \{r_1,\dots,r_k\}$. Sin preferencias ($C^* = \mathcal{C}$, $E = \emptyset$ y sin $m$) se tiene $F = \emptyset$ y el problema coincide con el original.
+
+\paragraph{Factibilidad.} Como $t$ procede de caminos mínimos en la red, cumple la desigualdad triangular $t_{ij} \le t_{il} + t_{lj}$; en la matriz guardada, por el redondeo, con una tolerancia de 0,01 min por tramo. Aplicándola $k-1$ veces, toda ruta de $k$ paradas que pasa por el POI $i$ dura al menos $t_{hi} + v_i + t_{ih} - 0{,}01\,(k-1)$ min. De ahí se sigue, salvo esa tolerancia:
+\begin{itemize}
+  \item Con visita obligatoria, el problema tiene solución si y solo si $t_{hm} + v_m + t_{mh} \le \Tmax$. La condición es necesaria por la cota anterior y suficiente porque la ruta $R = (m)$ la cumple.
+  \item Sin visita obligatoria, el problema no tiene solución si y solo si ningún $i \in P \setminus F$ cumple $t_{hi} + v_i + t_{ih} \le \Tmax$. En particular, si $C^* = \emptyset$ entonces $F = P$ y no hay ninguna ruta.
+\end{itemize}
+Por ejemplo, el Roque Nublo desde Santa Catalina exige $69{,}2 + 90 + 70{,}8 = 230$ min, así que con $\Tmax < 230$ min ninguna ruta puede incluirlo.
+
+\subsection{Clasificación del problema}
+
+\begin{table}[H]
+\centering
+\small
+\caption{Clasificación del problema.}
+\label{tab:clasificacion}
+\begin{tabularx}{\textwidth}{@{}l l X@{}}
+\toprule
+Dimensión & Clase & Justificación \\
+\midrule
+Variables & Discreto, combinatorio & Se elige un subconjunto de POIs y su orden ($x_{ij}, y_i \in \{0,1\}$). \\
+Objetivos & Biobjetivo, en conflicto & Añadir paradas aumenta la puntuación $f_1$ y también el tiempo $f_2$. \\
+Convexidad & No convexo & El conjunto factible es discreto, y el frente de Pareto es un conjunto finito de puntos escalonados con puntos fuera de su envoltura convexa (sección~\ref{sec:experimentacion}). \\
+Restricciones & Con restricciones & Tiempo máximo~\eqref{eq:tiempo}, estructura de ruta~\eqref{eq:hotel}--\eqref{eq:mtz} y preferencias~\eqref{eq:preferencias}. \\
+Incertidumbre & Determinista & Tiempos, puntuaciones y visitas se suponen conocidos. \\
+Complejidad & NP-difícil & Con $s_i = 1$, $v_i = 0$ y $\Tmax$ igual a una longitud dada, decidir si existe una ruta que visite todos los POIs es la versión de decisión del TSP. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Al ser NP-difícil, no se conoce un algoritmo exacto de tiempo polinómico, y resolver el modelo entero para cada punto del frente sería costoso. Por eso se recurre a una metaheurística multiobjetivo que aproxima el frente completo en una sola ejecución.
