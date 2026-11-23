@@ -75,6 +75,7 @@ La matriz es optimista en los cuatro casos. El error de validación (8,2 min) es
 - **Ciudad.** En trayectos urbanos cortos pesan semáforos, tráfico y aparcamiento, que el modelo no incluye. Santa Catalina → Vegueta da 4,3 min frente a 10 min en Google.
 - **Acceso a las playas.** La posición del POI es un punto, pero llegar a las Dunas desde el hotel tarda de 4 a 10 min según el acceso.
 - **Carreteras cortadas.** La red refleja los cortes de carretera actuales. Por eso Presa de las Niñas → Tejeda tarda 132 min: el camino mínimo rodea por Mogán. El tiempo es correcto con esos cortes, pero si se reabren las carreteras habría que regenerar la matriz. Este POI no aparece en ninguna ruta del frente.
+- **Lugares apartados de la carretera.** El punto del Barranco de Fataga queda a 1,15 km del nodo de carretera más cercano y no se pudo acercar más, así que su tiempo de conducción llega solo hasta ese nodo y no incluye el acceso final. Es el caso más extremo entre los POIs que quedan a más de 300 m de la red.
 - **Tráfico.** No se modela variación horaria; los tiempos de referencia corresponden a un día laborable a media mañana.
 
 En consecuencia, las rutas que suben a la cumbre desde el sur o que encadenan tramos urbanos durarán en la realidad algo más que lo calculado. Una mejora natural sería usar factores distintos por tipo de trayecto (urbano, autopista, montaña) o una API de rutas con tráfico.
@@ -167,4 +168,4 @@ Se han usado asistentes de IA en las siguientes tareas, siempre con revisión de
 
 La IA **no** se usó para obtener los tiempos de conducción. Estos proceden de OpenStreetMap y de las mediciones manuales en Google Maps descritas en las secciones 2 y 3.
 
-> **Nota para el equipo:** completad esta lista con cualquier otro uso de IA en el resto del proyecto, por ejemplo en el desarrollo del notebook o de los algoritmos, antes de entregar.
+La lista completa de usos de IA de todo el proyecto, con ejemplos de peticiones y los errores detectados, está en el anexo A de la memoria (`memoria/`).

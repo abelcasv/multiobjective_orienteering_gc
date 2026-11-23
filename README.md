@@ -3,7 +3,7 @@
 Proyecto para la asignatura **Optimización y Heurística** (Grado en Ciencia e Ingeniería de Datos / IA).
 Encuadrado en la modalidad **C5: Optimización Multiobjetivo (Dificultad Alta)**.
 
-El proyecto resuelve el **Problema de Orientación Multiobjetivo (Multi-Objective Orienteering Problem - MOOP)** para diseñar rutas turísticas óptimas en Gran Canaria bajo una restricción presupuestaria de tiempo ($T_{\max} = 8$ horas de escala de crucero o jornada turística), buscando simultáneamente:
+El proyecto resuelve el **Problema de Orientación Multiobjetivo (Multi-Objective Orienteering Problem - MOOP)** para diseñar rutas turísticas óptimas en Gran Canaria bajo una restricción presupuestaria de tiempo ($T_{\max} = 8$ horas de jornada turística, con salida y regreso al hotel), buscando simultáneamente:
 1. **Maximizar el valor turístico total** ($\sum S_i$).
 2. **Minimizar el tiempo invertido** (tiempo de conducción real + tiempo de estancia física).
 
